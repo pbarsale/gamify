@@ -25,7 +25,7 @@ class User extends \Core\Model
      * @param array $data Initial Property Value
      * @return void
      */
-    public function __construct($data){
+    public function __construct($data =[]){
         foreach($data as $key => $value){
             $this->$key = $value;
         };
@@ -114,15 +114,72 @@ class User extends \Core\Model
      */
 
 
-    protected function emailExists($email){
+    public static function emailExists($email){
+        return static::findByEmail($email) !== false;
+    }
+
+
+    /**
+    * Find a user model by email address
+     *
+     * @param $email - email to search for
+     * @return user object if found, otherwise false
+     */
+
+
+    public static function findByEmail($email){
 
         $sql = "SELECT * from users where email=:email";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':email',$email,PDO::PARAM_STR); 
 
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+
         $stmt->execute();
-        return $stmt->fetch()!==false;
+        return $stmt->fetch();
+    }
+
+
+    /**
+     * Find a user model by id
+     *
+     * @param $id string The user id
+     * @return mixed user object if found, otherwise false
+     */
+
+
+    public static function findById($id){
+
+        $sql = "SELECT * from users where id=:id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_INT); 
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+
+        $stmt->execute();
+        return $stmt->fetch(); 
+    }
+
+    /**
+     * Authenticate the user by email and password
+     *
+     * @param string $email - email to search
+     * @param string $password - password to verify
+     * @return mixed : The user object or false if authentication fails
+     */
+
+
+    public static function authenticate($email,$password){
+
+        $user = static::findByEmail($email);
+        if($user){
+            if(password_verify($password,$user->password)){
+                return $user;
+            }
+        }
+        return false;
     }
 
 

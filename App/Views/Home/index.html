@@ -5,7 +5,13 @@
 {% block body %}
 
     <h1>Welcome</h1>
-    <a href="/signup/new">Sign Up</a>
-	<a href="/login/new">Log In</a>
+
+    {% if current_user %}
+    	Hello {{ current_user.name }}
+    	<a href="/logout">Log out</a>
+    {% else %}
+    	<a href="/signup/new">Sign Up</a>
+		<a href="/login">Log In</a> 
+    {% endif %}
 
 {% endblock %}

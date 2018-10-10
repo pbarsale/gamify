@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" />
+
 </head>
 <body>
+
+	{% for message in flash_messages %}
+		<div class="alert alert-{{ message.type }}">
+			{{ message.body }}
+		</div>
+	{% endfor %}
+
     {% block body %}
+    {% endblock %}
+
+    {% block footer %}
     {% endblock %}
 </body>
 </html>
