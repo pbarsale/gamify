@@ -14,13 +14,13 @@ class Router
      * Associative array of routes (the routing table)
      * @var array
      */
-    protected $routes = [];
+    protected $routes = array();
 
     /**
      * Parameters from the matched route
      * @var array
      */
-    protected $params = [];
+    protected $params = array();
 
     /**
      * Add a route to the routing table
@@ -30,7 +30,7 @@ class Router
      *
      * @return void
      */
-    public function add($route, $params = [])
+    public function add($route, $params = array())
     {
         // Convert the route to a regular expression: escape forward slashes
         $route = preg_replace('/\//', '\\/', $route);

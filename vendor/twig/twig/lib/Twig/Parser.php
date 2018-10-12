@@ -15,21 +15,22 @@
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class Twig_Parser
+class Twig_Parser implements Twig_ParserInterface
 {
-    private $stack = array();
-    private $stream;
-    private $parent;
-    private $handlers;
-    private $visitors;
-    private $expressionParser;
-    private $blocks;
-    private $blockStack;
-    private $macros;
-    private $env;
-    private $importedSymbols;
-    private $traits;
-    private $embeddedTemplates = array();
+    protected $stack = array();
+    protected $stream;
+    protected $parent;
+    protected $handlers;
+    protected $visitors;
+    protected $expressionParser;
+    protected $blocks;
+    protected $blockStack;
+    protected $macros;
+    protected $env;
+    protected $reservedMacroNames;
+    protected $importedSymbols;
+    protected $traits;
+    protected $embeddedTemplates = array();
     private $varNameSalt = 0;
 
     public function __construct(Twig_Environment $env)
@@ -37,25 +38,48 @@ class Twig_Parser
         $this->env = $env;
     }
 
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
+    public function getEnvironment()
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
+        return $this->env;
+    }
+
     public function getVarName()
     {
         return sprintf('__internal_%s', hash('sha256', __METHOD__.$this->stream->getSourceContext()->getCode().$this->varNameSalt++));
     }
 
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0). Use $parser->getStream()->getSourceContext()->getPath() instead.
+     */
+    public function getFilename()
+    {
+        @trigger_error(sprintf('The "%s" method is deprecated since version 1.27 and will be removed in 2.0. Use $parser->getStream()->getSourceContext()->getPath() instead.', __METHOD__), E_USER_DEPRECATED);
+
+        return $this->stream->getSourceContext()->getName();
+    }
+
     public function parse(Twig_TokenStream $stream, $test = null, $dropNeedle = false)
     {
-        $vars = get_object_vars($this);
+        // push all variables into the stack to keep the current state of the parser
+        // using get_object_vars() instead of foreach would lead to https://bugs.php.net/71336
+        // This hack can be removed when min version if PHP 7.0
+        $vars = array();
+        foreach ($this as $k => $v) {
+            $vars[$k] = $v;
+        }
+
         unset($vars['stack'], $vars['env'], $vars['handlers'], $vars['visitors'], $vars['expressionParser'], $vars['reservedMacroNames']);
         $this->stack[] = $vars;
 
         // tag handlers
         if (null === $this->handlers) {
-            $this->handlers = array();
-            foreach ($this->env->getTokenParsers() as $handler) {
-                $handler->setParser($this);
-
-                $this->handlers[$handler->getTag()] = $handler;
-            }
+            $this->handlers = $this->env->getTokenParsers();
+            $this->handlers->setParser($this);
         }
 
         // node visitors
@@ -115,27 +139,27 @@ class Twig_Parser
         $rv = array();
         while (!$this->stream->isEOF()) {
             switch ($this->getCurrentToken()->getType()) {
-                case /* Twig_Token::TEXT_TYPE */ 0:
+                case Twig_Token::TEXT_TYPE:
                     $token = $this->stream->next();
                     $rv[] = new Twig_Node_Text($token->getValue(), $token->getLine());
                     break;
 
-                case /* Twig_Token::VAR_START_TYPE */ 2:
+                case Twig_Token::VAR_START_TYPE:
                     $token = $this->stream->next();
                     $expr = $this->expressionParser->parseExpression();
-                    $this->stream->expect(/* Twig_Token::VAR_END_TYPE */ 4);
+                    $this->stream->expect(Twig_Token::VAR_END_TYPE);
                     $rv[] = new Twig_Node_Print($expr, $token->getLine());
                     break;
 
-                case /* Twig_Token::BLOCK_START_TYPE */ 1:
+                case Twig_Token::BLOCK_START_TYPE:
                     $this->stream->next();
                     $token = $this->getCurrentToken();
 
-                    if (/* Twig_Token::NAME_TYPE */ 5 !== $token->getType()) {
+                    if (Twig_Token::NAME_TYPE !== $token->getType()) {
                         throw new Twig_Error_Syntax('A block must start with a tag name.', $token->getLine(), $this->stream->getSourceContext());
                     }
 
-                    if (null !== $test && $test($token)) {
+                    if (null !== $test && call_user_func($test, $token)) {
                         if ($dropNeedle) {
                             $this->stream->next();
                         }
@@ -147,7 +171,8 @@ class Twig_Parser
                         return new Twig_Node($rv, array(), $lineno);
                     }
 
-                    if (!isset($this->handlers[$token->getValue()])) {
+                    $subparser = $this->handlers->getTokenParser($token->getValue());
+                    if (null === $subparser) {
                         if (null !== $test) {
                             $e = new Twig_Error_Syntax(sprintf('Unexpected "%s" tag', $token->getValue()), $token->getLine(), $this->stream->getSourceContext());
 
@@ -164,7 +189,6 @@ class Twig_Parser
 
                     $this->stream->next();
 
-                    $subparser = $this->handlers[$token->getValue()];
                     $node = $subparser->parse($token);
                     if (null !== $node) {
                         $rv[] = $node;
@@ -181,6 +205,26 @@ class Twig_Parser
         }
 
         return new Twig_Node($rv, array(), $lineno);
+    }
+
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
+    public function addHandler($name, $class)
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
+        $this->handlers[$name] = $class;
+    }
+
+    /**
+     * @deprecated since 1.27 (to be removed in 2.0)
+     */
+    public function addNodeVisitor(Twig_NodeVisitorInterface $visitor)
+    {
+        @trigger_error('The '.__METHOD__.' method is deprecated since version 1.27 and will be removed in 2.0.', E_USER_DEPRECATED);
+
+        $this->visitors[] = $visitor;
     }
 
     public function getBlockStack()
@@ -225,12 +269,28 @@ class Twig_Parser
 
     public function setMacro($name, Twig_Node_Macro $node)
     {
+        if ($this->isReservedMacroName($name)) {
+            throw new Twig_Error_Syntax(sprintf('"%s" cannot be used as a macro name as it is a reserved keyword.', $name), $node->getTemplateLine(), $this->stream->getSourceContext());
+        }
+
         $this->macros[$name] = $node;
     }
 
     public function isReservedMacroName($name)
     {
-        return false;
+        if (null === $this->reservedMacroNames) {
+            $this->reservedMacroNames = array();
+            $r = new ReflectionClass($this->env->getBaseTemplateClass());
+            foreach ($r->getMethods() as $method) {
+                $methodName = strtolower($method->getName());
+
+                if ('get' === substr($methodName, 0, 3) && isset($methodName[3])) {
+                    $this->reservedMacroNames[] = substr($methodName, 3);
+                }
+            }
+        }
+
+        return in_array(strtolower($name), $this->reservedMacroNames);
     }
 
     public function addTrait($trait)
@@ -313,14 +373,13 @@ class Twig_Parser
         return $this->stream->getCurrent();
     }
 
-    private function filterBodyNodes(Twig_Node $node, $nested = false)
+    protected function filterBodyNodes(Twig_NodeInterface $node)
     {
         // check that the body does not contain non-empty output nodes
         if (
             ($node instanceof Twig_Node_Text && !ctype_space($node->getAttribute('data')))
             ||
-            // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
-            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless))
+            (!$node instanceof Twig_Node_Text && !$node instanceof Twig_Node_BlockReference && $node instanceof Twig_NodeOutputInterface)
         ) {
             if (false !== strpos((string) $node, chr(0xEF).chr(0xBB).chr(0xBF))) {
                 throw new Twig_Error_Syntax('A template that extends another one cannot start with a byte order mark (BOM); it must be removed.', $node->getTemplateLine(), $this->stream->getSourceContext());
@@ -329,36 +388,17 @@ class Twig_Parser
             throw new Twig_Error_Syntax('A template that extends another one cannot include content outside Twig blocks. Did you forget to put the content inside a {% block %} tag?', $node->getTemplateLine(), $this->stream->getSourceContext());
         }
 
-        // bypass nodes that "capture" the output
+        // bypass nodes that will "capture" the output
         if ($node instanceof Twig_NodeCaptureInterface) {
-            // a "block" tag in such a node will serve as a block definition AND be displayed in place as well
             return $node;
         }
 
-        // to be removed completely in Twig 3.0
-        if (!$nested && $node instanceof Twig_Node_Spaceless) {
-            @trigger_error(sprintf('Using the spaceless tag at the root level of a child template in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
-        }
-
-        // "block" tags that are not captured (see above) are only used for defining
-        // the content of the block. In such a case, nesting it does not work as
-        // expected as the definition is not part of the default template code flow.
-        if ($nested && $node instanceof Twig_Node_BlockReference) {
-            //throw new Twig_Error_Syntax('A block definition cannot be nested under non-capturing nodes.', $node->getTemplateLine(), $this->stream->getSourceContext());
-            @trigger_error(sprintf('Nesting a block definition under a non-capturing node in "%s" at line %d is deprecated since version 2.5.0 and will become a syntax error in 3.0.', $this->stream->getSourceContext()->getName(), $node->getTemplateLine()), E_USER_DEPRECATED);
+        if ($node instanceof Twig_NodeOutputInterface) {
             return;
         }
 
-        // the "&& !$node instanceof Twig_Node_Spaceless" part of the condition must be removed in 3.0
-        if ($node instanceof Twig_NodeOutputInterface && !$node instanceof Twig_Node_Spaceless) {
-            return;
-        }
-
-        // here, $nested means "being at the root level of a child template"
-        // we need to discard the wrapping "Twig_Node" for the "body" node
-        $nested = $nested || get_class($node) !== 'Twig_Node';
         foreach ($node as $k => $n) {
-            if (null !== $n && null === $this->filterBodyNodes($n, $nested)) {
+            if (null !== $n && null === $this->filterBodyNodes($n)) {
                 $node->removeNode($k);
             }
         }

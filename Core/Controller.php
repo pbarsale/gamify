@@ -18,7 +18,7 @@ abstract class Controller
      * Parameters from the matched route
      * @var array
      */
-    protected $route_params = [];
+    protected $route_params = array();
 
     /**
      * Class constructor
@@ -49,7 +49,7 @@ abstract class Controller
 
         if (method_exists($this, $method)) {
             if ($this->before() !== false) {
-                call_user_func_array([$this, $method], $args);
+                call_user_func_array(array($this, $method), $args);
                 $this->after();
             }
         } else {

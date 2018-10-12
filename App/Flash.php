@@ -26,13 +26,13 @@ class Flash{
 
 	public static function addMessage($message, $type = 'success'){
 		if(!isset($_SESSION['flash_notifications'])){
-			$_SESSION['flash_notifications'] = [];
+			$_SESSION['flash_notifications'] = array();
 
 			// Append message to the array
-			$_SESSION['flash_notifications'][] = [
+			$_SESSION['flash_notifications'][] = array(
 				'body' => $message,
 				'type' => $type
-			];
+			);
 		}	
 	}
 

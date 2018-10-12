@@ -6,6 +6,8 @@
  * PHP version 7.0
  */
 
+ini_set('session.cookie.lifetime','864000');	// 10 days in seconds
+
 /**
  * Composer
  */
@@ -30,9 +32,9 @@ session_start();
 $router = new Core\Router();
 
 // Add the routes
-$router->add('', ['controller' => 'Home', 'action' => 'index']);
-$router->add('login', ['controller' => 'Login', 'action' => 'new']);
-$router->add('logout', ['controller' => 'Login', 'action' => 'destroy']);
+$router->add('', array('controller' => 'Home', 'action' => 'index'));
+$router->add('login', array('controller' => 'Login', 'action' => 'new'));
+$router->add('logout', array('controller' => 'Login', 'action' => 'destroy'));
 $router->add('{controller}/{action}');
     
 $router->dispatch($_SERVER['QUERY_STRING']);

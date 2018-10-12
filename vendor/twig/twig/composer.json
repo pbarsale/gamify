@@ -27,8 +27,7 @@
         "forum": "https://groups.google.com/forum/#!forum/twig-users"
     },
     "require": {
-        "php": "^7.0",
-        "symfony/polyfill-mbstring": "~1.0",
+        "php": ">=5.3.3",
         "symfony/polyfill-ctype": "^1.8"
     },
     "require-dev": {
@@ -44,14 +43,9 @@
             "Twig\\" : "src/"
         }
     },
-    "autoload-dev": {
-        "psr-0" : {
-            "Twig_Tests_" : "test/"
-        }
-    },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.5-dev"
+            "dev-master": "1.35-dev"
         }
     }
 }

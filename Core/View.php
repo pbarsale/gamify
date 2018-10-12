@@ -9,7 +9,6 @@ namespace Core;
  */
 class View
 {
-
     /**
      * Render a view file
      *
@@ -18,7 +17,7 @@ class View
      *
      * @return void
      */
-    public static function render($view, $args = [])
+    public static function render($view, $args = array())
     {
         extract($args, EXTR_SKIP);
 
@@ -39,7 +38,7 @@ class View
      *
      * @return void
      */
-    public static function renderTemplate($template, $args = [])
+    public static function renderTemplate($template, $args = array())
     {
         static $twig = null;
 
