@@ -36,11 +36,11 @@ function addGameType($conn) {
 function deleteGameType($conn) {
     $selected_game_type = mysqli_real_escape_string($conn, $_POST['select-game-type']);
 
-    if (empty($game_type)) {
+    if ($selected_game_type === '0') {
         header("Location: ../gametype.php?gametype=empty");
         exit();
     } else {
-        $sql = "UPDATE game_type SET isdeleted = true, date_updated = now(), user_updated = 4 WHERE name = $selected_game_type";
+        $sql = "UPDATE game_type SET isdeleted = true, date_updated = now(), user_updated = 4 WHERE id = '$selected_game_type'";
         mysqli_query($conn, $sql);
         header("Location: ../gametype.php?gametype=success");
         exit();
@@ -51,11 +51,11 @@ function updateGameType($conn) {
     $selected_game_type = mysqli_real_escape_string($conn, $_POST['select-game-type']);
     $game_type = mysqli_real_escape_string($conn, $_POST['game-type']);
 
-    if (empty($game_type)) {
+    if (empty($game_type) || $selected_game_type === '0') {
         header("Location: ../gametype.php?gametype=empty");
         exit();
     } else {
-        $sql = "UPDATE game_type SET name = $game_type, date_updated = now(), user_updated = 4 WHERE name = $selected_game_type";
+        $sql = "UPDATE game_type SET name = '$game_type', date_updated = now(), user_updated = 4 WHERE id = '$selected_game_type'";
         mysqli_query($conn, $sql);
         header("Location: ../gametype.php?gametype=success");
         exit();
@@ -71,7 +71,7 @@ function getAllGameType($conn) {
         exit();
     } else {
         header("Location: ../gametype.php?gametype=success");
-        exit();
+        return $result;
     }
 }
 
