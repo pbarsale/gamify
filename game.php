@@ -7,17 +7,25 @@
  */
     include_once 'header.php';
     include_once 'includes/getter.php';
-    $result = getAllGame($conn);
+    $games = getAllGame($conn);
+    $game_types = getAllGameType($conn);
 ?>
 
     <section class="main-container">
         <div class="main-wrapper">
             <h2>Game</h2>
             <form class="game-form" action="includes/game.inc.php" method="post">
+                <select name="select-game-type">
+                    <?php
+                    while($row = $game_types->fetch_assoc()) {
+                        echo "<option value=" . $row['id'] . ">" . $row['name'] . "</option>";
+                    }
+                    ?>
+                </select>
                 <select name="select-game">
                     <option value="0">Select Game</option>
                     <?php
-                        while($row = $result->fetch_assoc()) {
+                        while($row = $games->fetch_assoc()) {
                             echo "<option value=" . $row['id'] . ">" . $row['name'] . "</option>";
                         }
                     ?>

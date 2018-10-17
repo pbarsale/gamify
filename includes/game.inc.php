@@ -20,13 +20,14 @@ if (isset($_POST['add'])) {
 }
 
 function addGame($conn) {
+    $selected_game_type = mysqli_real_escape_string($conn, $_POST['select-game-type']);
     $game = mysqli_real_escape_string($conn, $_POST['game']);
 
     if (empty($game)) {
         header("Location: ../game.php?game=empty");
         exit();
     } else {
-        $sql = "INSERT INTO game (name, date_created, user_created, date_updated, user_updated, isdeleted) VALUES ('$game', now(), 4, now(), 4, false)";
+        $sql = "INSERT INTO game (name, date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group) VALUES ('$game', now(), 4, now(), 4, false, '$selected_game_type', '0-5')";
         mysqli_query($conn, $sql);
         header("Location: ../game.php?game=success");
         exit();

@@ -33,3 +33,17 @@ function getAllGame($conn) {
 //        exit();
 //    }
 }
+
+function getAllBadge($conn) {
+    $sql = "SELECT * FROM badge WHERE isdeleted = false";
+    $result = mysqli_query($conn, $sql);
+    return $result;
+//    $resultCheck = mysqli_num_rows($result);
+//    if($resultCheck < 1) {
+//        header("Location: ../badge.php?badge=error");
+//        exit();
+//    } else {
+//        header("Location: ../badge.php?badge=success");
+//        exit();
+//    }
+}

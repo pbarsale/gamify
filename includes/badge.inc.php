@@ -20,15 +20,24 @@ if (isset($_POST['add'])) {
 }
 
 function addBadge($conn) {
-    $badge = mysqli_real_escape_string($conn, $_POST['badge']);
+    $badge_name = mysqli_real_escape_string($conn, $_POST['badge-name']);
 
-    if (empty($badge)) {
-        header("Location: ../badge.php?badge=empty");
-        exit();
-    } else {
-        $sql = "INSERT INTO badge (name, date_created, user_created, date_updated, user_updated, isdeleted) VALUES ('$badge', now(), 4, now(), 4, false)";
+    $badge_tmp = $_FILES['badge']['tmp_name'];
+    $badge = $_FILES['badge']['name'];
+    $badge_type = $_FILES['badge']['type'];
+    $filepath = "images/" . $badge;
+
+    if (!empty($badge_name) and
+        preg_match('/^image\\/p?jpeg$/i', $badge_type) or
+        preg_match('/^image\\/gif$/i', $badge_type) or
+        preg_match('/^image\\/(x-)?png$/i', $badge_type) and
+        move_uploaded_file($badge_tmp, "../" . $filepath)) {
+        $sql = "INSERT INTO badge (name, badge, description, date_created, user_created, date_updated, user_updated, isdeleted) VALUES ('$badge_name', '$filepath', '', now(), 4, now(), 4, false)";
         mysqli_query($conn, $sql);
         header("Location: ../badge.php?badge=success");
+        exit();
+    } else {
+        header("Location: ../badge.php?badge=invalid");
         exit();
     }
 }
@@ -36,11 +45,11 @@ function addBadge($conn) {
 function deleteBadge($conn) {
     $selected_badge = mysqli_real_escape_string($conn, $_POST['select-badge']);
 
-    if (empty($game)) {
+    if ($selected_badge === '0') {
         header("Location: ../badge.php?badge=empty");
         exit();
     } else {
-        $sql = "UPDATE badge SET isdeleted = true, date_updated = now(), user_updated = 4 WHERE name = $selected_badge";
+        $sql = "UPDATE badge SET isdeleted = true, date_updated = now(), user_updated = 4 WHERE id = $selected_badge";
         mysqli_query($conn, $sql);
         header("Location: ../badge.php?badge=success");
         exit();
@@ -49,20 +58,29 @@ function deleteBadge($conn) {
 
 function updateBadge($conn) {
     $selected_badge = mysqli_real_escape_string($conn, $_POST['select-badge']);
-    $badge = mysqli_real_escape_string($conn, $_POST['badge']);
+    
+    $badge_tmp = $_FILES['badge']['tmp_name'];
+    $badge = $_FILES['badge']['name'];
+    $badge_type = $_FILES['badge']['type'];
+    $filepath = "images/" . $badge;
 
-    if (empty($game)) {
+    if ($selected_badge === '0') {
         header("Location: ../badge.php?badge=empty");
         exit();
     } else {
-        $sql = "UPDATE badge SET name = $badge, date_updated = now(), user_updated = 4 WHERE name = $selected_badge";
-        mysqli_query($conn, $sql);
-        header("Location: ../badge.php?badge=success");
-        exit();
+        if (preg_match('/^image\\/p?jpeg$/i', $badge_type) or
+            preg_match('/^image\\/gif$/i', $badge_type) or
+            preg_match('/^image\\/(x-)?png$/i', $badge_type) and
+            move_uploaded_file($badge_tmp, "../" . $filepath)) {
+            $sql = "UPDATE badge SET badge = '$filepath', date_updated = now(), user_updated = 4 WHERE id = '$selected_badge'";
+            mysqli_query($conn, $sql);
+            header("Location: ../badge.php?badge=success");
+            exit();
+        }
     }
 }
 
-function getAllGame($conn) {
+function getAllBadge($conn) {
     $sql = "SELECT * FROM badge WHERE isdeleted = false";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
@@ -75,7 +93,7 @@ function getAllGame($conn) {
     }
 }
 
-function getGame($conn, $name) {
+function getBadge($conn, $name) {
     $sql = "SELECT * FROM badge WHERE name = $name";
     $result = mysqli_query($conn, $sql);
     $resultCheck = mysqli_num_rows($result);
