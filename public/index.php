@@ -25,7 +25,6 @@ set_exception_handler('Core\Error::exceptionHandler');
  * Session
  */
 session_start();
-
 /**
  * Routing
  */
@@ -35,6 +34,7 @@ $router = new Core\Router();
 $router->add('', array('controller' => 'Home', 'action' => 'index'));
 $router->add('login', array('controller' => 'Login', 'action' => 'new'));
 $router->add('logout', array('controller' => 'Login', 'action' => 'destroy'));
+$router->add('password/reset/{token:[\da-f]+}', array('controller' => 'Password', 'action' => 'reset'));
 $router->add('{controller}/{action}');
     
 $router->dispatch($_SERVER['QUERY_STRING']);

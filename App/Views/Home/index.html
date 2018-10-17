@@ -8,10 +8,11 @@
 
     {% if current_user %}
     	Hello {{ current_user.name }}
-    	<a href="/logout">Log out</a>
+    	<a href="/Gamify/logout">Log out</a>
     {% else %}
-    	<a href="/signup/new">Sign Up</a>
-		<a href="/login">Log In</a> 
+    	<a href="/Gamify/signup/new">Sign Up</a>
+		<a href="/Gamify/login">Log In</a> 
+		
     {% endif %}
 
 {% endblock %}

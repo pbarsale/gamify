@@ -23,7 +23,7 @@ class Token{
     	if($token_value){
     		$this->token = $token_value;
     	}else
-    		$this->token = bin2hex(random_bytes(16)); // 16 bytes = 128 bits = 32 hex characters   
+    		$this->token = bin2hex(openssl_random_pseudo_bytes(16)); // 16 bytes = 128 bits = 32 hex characters  
     }
 
     /**
@@ -31,7 +31,7 @@ class Token{
      * @return string - the token
      */
     public function getValue(){
-     	$this->token;
+     	return $this->token;
     }
 
     /**

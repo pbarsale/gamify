@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Forgot password{% endblock %}
+
+{% block body %}
+
+    <h3>Request password reset</h3>
+	<form method="post" action="/Gamify/password/request-reset">
+		
+		<div><input type="email" id='inputEmail' name="email" placeholder="Email address" autofocus required /></div><br>
+
+		<div><button type="submit"> Send password reset</button></div><br>
+	</form>
+
+{% endblock %}

@@ -43,10 +43,10 @@ class Login extends \Core\Controller
     	
     	}else{
             Flash::addMessage('Login unsuccessful, please try again',Flash::WARNING);
-    		View::renderTemplate('Login/new.html',[
+    		View::renderTemplate('Login/new.html',array(
     			'email' => $_POST['email'],
                 'remember_me' => $remember_me
-    		]);
+    		));
     	}
     }
 
@@ -58,7 +58,7 @@ class Login extends \Core\Controller
     public function destroyAction(){
     	
 		Auth::logout();
-        $this->redirect('/login/show-logout-message');
+        $this->redirect('/Gamify/login/show-logout-message');
     }
 
     /**
@@ -71,6 +71,6 @@ class Login extends \Core\Controller
     public function showLogoutMessageAction(){
         
         Flash::addMessage('Logout Successful');
-        $this->redirect('/');
+        $this->redirect('/Gamify/');
     }
 }
