@@ -35,9 +35,9 @@ class Signup extends \Core\Controller
         if($user->save()){
             $this->redirect('/Gamify/signup/success');            
         }else{
-            View::renderTemplate('Signup/new.html', [
+            View::renderTemplate('Signup/new.html', array(
                 'user' => $user
-            ]);
+            ));
             //var_dump($user->errors);
         }        
     }
