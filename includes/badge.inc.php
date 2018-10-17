@@ -58,7 +58,7 @@ function deleteBadge($conn) {
 
 function updateBadge($conn) {
     $selected_badge = mysqli_real_escape_string($conn, $_POST['select-badge']);
-    
+
     $badge_tmp = $_FILES['badge']['tmp_name'];
     $badge = $_FILES['badge']['name'];
     $badge_type = $_FILES['badge']['type'];

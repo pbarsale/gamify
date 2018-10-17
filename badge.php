@@ -20,7 +20,7 @@
                     <option value="0">Select Badge</option>
                     <?php
                         while($row = $badges->fetch_assoc()) {
-                            echo "<option value=" . $row['id'] . " data-subtext=\"<img width='2%' height='1%' src='". $row['badge'] . "'/>\"></option>";
+                            echo "<option value=" . $row['id'] . " style='background-image:url(". $row['badge'] . "); background-repeat:no-repeat; padding-left:30px;'>" . $row['name']. "</option>";
                         }
                     ?>
                 </select>
