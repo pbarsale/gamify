@@ -20,9 +20,6 @@ class Gametypecontroller extends \Core\Controller
     public function newAction()
     {
         $game_types = GameType::getAllGameType();
-        if($game_types) {
-            var_dump($game_types);
-        }
         View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types));
     }
 

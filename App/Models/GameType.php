@@ -6,7 +6,7 @@ use PDO;
 use \Core\View;
 
 /**
- * Example user model
+ * Example GameType model
  *
  * PHP version 7.0
  */
@@ -34,28 +34,20 @@ class GameType extends \Core\Model
     }
 
     public function deleteGameType() {
-        $sql = 'UPDATE game_type 
-                SET isdeleted = :isdeleted,
-                    date_updated = :date_updated
-                    user_updated = :user_updated
-                WHERE id=:id';
+        $sql = 'UPDATE game_type SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':isdeleted', true, PDO::PARAM_BOOL);
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()),PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', 16, PDO::PARAM_INT);
-        $stmt->bindValue(':id',$this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
 
     public function updateGameType($game_type) {
-        $sql = 'UPDATE game_type 
-                SET name = :name,
-                    date_updated = :date_updated
-                    user_updated = :user_updated
-                WHERE id=:id';
+        $sql = 'UPDATE game_type SET name = :name, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -83,11 +75,11 @@ class GameType extends \Core\Model
         return $stmt->fetchAll();
     }
 
-    public static function getGameType($name) {
-        $sql = "SELECT * from game_type where name=:name";
+    public static function getGameType($id) {
+        $sql = "SELECT * from game_type where id=:id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
 

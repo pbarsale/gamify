@@ -8,14 +8,12 @@
     <div class="main-wrapper">
         <h2>Game Type</h2>
         <form class="game-type-form" action="/Gamify/gametypecontroller/modify" method="post">
-            <!--<select name="select-game-type">-->
-                <!--<option value="0">Select Game Type</option>-->
-                <!--{{ dump(game_types) }}-->
+            <select name="select-game-type">
+                <option value="0">Select Game Type</option>
                 {% for game_type in game_types %}
-                    <li> game_type["name"] </li>
-                    <!--<option value={{ game_type.id }}>{{ game_type.name }}</option>-->
+                    <option value="{{ game_type.id }}">{{ game_type.name }}</option>
                 {% endfor %}
-            <!--</select>-->
+            </select>
             <input type="text" name="game-type" placeholder="Enter Game Type">
             <button type="submit" name="add">Add</button>
             <button type="submit" name="update">Update</button>
