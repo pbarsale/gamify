@@ -24,6 +24,17 @@ class Login extends \Core\Controller
     }
 
     /**
+     * Show the Home page for admin
+     *
+     * @return void
+     */
+    public function newAdminAction()
+    {
+        $_SESSION['admin'] = true;
+        $this->redirect('/Gamify/');
+    }
+
+    /**
      * log in a user
      *
      * @return void
@@ -39,7 +50,13 @@ class Login extends \Core\Controller
             // Remember the login code
 
             Flash::addMessage('Login Successful');
-    		$this->redirect(Auth::getReturnToPage());    		
+
+            if($_SESSION['admin'])
+                View::renderTemplate('Admin/adminhome.html');
+            else
+                View::renderTemplate('User/userhome.html');
+
+    		//$this->redirect(Auth::getReturnToPage());
     	
     	}else{
             Flash::addMessage('Login unsuccessful, please try again',Flash::WARNING);

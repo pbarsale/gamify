@@ -36,5 +36,8 @@ $router->add('login', array('controller' => 'Login', 'action' => 'new'));
 $router->add('logout', array('controller' => 'Login', 'action' => 'destroy'));
 $router->add('password/reset/{token:[\da-f]+}', array('controller' => 'Password', 'action' => 'reset'));
 $router->add('{controller}/{action}');
-    
+
+// Routes for Admin
+$router->add('admin', array('controller' => 'Login', 'action' => 'newAdmin'));
+
 $router->dispatch($_SERVER['QUERY_STRING']);

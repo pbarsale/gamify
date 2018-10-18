@@ -67,7 +67,12 @@ class Auth{
      */
 
 	public static function getReturnToPage(){
-		$_SESSION['return_to'] = '/Gamify/';
+
+	    if($_SESSION['admin'] )
+	        $_SESSION['return_to'] = '/Gamify/login';
+	    else
+            $_SESSION['return_to'] = '/Admin/userhome.html';
+
 		return $_SESSION['return_to'];
 		//return $_SESSION['return_to'] ?? '/'; 
 	}
