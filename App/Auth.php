@@ -7,7 +7,6 @@ use \App\Models\RememberedLogin;
   *
   */
 
-
 class Auth{
 	/**
      * @param User $user The User Model
