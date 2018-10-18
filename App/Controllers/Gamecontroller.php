@@ -7,33 +7,35 @@
  */
 namespace App\Controllers;
 
+use App\Models\GameType;
 use \Core\View;
-use \App\Models\GameType;
+use \App\Models\Game;
 
 /**
  * GameType controller
  *
  * PHP version 7.0
  */
-class Gametypecontroller extends \Core\Controller
+class Gamecontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $games = Game::getAllGames();
         $game_types = GameType::getAllGameTypes();
-        View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types));
+        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types));
     }
 
     public function modifyAction()
     {
         if (isset($_POST['add'])) {
-            GameType::addGameType($_POST['game-type']);
+            Game::addGame($_POST['game'], $_POST['select-game-type']);
         } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
-            $game_type = GameType::getGameTypeById($_POST['select-game-type']);
-            if($game_type) {
+            $game = Game::getGameById($_POST['select-game']);
+            if($game) {
                 if(isset($_POST['delete'])) {
-                    $game_type->deleteGameType();
+                    $game->deleteGame();
                 } elseif(isset($_POST['update'])) {
-                    $game_type->updateGameType($_POST['game-type']);
+                    $game->updateGame($_POST['game']);
                 }
             }
         }

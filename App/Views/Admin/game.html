@@ -1,7 +1,30 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: priyankanaik
- * Date: 16/10/2018
- * Time: 23:51
- */
+{% extends "base.html" %}
+
+{% block title %}GameType{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Game</h2>
+        <form class="game-form" action="/Gamify/gamecontroller/modify" method="post">
+            <select name="select-game-type">
+                {% for game_type in game_types %}
+                    <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                {% endfor %}
+            </select>
+            <select name="select-game">
+                <option value="0">Select Game</option>
+                {% for game in games %}
+                    <option value="{{ game.id }}">{{ game.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="text" name="game" placeholder="Enter Game">
+            <button type="submit" name="add">Add</button>
+            <button type="submit" name="update">Update</button>
+            <button type="submit" name="delete">Delete</button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

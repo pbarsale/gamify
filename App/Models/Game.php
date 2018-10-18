@@ -6,35 +6,38 @@ use PDO;
 use \Core\View;
 
 /**
- * Example GameType model
+ * Example Game model
  *
  * PHP version 7.0
  */
-class GameType extends \Core\Model
+class Game extends \Core\Model
 {
-    public static function addGameType($game_type) {
-        $game_type_obj = self::getGameTypeByName($game_type);
-        if(!$game_type_obj) {
-            $sql = "Insert into game_type(name, date_created, user_created, date_updated, user_updated, isdeleted)
-                            values(:name, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
+    public static function addGame($game, $selected_game_type) {
+        $game_obj = self::getGameByName($game);
+        $game_type_obj = GameType::getGameTypeById($selected_game_type);
+        if(!$game_obj && $game_type_obj) {
+            $sql = "Insert into game(name, date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group)
+                            values(:name, :date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group)";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':name', $game_type, PDO::PARAM_STR);
+            $stmt->bindValue(':name', $game, PDO::PARAM_STR);
             $stmt->bindValue(':date_created', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_created', 16, PDO::PARAM_INT);
             $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_updated', 16, PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':game_type_id', $game_type_obj->id, PDO::PARAM_INT);
+            $stmt->bindValue(':age_group', '0-5', PDO::PARAM_STR);
             return $stmt->execute();
         } else {
-            var_dump("Already present");
+            var_dump("Already exists!");
         }
     }
 
-    public function deleteGameType() {
-        $sql = 'UPDATE game_type SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
+    public function deleteGame() {
+        $sql = 'UPDATE game SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -46,12 +49,12 @@ class GameType extends \Core\Model
         return $stmt->execute();
     }
 
-    public function updateGameType($game_type) {
-        $sql = 'UPDATE game_type SET name = :name, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
+    public function updateGame($game) {
+        $sql = 'UPDATE game SET name = :name, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':name', $game_type, PDO::PARAM_STR);
+        $stmt->bindValue(':name', $game, PDO::PARAM_STR);
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()),PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', 16, PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
@@ -60,8 +63,8 @@ class GameType extends \Core\Model
 
     }
 
-    public static function getAllGameTypes() {
-        $sql = "SELECT * FROM game_type WHERE isdeleted=:isdeleted";
+    public static function getAllGames() {
+        $sql = "SELECT * FROM game WHERE isdeleted=:isdeleted";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -75,8 +78,8 @@ class GameType extends \Core\Model
         return $stmt->fetchAll();
     }
 
-    public static function getGameTypeByName($name) {
-        $sql = "SELECT * from game_type where name=:name";
+    public static function getGameByName($name) {
+        $sql = "SELECT * from game where name=:name";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
@@ -87,8 +90,8 @@ class GameType extends \Core\Model
         return $stmt->fetch();
     }
 
-    public static function getGameTypeById($id) {
-        $sql = "SELECT * from game_type where id=:id";
+    public static function getGameById($id) {
+        $sql = "SELECT * from game where id=:id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
