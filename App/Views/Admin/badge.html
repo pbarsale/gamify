@@ -1,7 +1,30 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: priyankanaik
- * Date: 16/10/2018
- * Time: 23:51
- */
+{% extends "base.html" %}
+
+{% block title %}Badge{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Badge</h2>
+        <form class="game-type-form" action="/Gamify/badgecontroller/modify" method="post" enctype="multipart/form-data">
+            <input type="text" id="badge-name" name="badge-name">
+            <input type="file" id="badge" name="badge"/>
+            <select name="select-badge">
+                <option value="0">Select Badge</option>
+                {% for badge in badges %}
+                    <option value="{{ badge.id }}">{{ badge.name }}</option>
+                {% endfor %}
+            </select>
+            <textarea name="badge" placeholder="Enter Description"></textarea>
+            <button type="submit" name="add">Add</button>
+            <button type="submit" name="update">Update</button>
+            <button type="submit" name="delete">Delete</button>
+            <!--{% for b in badges %}-->
+                <!--<img src="/www/Gamify/public/{{ b.badge }}"/>-->
+            <!--{% endfor %}-->
+        </form>
+    </div>
+</section>
+
+{% endblock %}
