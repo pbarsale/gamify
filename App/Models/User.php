@@ -353,4 +353,29 @@ class User extends \Core\Model
         }
         return false;
     }
+
+    public static function getAllUsers() {
+        $sql = "SELECT * FROM users";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    public static function getAllUsersByName($name) {
+        $sql = "SELECT * from users where name=:name";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':name', $name, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+
+        $stmt->execute();
+        return $stmt->fetch();
+    }
 }

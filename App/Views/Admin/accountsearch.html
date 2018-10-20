@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Account{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Manage Account</h2>
+        <input type="search" id="search" name="search"/>
+        <div>
+            <ul class="userlist">
+                {% for user in users %}
+                <li>{{ user.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
