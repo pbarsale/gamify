@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Question{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Question</h2>
+        <form class="question-form" action="/Gamify/questioncontroller/add" method="post">
+            <div>
+                <label for="question">Q</label>
+                <textarea id="question" name="question" placeholder="Enter Question"></textarea>
+            </div>
+            <div>
+                <label for="points">Points</label>
+                <input type="text" id="points" name="points" placeholder="Enter Points"/>
+                <label for="select-badge">Select Badge</label>
+                <select id="select-badge" name="select-badge">
+                    <option value="0">Select Badge</option>
+                    {% for badge in badges %}
+                        <option value="{{ badge.id }}">{{ badge.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <input type="checkbox" name="options[]" value="optionA1"/>
+                <textarea id="option1" name="optionA1" placeholder="Enter Option 1"></textarea>
+            </div>
+            <div>
+                <input type="checkbox" name="options[]" value="optionA2"/>
+                <textarea id="option2" name="optionA2" placeholder="Enter Option 2"></textarea>
+            </div>
+            <div>
+                <input type="checkbox" name="options[]" value="optionA3"/>
+                <textarea id="option3" name="optionA3" placeholder="Enter Option 3"></textarea>
+            </div>
+            <div>
+                <input type="checkbox" name="options[]" value="optionA4"/>
+                <textarea id="option4" name="optionA4" placeholder="Enter Option 4"></textarea>
+            </div>
+            <div>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Enter Description"></textarea>
+            </div>
+            <div>
+                <button type="submit" name="add">Add</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% endblock %}

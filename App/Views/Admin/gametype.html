@@ -7,18 +7,31 @@
 <section class="main-container">
     <div class="main-wrapper">
         <h2>Game Type</h2>
-        <form class="game-type-form" action="/Gamify/gametypecontroller/modify" method="post">
-            <select name="select-game-type">
-                <option value="0">Select Game Type</option>
-                {% for game_type in game_types %}
-                    <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="text" name="game-type" placeholder="Enter Game Type">
-            <button type="submit" name="add">Add</button>
-            <button type="submit" name="update">Update</button>
-            <button type="submit" name="delete">Delete</button>
-        </form>
+        <!--<div class="bg-modal">-->
+            <!--<div class="modal-content">-->
+                <!--<div class="close">+</div>-->
+                <form class="game-type-form" action="/Gamify/gametypecontroller/modify" method="post">
+                    <div>
+                        <label>Select Game Type</label>
+                        <select name="select-game-type">
+                            <option value="0">Select Game Type</option>
+                            {% for game_type in game_types %}
+                                <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Game Type</label>
+                        <input type="text" name="game-type" placeholder="Enter Game Type">
+                    </div>
+                    <div>
+                        <button type="submit" name="add">Add</button>
+                        <button type="submit" name="update">Update</button>
+                        <button type="submit" name="delete">Delete</button>
+                    </div>
+                </form>
+            <!--</div>-->
+        <!--</div>-->
     </div>
 </section>
 

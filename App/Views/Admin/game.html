@@ -8,21 +8,31 @@
     <div class="main-wrapper">
         <h2>Game</h2>
         <form class="game-form" action="/Gamify/gamecontroller/modify" method="post">
-            <select name="select-game-type">
-                {% for game_type in game_types %}
-                    <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                {% endfor %}
-            </select>
-            <select name="select-game">
-                <option value="0">Select Game</option>
-                {% for game in games %}
-                    <option value="{{ game.id }}">{{ game.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="text" name="game" placeholder="Enter Game">
-            <button type="submit" name="add">Add</button>
-            <button type="submit" name="update">Update</button>
-            <button type="submit" name="delete">Delete</button>
+            <div>
+                <label>Game Type</label>
+                <select name="select-game-type">
+                    {% for game_type in game_types %}
+                        <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <select name="select-game">
+                    <option value="0">Select Game</option>
+                    {% for game in games %}
+                        <option value="{{ game.id }}">{{ game.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label>Game</label>
+                <input type="text" name="game" placeholder="Enter Game">
+            </div>
+            <div>
+                <button type="submit" name="add">Add</button>
+                <button type="submit" name="update">Update</button>
+                <button type="submit" name="delete">Delete</button>
+            </div>
         </form>
     </div>
 </section>
