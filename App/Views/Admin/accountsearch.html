@@ -7,15 +7,32 @@
 <section class="main-container">
     <div class="main-wrapper">
         <h2>Manage Account</h2>
-        <input type="search" id="search" name="search"/>
+        <input type="search" id="search" name="search" onkeyup="search()" placeholder="Search"/>
         <div>
-            <ul class="userlist">
+            <ul id="userlist">
                 {% for user in users %}
-                <li>{{ user.name }}</li>
+                <li><a href="user?user={{ user.name }}">{{ user.name }}</a></li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </section>
+
+<script type="text/javascript">
+    function search() {
+        var input = document.getElementById("search");
+        var filter = input.value.toUpperCase();
+        var ul = document.getElementById("userlist");
+        var li = ul.getElementsByTagName("li");
+        for (var i = 0; i < li.length; i++) {
+            var a = li[i].getElementsByTagName("a")[0];
+            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+    }
+</script>
 
 {% endblock %}

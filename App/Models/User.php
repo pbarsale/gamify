@@ -367,7 +367,7 @@ class User extends \Core\Model
         return $stmt->fetchAll();
     }
 
-    public static function getAllUsersByName($name) {
+    public static function getUserByName($name) {
         $sql = "SELECT * from users where name=:name";
         $db = static::getDB();
         $stmt = $db->prepare($sql);

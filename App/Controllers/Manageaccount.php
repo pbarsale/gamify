@@ -22,4 +22,11 @@ class Manageaccount extends \Core\Controller
         View::renderTemplate('Admin/accountsearch.html', array('users' => $users));
     }
 
+    public function userAction()
+    {
+        $user = User::getUserByName($_GET['user']);
+        View::renderTemplate('Login/profile.html', array('user' => $user));
+    }
+
+
 }
