@@ -289,7 +289,7 @@ class User extends \Core\Model
      */
     protected function sendPasswordResetEmail(){
         
-        $url = 'http://'.$_SERVER['HTTP_HOST'].'/Gamify/password/reset/'.$this->reset_token;
+        $url = 'http://'.$_SERVER['HTTP_HOST'].'/museum/gamify/password/reset/'.$this->reset_token;
 
         $text = View::getTemplate('Password/reset_email.txt',array('url' => $url));
         $html = View::getTemplate('Password/reset_email.html',array('url' => $url));

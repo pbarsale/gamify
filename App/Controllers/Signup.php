@@ -33,7 +33,7 @@ class Signup extends \Core\Controller
         $user = new User($_POST);
 
         if($user->save()){
-            $this->redirect('/Gamify/signup/success');            
+            $this->redirect('/museum/gamify/signup/success');
         }else{
             View::renderTemplate('Signup/new.html', array(
                 'user' => $user

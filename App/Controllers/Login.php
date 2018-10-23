@@ -58,7 +58,7 @@ class Login extends \Core\Controller
     public function destroyAction(){
     	
 		Auth::logout();
-        $this->redirect('/Gamify/login/show-logout-message');
+        $this->redirect('/museum/gamify/login/show-logout-message');
     }
 
     /**
@@ -71,6 +71,6 @@ class Login extends \Core\Controller
     public function showLogoutMessageAction(){
         
         Flash::addMessage('Logout Successful');
-        $this->redirect('/Gamify/');
+        $this->redirect('/museum/gamify/');
     }
 }

@@ -2,7 +2,7 @@
 RewriteEngine On
 
 # Uncomment the following line if your public folder isn't the web server's root
-# RewriteBase /Gamify
+# RewriteBase /museum/gamify
 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
