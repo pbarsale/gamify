@@ -18,8 +18,7 @@ class Login extends \Core\Controller
      *
      * @return void
      */
-    public function newAction()
-    {
+    public function newAction(){
         View::renderTemplate('Login/new.html');
     }
 
@@ -37,7 +36,6 @@ class Login extends \Core\Controller
 
     		Auth::login($user,$remember_me);
             // Remember the login code
-
             Flash::addMessage('Login Successful');
     		$this->redirect(Auth::getReturnToPage());    		
     	
@@ -56,9 +54,19 @@ class Login extends \Core\Controller
      * @return void
      */
     public function destroyAction(){
-    	
-		Auth::logout();
+        Auth::logout();
         $this->redirect('/museum/gamify/login/show-logout-message');
+    }
+
+    /**
+     * log out a user
+     *
+     * @return void
+     */
+    public function destroyAdminAction(){
+        Auth::logout();
+        Flash::addMessage('Logout Successful');
+        $this->redirect('/museum/gamify/admin');
     }
 
     /**
@@ -69,7 +77,6 @@ class Login extends \Core\Controller
      */
 
     public function showLogoutMessageAction(){
-        
         Flash::addMessage('Logout Successful');
         $this->redirect('/museum/gamify/');
     }

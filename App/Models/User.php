@@ -44,9 +44,10 @@ class User extends \Core\Model
 
         if(empty($this->errors)){ 
 
+            $isadmin = $_SESSION['admin'];
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
-            $sql = "Insert into users(name,member_id,email,password,birth_date)
-                            values(:name,:member_id,:email,:password,:birth_date)";
+            $sql = "Insert into users(name,member_id,email,password,birth_date,isadmin)
+                            values(:name,:member_id,:email,:password,:birth_date,:isadmin)";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -56,7 +57,9 @@ class User extends \Core\Model
             $stmt->bindValue(':email',$this->email,PDO::PARAM_STR);
             $stmt->bindValue(':password',$password_hash,PDO::PARAM_STR);
             $stmt->bindValue(':birth_date',$this->birth_date,PDO::PARAM_STR);
+            $stmt->bindValue(':isadmin',$isadmin,PDO::PARAM_BOOL);
             return $stmt->execute();
+
         }
         return false; 
     }
@@ -206,7 +209,8 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
         if($user){
             if(password_verify($password,$user->password)){
-                return $user;
+                if($user->isadmin==$_SESSION['admin'])
+                    return $user;
             }
         }
         return false;

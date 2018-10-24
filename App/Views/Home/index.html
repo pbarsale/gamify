@@ -4,16 +4,12 @@
 
 {% block body %}
 
-    <h1>Welcome</h1>
-
+    <h1>Welcome User</h1>
     {% if current_user %}
-    	Hello {{ current_user.name }}
+    	Hello User {{ current_user.name }}
     	<a href="/museum/gamify/logout">Log out</a>
     {% else %}
     	<a href="/museum/gamify/signup/new">Sign Up</a>
 		<a href="/museum/gamify/login">Log In</a>
-        <a href="/museum/gamify/admin/new">Admin</a>
-		
     {% endif %}
-
 {% endblock %}

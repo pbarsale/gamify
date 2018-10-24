@@ -34,7 +34,11 @@ $router = new Core\Router();
 $router->add('', array('controller' => 'Home', 'action' => 'index'));
 $router->add('login', array('controller' => 'Login', 'action' => 'new'));
 $router->add('logout', array('controller' => 'Login', 'action' => 'destroy'));
+$router->add('logout/admin', array('controller' => 'Login', 'action' => 'destroyAdmin'));
+$router->add('admin', array('controller' => 'Admin', 'action' => 'new'));
 $router->add('password/reset/{token:[\da-f]+}', array('controller' => 'Password', 'action' => 'reset'));
 $router->add('{controller}/{action}');
-    
+
+if(!isset($_SESSION['admin']))
+    $_SESSION['admin'] = false;
 $router->dispatch($_SERVER['QUERY_STRING']);

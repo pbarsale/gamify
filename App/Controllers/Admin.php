@@ -18,6 +18,7 @@ class Admin extends \Core\Controller
 {
     public function newAction()
     {
+        $_SESSION['admin'] = true;
         View::renderTemplate('Admin/index.html');
     }
 }

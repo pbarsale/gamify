@@ -1,13 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Admin{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block body %}
 
-<a href="/museum/gamify/gametypecontroller/new">Game Type</a>
-<a href="/museum/gamify/gamecontroller/new">Game</a>
-<a href="/museum/gamify/badgecontroller/new">Badge</a>
-<a href="/museum/gamify/questioncontroller/new">Question</a>
-<a href="/museum/gamify/manageaccount/new">Manage Account</a>
+<h1>Welcome Admin</h1>
+{% if current_user %}
+Hello  Admin {{ current_user.name }}
+<br>
+<li><a href="/museum/gamify/gametypecontroller/new">Game Type</a></li>
+<li><a href="/museum/gamify/gamecontroller/new">Game</a></li>
+<li><a href="/museum/gamify/badgecontroller/new">Badge</a></li>
+<li><a href="/museum/gamify/questioncontroller/new">Question</a></li>
+<li><a href="/museum/gamify/manageaccount/new">Manage Account</a></li>
+<br>
+<a href="/museum/gamify/logout/admin">Log out</a>
 
+{% else %}
+<a href="/museum/gamify/signup/new">Sign Up</a>
+<a href="/museum/gamify/login">Log In</a>
+{% endif %}
 {% endblock %}

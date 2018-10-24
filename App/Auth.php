@@ -66,8 +66,15 @@ class Auth{
      * @return void
      */
 
-	public static function getReturnToPage(){
-		$_SESSION['return_to'] = '/museum/gamify/';
+	public static function
+    getReturnToPage(){
+
+	    if($_SESSION['admin']){
+            $_SESSION['return_to'] = '/museum/gamify/Admin/new';
+        }
+        else{
+            $_SESSION['return_to'] = '/museum/gamify/';
+        }
 		return $_SESSION['return_to'];
 		//return $_SESSION['return_to'] ?? '/'; 
 	}
