@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Models\AgeGroup;
 use App\Models\GameType;
 use \Core\View;
 use \App\Models\Game;
@@ -22,13 +23,14 @@ class Gamecontroller extends \Core\Controller
     {
         $games = Game::getAllGames();
         $game_types = GameType::getAllGameTypes();
-        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types));
+        $age_groups = AgeGroup::getAllAgeGroups();
+        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups));
     }
 
     public function modifyAction()
     {
         if (isset($_POST['add'])) {
-            Game::addGame($_POST['game'], $_POST['select-game-type']);
+            Game::addGame($_POST['game'], $_POST['select-game-type'], $_POST['select-age-group']);
         } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
             $game = Game::getGameById($_POST['select-game']);
             if($game) {

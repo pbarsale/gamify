@@ -17,6 +17,14 @@
                 </select>
             </div>
             <div>
+                <label>Age Group</label>
+                <select name="select-age-group">
+                    {% for age_group in age_groups %}
+                    <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
                 <select name="select-game">
                     <option value="0">Select Game</option>
                     {% for game in games %}
