@@ -33,9 +33,9 @@
                 <button type="submit" name="update">Update</button>
                 <button type="submit" name="delete">Delete</button>
             </div>
-            <!--{% for b in badges %}-->
-                <!--<img src="{{ b.badge }}"/>-->
-            <!--{% endfor %}-->
+            {% for b in badges %}
+                <img src="{{ b.badge }}" width="10%" height="5%"/>
+            {% endfor %}
         </form>
     </div>
 </section>

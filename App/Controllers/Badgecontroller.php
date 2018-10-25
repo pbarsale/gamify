@@ -26,7 +26,7 @@ class Badgecontroller extends \Core\Controller
     public function modifyAction()
     {
         if (isset($_POST['add'])) {
-            Badge::addBadge($_POST['badge-name'], $_FILES['badge']);
+            Badge::addBadge($_POST['badge-name'], $_FILES['badge'],$_POST['description']);
         } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
             $badge = Badge::getBadgeById($_POST['select-badge']);
             if($badge) {
