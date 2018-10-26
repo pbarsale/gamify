@@ -9,6 +9,13 @@
         <h2>Question</h2>
         <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
             <div>
+                <ul>
+                    {% for q in questions %}
+                    <li>{{ q.question }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div>
                 <label for="question">Q</label>
                 <textarea id="question" name="question" placeholder="Enter Question"></textarea>
             </div>
