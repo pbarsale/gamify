@@ -30,7 +30,11 @@ class Gamecontroller extends \Core\Controller
     public function modifyAction()
     {
         if (isset($_POST['add'])) {
-            Game::addGame($_POST['game'], $_POST['select-game-type'], $_POST['select-age-group']);
+            $id = Game::addGame($_POST['game'], $_POST['select-game-type'], $_POST['select-age-group']);
+            if($id) {
+                $_SESSION['game_id'] = $id;
+                $this->redirect('/museum/gamify/questioncontroller/new');
+            }
         } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
             $game = Game::getGameById($_POST['select-game']);
             if($game) {

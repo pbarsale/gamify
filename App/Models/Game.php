@@ -47,7 +47,9 @@ class Game extends \Core\Model
                 $stmt->bindValue(':text', $game, PDO::PARAM_STR);
                 $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-                return $stmt->execute();
+                $stmt->execute();
+
+                return $id;
 
             } else {
                 var_dump("Already present");
