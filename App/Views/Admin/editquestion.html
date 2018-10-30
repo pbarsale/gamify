@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Question{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Question</h2>
+        <form class="question-form" action="/museum/gamify/questioncontroller/update" method="post">
+            {% for q in question %}
+            <input type="hidden" name="id" value="{{ q.id }}">
+            <div>
+                <label for="question">Q</label>
+                <textarea id="question" name="question">{{ q.question }}</textarea>
+            </div>
+            {% set i = 1 %}
+            {% for o in q.options %}
+            <div>
+                <textarea id="optionA{{ i }}" name="option[optionA{{ i }}]">{{ o.option }}</textarea>
+            </div>
+            {% set i = i + 1 %}
+            {% endfor %}
+            <div>
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Enter Description">{{ q.description}}</textarea>
+            </div>
+            <div>
+                <button type="submit" name="update">Update</button>
+            </div>
+            {% endfor %}
+        </form>
+    </div>
+</section>
+
+{% endblock %}

@@ -108,14 +108,13 @@ class Question extends \Core\Model
                     $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
                 }
                 $options = Option::getAllOptions($selected_row['id']);
+                $selected_row['options'] = $options;
                 $rows[] = array_map(null, $selected_row);
-                array_push($rows, $options);
             }
             $questions = $rows;
         } else {
             $questions = $result;
         }
-        var_dump($questions);
         return $questions;
     }
 
@@ -151,7 +150,69 @@ class Question extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
 
         $stmt->execute();
-        return $stmt->fetch();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if($result) {
+            $resource = self::getResourceForId($id, $db);
+            foreach ($resource as $selected_resource) {
+                $result[$selected_resource['column_n']] = $selected_resource['text'];
+            }
+            $options = Option::getAllOptions($id);
+            $result['options'] = $options;
+            $rows[] = array_map(null, $result);
+            $question = $rows;
+        } else {
+            $question = $result;
+        }
+        var_dump($question);
+        return $question;
     }
+
+    public static function updateQuestion($id, $question, $options, $description)
+    {
+        $sql = "UPDATE questions SET date_updated=:date_updated, user_updated=:user_updated WHERE id=:id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+        $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        if($stmt->execute()) {
+
+            self::updateQuestionResource($db, $id, $question);
+            if($description) {
+                self::updateDescriptionResource($db, $id, $description);
+            }
+
+            Option::updateOptions($db, $id, $options);
+        }
+    }
+
+    private static function updateQuestionResource($db, $id, $question) {
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::QUESTION, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $question, PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
+    private static function updateDescriptionResource($db, $id, $description) {
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $description, PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
 
 }

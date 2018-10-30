@@ -30,16 +30,26 @@ class Questioncontroller extends \Core\Controller
     {
         if (isset($_POST['add'])) {
             Question::addQuestion($_POST['question'], $_POST['option'], $_POST['points'], $_POST['options'], $_POST['description'], $_POST['select-badge']);
-        } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
-            $question = Question::getQuestionById('andn');
+        }
+    }
+
+    public function modifyAction()
+    {
+        if (isset($_POST['question'])) {
+            $question = Question::getQuestionById(intval($_POST['question']));
             if ($question) {
-                if (isset($_POST['delete'])) {
-                    $question->deleteQuestion();
-                } elseif (isset($_POST['update'])) {
-                    $question->updateQuestion($_POST['question']);
-                }
+                View::renderTemplate('Admin/editquestion.html', array('question' => $question));
             }
         }
     }
+
+    public function updateAction()
+    {
+        if (isset($_POST['update'])) {
+            Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], $_POST['description']);
+        }
+    }
+
+
 
 }

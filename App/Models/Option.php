@@ -141,4 +141,36 @@ class Option extends \Core\Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+
+    public static function updateOptions($db, $id, $newOptions) {
+        $options = self::getAllOptions($id);
+        $i = 1;
+        foreach($options as $option) {
+            $sql = "UPDATE options SET date_updated=:date_updated, user_updated=:user_updated WHERE question_id=:question_id and id=:id";
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':question_id', $id, PDO::PARAM_INT);
+            $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+            $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':id', $option['id'], PDO::PARAM_INT);
+
+            $stmt->execute();
+            if($option['option'] !== $newOptions['optionA'.$i]) {
+                self::updateOption($db, $option['id'], $newOptions['optionA' . $i]);
+            }
+            $i++;
+        }
+    }
+
+    private static function updateOption($db, $option_id, $option) {
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::OPTION, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $option_id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $option, PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
 }

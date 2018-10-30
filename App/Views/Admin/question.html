@@ -7,14 +7,17 @@
 <section class="main-container">
     <div class="main-wrapper">
         <h2>Question</h2>
-        <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
+        <form class="question-form" action="/museum/gamify/questioncontroller/modify" method="post">
             <div>
                 <ul>
                     {% for q in questions %}
                     <li>{{ q.question }}</li>
+                    <input type="submit" name="question" value="{{ q.id }}"/>
                     {% endfor %}
                 </ul>
             </div>
+        </form>
+        <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
             <div>
                 <label for="question">Q</label>
                 <textarea id="question" name="question" placeholder="Enter Question"></textarea>
