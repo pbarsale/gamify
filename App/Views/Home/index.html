@@ -25,30 +25,22 @@
 
     <table style="width:50%;margin-left:25%;margin-top:5%">
         <tr>
-            <td style="width:25%">
-                <div class="w3-card-4">
+            {% for key,game in games %}
+            <td valign="top" style="width:300px;padding: 20px;">
+                <div class="w3-card-4" style="height:200px" >
 
                     <header class="w3-container w3-blue">
-                        <h3>Quiz</h3>
+                        <h3>{{ key }}</h3>
                     </header>
 
+                    {% for item in game %}
                     <div class="w3-container">
-                       <p> <a href="/museum/gamify/quiz/new">Quiz</a></p>
+                        <p> <a href="/museum/gamify/users/quiz/{{item.id}}">{{ item.name }}</a></p>
                     </div>
-
+                    {% endfor %}
                 </div>
             </td>
-            <td  style="width:25%">
-                <div class="w3-card-4">
-                    <header class="w3-container w3-blue">
-                        <h3>Scavenger Hunt</h3>
-                    </header>
-
-                    <div class="w3-container">
-                       <p> <a href="/museum/gamify/scavenger/new">Scavenger</a></p>
-                    </div>
-                </div>
-            </td>
+            {% endfor %}
         </tr>
     </table>
 
@@ -58,5 +50,4 @@
 		<a href="/museum/gamify/login">Log In</a>
 
     {% endif %}
-
 {% endblock %}

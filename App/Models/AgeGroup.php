@@ -52,4 +52,14 @@ class AgeGroup extends \Core\Model
         return $stmt->fetch();
     }
 
+    public static function getAgeGroupIdByAge($age) {
+
+        $sql = "SELECT * from age_groups where isdeleted=:isdeleted and $age between min and max";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        return $stmt->fetch();
+    }
 }

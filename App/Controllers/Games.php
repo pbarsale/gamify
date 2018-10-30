@@ -19,7 +19,6 @@ class Games extends Authenticated
      */
     public function indexAction()
     {
-    	
         View::renderTemplate('Games/index.html');
     }
 }

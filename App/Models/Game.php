@@ -170,4 +170,33 @@ class Game extends \Core\Model
         return $stmt->fetch();
     }
 
+    public static function getAllGamesForGameType($gameTypeID,$ageGroupID) {
+
+        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted and game_type_id=:game_type_id and age_group_id=:age_group_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':game_type_id', $gameTypeID, PDO::PARAM_STR);
+        $stmt->bindValue(':age_group_id', $ageGroupID, PDO::PARAM_STR);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if($result) {
+            foreach ($result as $selected_row) {
+                $resource = self::getResourceForId($selected_row['id'], $db);
+                foreach ($resource as $selected_resource) {
+                    $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
+                }
+                $rows[] = array_map(null, $selected_row);
+            }
+            $games = $rows;
+        } else {
+            $games = $result;
+        }
+        return $games;
+    }
+
 }

@@ -382,4 +382,20 @@ class User extends \Core\Model
         $stmt->execute();
         return $stmt->fetch();
     }
+
+    /**
+     * Find the age of the user model
+     *
+     * @param Birth date of the user
+     */
+
+
+    public function getAgeFromBirthDate(){
+
+        $dobObject = new DateTime($this->birth_date);
+        $nowObject = new DateTime();
+        $diff = $dobObject->diff($nowObject);
+        $this->age = $diff->y;
+        return;
+    }
 }
