@@ -39,7 +39,7 @@ class Login extends \Core\Controller
                 Auth::login($user,$remember_me);
                 // Remember the login code
                 Flash::addMessage('Login Successful');
-                $this->redirect(Auth::getReturnToPage());
+                $this->redirect("Auth::getReturnToPage()");
 
             }else{
                 Flash::addMessage('Login unsuccessful, please try again',Flash::WARNING);

@@ -173,4 +173,20 @@ class Option extends \Core\Model
         $stmt->execute();
     }
 
+    public static function getCorrectOptions($questionid) {
+
+        $sql = "Select id from options where question_id=:question_id and iscorrect=:iscorrect";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
+        $stmt->bindValue(':iscorrect', 1, PDO::PARAM_INT);
+        
+        $stmt->execute();
+
+        $options = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $options;
+    }
+
+    
+
 }

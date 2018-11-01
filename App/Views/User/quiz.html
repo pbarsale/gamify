@@ -4,6 +4,49 @@
 
 {% block body %}
 
-<h3> Quiz Game </h3>
+{% if current_user %}
 
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="#">Profile</a></li>
+                <li><a href="#">Leaderboard</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <h3> Quiz Game </h3>
+    <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
+    {% for question in questions %}
+        <div class="w3-container">
+            <input type="hidden" name="questionid" value={{ question.id }}>
+            <input type="hidden" name="points" value={{ question.points }}>
+            <input type="hidden" name="badge_id" value={{ question.badgeid }}>      
+            <p> {{ question.question }} </p>
+            <p> {{ question.description }}</p>
+
+            {% for opt in question.options %}
+            <input type="checkbox" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+            
+            {% endfor %}
+            <br><br>
+            <input type="hidden" name="opts" value={{ correctoptions }}>
+            <input type="submit" name="submit"/>
+        </div>
+    {% endfor %}
+    </form>
+
+{% else %}
+
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+
+{% endif %}
 {% endblock %}

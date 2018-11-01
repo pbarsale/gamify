@@ -3,7 +3,9 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\Quiz;
-
+use \App\Models\Question;
+use \App\Flash;
+use \App\Auth;
 
 class Users extends \Core\Controller
     {
@@ -14,8 +16,10 @@ class Users extends \Core\Controller
     */
     public function quizAction()
     {
-        $games = Quiz::getAllGames();
-        View::renderTemplate('User/quiz.html',array('games' => $games));
+        $gameid = $this->route_params['token'];
+        $questions = Question::getAllQuestionsByGameId($gameid);    
+        //var_dump($questions);    
+        View::renderTemplate('User/quiz.html',array('questions' => $questions));
     }
 
     /**
@@ -26,5 +30,18 @@ class Users extends \Core\Controller
     public function scavengerAction()
     {
         View::renderTemplate('User/quiz.html');
+    }
+
+    /**
+     * Show the Quiz Answer page
+     *
+     * @return void
+     */
+    public function quizAnswerAction()
+    {
+        // View::renderTemplate('User/quiz.html');
+        Quiz::calculatePoints(intval($_POST['questionid']),intval($_POST['points']),intval($_POST['badge_id']),$_POST['option']);
+        Flash::addMessage('Points Updated Successful');
+        $this->redirect(Auth::getReturnToPage());
     }
 }

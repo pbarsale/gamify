@@ -37,6 +37,7 @@ $router->add('logout', array('controller' => 'Login', 'action' => 'destroy'));
 $router->add('logout/admin', array('controller' => 'Login', 'action' => 'destroyAdmin'));
 $router->add('admin', array('controller' => 'Admin', 'action' => 'new'));
 $router->add('password/reset/{token:[\da-f]+}', array('controller' => 'Password', 'action' => 'reset'));
+$router->add('users/quiz/{token:[0-9]+}', array('controller' => 'Users', 'action' => 'quiz'));
 $router->add('{controller}/{action}');
 
 if(!isset($_SESSION['admin']))

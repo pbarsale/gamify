@@ -76,7 +76,7 @@ class User extends \Core\Model
             $this->errors[] = 'Empty fields not allowed';
         }
         
-        if (!preg_match("/^[a-zA-Z]*$/", $this->name)){
+        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)){
             $this->errors[] = 'First and Last name should contain only alphabets';
         }
         
@@ -106,8 +106,8 @@ class User extends \Core\Model
 
         $dob = new DateTime($this->birth_date);
         $now = new DateTime();
-        if($now->diff($dob)->y < 2){
-            $this->errors[] = 'Should be 2 year old or above';
+        if($now->diff($dob)->y < 1){
+            $this->errors[] = 'Should be 1 year old or above';
         }
     }
 

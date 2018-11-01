@@ -214,5 +214,38 @@ class Question extends \Core\Model
         $stmt->execute();
     }
 
+    public static function getAllQuestionsByGameId($game_id) {
+        $sql = "SELECT * FROM questions WHERE isdeleted=:isdeleted and game_id=:game_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':game_id', $game_id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result) {
+            foreach ($result as $selected_row) {
+                $resource = self::getResourceForId($selected_row['id'], $db);
+                foreach ($resource as $selected_resource) {
+                    $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
+                }
+                $options = Option::getAllOptions($selected_row['id']);
+                $selected_row['options'] = $options;
+                $rows[] = array_map(null, $selected_row);
+            }
+            $questions = $rows;
+        } else {
+            $questions = $result;
+        }
+        return $questions;
+    }
+
+    
 
 }
