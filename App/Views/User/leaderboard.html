@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboard{% endblock %}
+
+{% block body %}
+
+<section class="main-container">
+    <div class="main-wrapper">
+        <h2>Leaderboard</h2>
+        <div>
+            {% for game_type in game_types %}
+            <a href="leaderboard?game_type={{game_type.name}}">{{ game_type.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

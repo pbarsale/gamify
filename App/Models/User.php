@@ -7,7 +7,6 @@ use \Datetime;
 use \App\Token;
 use \App\Mail;
 use \Core\View;
-
 /**
  * Example user model
  *
@@ -21,7 +20,7 @@ class User extends \Core\Model
      * @var array
      */
     public $errors = array();
- 
+
 
     /**
      * @param array $data Initial Property Value
@@ -42,7 +41,7 @@ class User extends \Core\Model
 
         $this->validate();
 
-        if(empty($this->errors)){ 
+        if(empty($this->errors)){
 
             $isadmin = $_SESSION['admin'];
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
@@ -192,7 +191,7 @@ class User extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
 
         $stmt->execute();
-        return $stmt->fetch(); 
+        return $stmt->fetch();
     }
 
     /**
@@ -397,5 +396,50 @@ class User extends \Core\Model
         $diff = $dobObject->diff($nowObject);
         $this->age = $diff->y;
         return;
+    }
+
+    public static function getAllUsersByAgeGroup($currUserAgeGroup) {
+        $sql = "SELECT * FROM users where isblocked=:isblocked";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':isblocked', false, PDO::PARAM_BOOL);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        $users = $stmt->fetchAll();
+
+        $usersByAge = array();
+
+        foreach ($users as $user) {
+            $user->getAgeFromBirthDate();
+            $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
+            if(self::isAgeWithinRange($userAgeGroup, $currUserAgeGroup)) {
+                array_push($usersByAge, $user);
+            }
+        }
+        return $usersByAge;
+    }
+
+    public static function getAllUsersByUserAge($id) {
+        $user = self::findById($id);
+        $user->getAgeFromBirthDate();
+        $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
+        $users = self::getAllUsersByAgeGroup($userAgeGroup);
+        return $users;
+    }
+
+    public static function isAgeWithinRange($userAge, $ageGroup) {
+        return ($userAge->min === $ageGroup->min and $userAge->max === $ageGroup->max);
+    }
+
+    public static function ifUserPresent($id, $users) {
+        foreach($users as $user) {
+            if($user->id === $id) {
+                return $user;
+            }
+        }
     }
 }
