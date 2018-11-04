@@ -1,48 +1,152 @@
 {% extends "base.html" %}
 
-{% block title %}GameType{% endblock %}
+{% block title %}Game{% endblock %}
 
 {% block body %}
 
-<section class="main-container">
-    <div class="main-wrapper">
+    <style>
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
+    </style>
+
+    {% if current_user %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="game-form-div" style="text-align: center;margin: 5% 35% 35%;">
         <h2>Game</h2>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
+            <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
+            <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
+        </div>
+
         <form class="game-form" action="/museum/gamify/gamecontroller/modify" method="post">
-            <div>
-                <label>Game Type</label>
-                <select name="select-game-type">
-                    {% for game_type in game_types %}
+            <div id="Add" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Game Type</label>
+                    <select name="select-game-type">
+                        {% for game_type in game_types %}
                         <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                    {% endfor %}
-                </select>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Age Group</label>
+                    <select name="select-age-group">
+                        {% for age_group in age_groups %}
+                        <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin: 10%">
+                    <input type="text" name="game" placeholder="Enter New Game"
+                           style="border: none;outline: 0;border-bottom: 2px solid blue;">
+                </div>
+                <div style="margin-bottom: 5%">
+                    <button type="submit" name="add">Add</button>
+                </div>
             </div>
-            <div>
-                <label>Age Group</label>
-                <select name="select-age-group">
-                    {% for age_group in age_groups %}
-                    <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div>
-                <select name="select-game">
-                    <option value="0">Select Game</option>
-                    {% for game in games %}
+
+            <div id="Update" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Game To Update</label>
+                    <select name="select-game">
+                        {% for game in games %}
                         <option value="{{ game.id }}">{{ game.name }}</option>
-                    {% endfor %}
-                </select>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin: 10%">
+                    <input type="text" name="game-type" placeholder="Enter New Game"
+                           style="border: none;outline: 0;border-bottom: 2px solid blue;">
+                </div>
+                <div style="margin-bottom: 5%">
+                    <button type="submit" name="update">Update</button>
+                </div>
             </div>
-            <div>
-                <label>Game</label>
-                <input type="text" name="game" placeholder="Enter Game">
-            </div>
-            <div>
-                <button type="submit" name="add">Add</button>
-                <button type="submit" name="update">Update</button>
-                <button type="submit" name="delete">Delete</button>
+
+            <div id="Delete" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Game To Delete</label>
+                    <select name="select-game">
+                        {% for game in games %}
+                        <option value="{{ game.id }}">{{ game.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom: 5%">
+                    <button type="submit" name="delete">Delete</button>
+                </div>
             </div>
         </form>
     </div>
-</section>
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        document.getElementById("defaultOpen").click();
+    </script>
 
 {% endblock %}

@@ -441,5 +441,19 @@ class User extends \Core\Model
                 return $user;
             }
         }
+        return null;
     }
+
+    public static function blockUser($user_id, $block)
+    {
+        $sql = "UPDATE users SET isblocked=:isblocked where id=:id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':isblocked', $block, PDO::PARAM_BOOL);
+
+        return $stmt->execute();
+    }
+
 }

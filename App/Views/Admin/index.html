@@ -4,21 +4,59 @@
 
 {% block body %}
 
-<h1>Welcome Admin</h1>
-{% if current_user %}
-Hello  Admin {{ current_user.name }}
-<br>
-<li><a href="/museum/gamify/gametypecontroller/new">Game Type</a></li>
-<li><a href="/museum/gamify/gamecontroller/new">Game</a></li>
-<li><a href="/museum/gamify/badgecontroller/new">Badge</a></li>
-<li><a href="/museum/gamify/questioncontroller/new">Question</a></li>
-<li><a href="/museum/gamify/manageaccount/new">Manage Account</a></li>
-<li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
-<br>
-<a href="/museum/gamify/logout/admin">Log out</a>
+    {% if current_user %}
 
-{% else %}
-<a href="/museum/gamify/signup/new">Sign Up</a>
-<a href="/museum/gamify/login">Log In</a>
-{% endif %}
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/">
+                        Hello {{ current_user.name }}
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/">Home</a></li>
+                    <li><a href="/museum/gamify/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <table style="margin: 5% auto 0;text-align: center;">
+            <tr>
+                <td valign="top" style="padding-bottom: 10%;padding-right: 10%;">
+                    <div class="w3-card w3-blue" style="width: 250px;height: 200px;border-radius: 5%;">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/gametypecontroller/new" style="text-decoration:none">Game Type</a>
+                        </h3>
+                    </div>
+                </td>
+                <td valign="top" style="padding-bottom: 10%;padding-right: 10%">
+                    <div class="w3-card w3-blue" style="width: 250px;height: 200px;border-radius: 5%;">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/gamecontroller/new" style="text-decoration:none">Game</a>
+                        </h3>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top" style="padding-bottom: 10%;padding-right: 10%">
+                    <div class="w3-card w3-blue" style="width: 250px;height: 200px;border-radius: 5%;">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/badgecontroller/new" style="text-decoration:none;">Badge</a>
+                        </h3>
+                    </div>
+                </td>
+                <td valign="top" style="padding-bottom: 10%; padding-right: 10%">
+                    <div class="w3-card w3-blue" style="width: 250px;height: 200px;border-radius: 5%;">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/manageaccount/new" style="text-decoration:none">Manage Account</a>
+                        </h3>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
 {% endblock %}

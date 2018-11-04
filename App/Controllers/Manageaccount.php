@@ -28,5 +28,16 @@ class Manageaccount extends \Core\Controller
         View::renderTemplate('Admin/profile.html', array('user' => $user));
     }
 
+    public function blockAction() {
+        User::blockUser($_POST['user_id'], $_POST['block']);
+    }
+
+    public function pointsAction() {
+
+    }
+
+    public function badgesAction() {
+
+    }
 
 }

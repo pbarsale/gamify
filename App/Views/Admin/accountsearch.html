@@ -4,35 +4,87 @@
 
 {% block body %}
 
-<section class="main-container">
-    <div class="main-wrapper">
-        <h2>Manage Account</h2>
-        <input type="search" id="search" name="search" onkeyup="search()" placeholder="Search"/>
-        <div>
-            <ul id="userlist">
-                {% for user in users %}
-                <li><a href="user?user={{ user.name }}">{{ user.name }}</a></li>
-                {% endfor %}
+    <style>
+        .bluediv {
+            height: 560px;
+            overflow-y : auto;
+            text-align: center;
+        }
+
+        hr {
+            text-align:center;
+            margin: 0 auto;
+            width: 50%;
+            color: #cccccc;
+            height: 5px;
+        }
+    </style>
+
+    {% if current_user %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
             </ul>
         </div>
-    </div>
-</section>
+    </nav>
 
-<script type="text/javascript">
-    function search() {
-        var input = document.getElementById("search");
-        var filter = input.value.toUpperCase();
-        var ul = document.getElementById("userlist");
-        var li = ul.getElementsByTagName("li");
-        for (var i = 0; i < li.length; i++) {
-            var a = li[i].getElementsByTagName("a")[0];
-            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
+    <div>
+        <h2 style="text-align: center">Manage Account</h2>
+        <div style="text-align: center">
+            <span><i class="fa fa-search"></i>
+            <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 30%;"/>
+            </span>
+        </div>
+        <div>
+            <div style="text-align: center">
+                <span>#</span>
+                <span>Name</span>
+            </div>
+            <div class="bluediv" id="userlist">
+            {% set i = 1 %}
+            {% for user in users %}
+                <div style="margin: 2%">
+                    <span>{{ i }}</span>
+                    <span>
+                        <!--<img src="{{ user.avatar }}" width="2%" height="2%"/>-->
+                        <a href="user?user={{ user.name }}">{{ user.name }}</a>
+                    </span>
+                    {% set i = i + 1 %}
+                </div>
+                <hr align="center">
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+    <script type="text/javascript">
+        function search() {
+            var input = document.getElementById("search");
+            var filter = input.value.toUpperCase();
+            var ul = document.getElementById("userlist");
+            var div = ul.getElementsByTagName("div");
+            for (var i = 0; i < div.length; i++) {
+                var a = div[i].getElementsByTagName("a")[0];
+                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    div[i].style.display = "";
+                } else {
+                    div[i].style.display = "none";
+                }
             }
         }
-    }
-</script>
+    </script>
 
 {% endblock %}
