@@ -29,15 +29,18 @@ class Manageaccount extends \Core\Controller
     }
 
     public function blockAction() {
-        User::blockUser($_POST['user_id'], $_POST['block']);
+        User::blockUser($_GET['user_id'], $_GET['block']);
+//        $this->redirect($this['request']->getRequestUri());
+        $users = User::getAllUsers();
+        View::renderTemplate('Admin/accountsearch.html', array('users' => $users));
     }
 
-    public function pointsAction() {
+    public function editAction() {
 
     }
 
-    public function badgesAction() {
-
+    public function changeAction() {
+        $_GET['user_id'];
     }
 
 }

@@ -44,22 +44,25 @@
             </span>
         </div>
         <div>
-            <div style="text-align: center">
-                <span>#</span>
-                <span>Name</span>
-            </div>
             <div class="bluediv" id="userlist">
-            {% set i = 1 %}
             {% for user in users %}
-                <div style="margin: 2%">
-                    <span>{{ i }}</span>
-                    <span>
+                <div style="margin: 2%;font-size:large">
+                    <span style="padding-right: 10%;">
                         <!--<img src="{{ user.avatar }}" width="2%" height="2%"/>-->
-                        <a href="user?user={{ user.name }}">{{ user.name }}</a>
+                        {% if user.isblocked %}
+                        <span style="text-decoration:line-through; color: red">{{ user.name }}</span>
+                        {% else %}
+                        <span>{{ user.name }}</span>
+                        {% endif %}
                     </span>
-                    {% set i = i + 1 %}
+                    <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
+                        <span><i class="fa fa-ban" style="color: red"></i></span>
+                    </a>
+                    <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
+                        <span><i class="fa fa-edit"></i></span>
+                    </a>
+                    <hr align="center">
                 </div>
-                <hr align="center">
             {% endfor %}
             </div>
         </div>
@@ -77,7 +80,7 @@
             var ul = document.getElementById("userlist");
             var div = ul.getElementsByTagName("div");
             for (var i = 0; i < div.length; i++) {
-                var a = div[i].getElementsByTagName("a")[0];
+                var a = div[i].getElementsByTagName("div")[0];
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     div[i].style.display = "";
                 } else {
