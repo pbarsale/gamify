@@ -30,9 +30,7 @@ class Manageaccount extends \Core\Controller
 
     public function blockAction() {
         User::blockUser($_GET['user_id'], $_GET['block']);
-//        $this->redirect($this['request']->getRequestUri());
-        $users = User::getAllUsers();
-        View::renderTemplate('Admin/accountsearch.html', array('users' => $users));
+        $this->redirect('/museum/gamify/manageaccount/new');
     }
 
     public function editAction() {

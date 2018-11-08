@@ -25,12 +25,12 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/">
+                <a class="navbar-brand" href="/museum/gamify/admin">
                     Hello {{ current_user.name }}
                 </a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
                 <li><a href="/museum/gamify/logout">Logout</a></li>
             </ul>
         </div>
@@ -43,7 +43,7 @@
             <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 30%;"/>
             </span>
         </div>
-        <div>
+        <!--<div>-->
             <div class="bluediv" id="userlist">
             {% for user in users %}
                 <div style="margin: 2%;font-size:large">
@@ -65,7 +65,7 @@
                 </div>
             {% endfor %}
             </div>
-        </div>
+        <!--</div>-->
     </div>
 
     {% else %}
@@ -80,7 +80,7 @@
             var ul = document.getElementById("userlist");
             var div = ul.getElementsByTagName("div");
             for (var i = 0; i < div.length; i++) {
-                var a = div[i].getElementsByTagName("div")[0];
+                var a = div[i].getElementsByTagName("span")[0];
                 if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
                     div[i].style.display = "";
                 } else {
