@@ -435,15 +435,6 @@ class User extends \Core\Model
         return ($userAge->min === $ageGroup->min and $userAge->max === $ageGroup->max);
     }
 
-    public static function ifUserPresent($id, $users) {
-        foreach($users as $user) {
-            if($user->id === $id) {
-                return $user;
-            }
-        }
-        return null;
-    }
-
     public static function blockUser($user_id, $block)
     {
         $sql = "UPDATE users SET isblocked=:isblocked where id=:id";

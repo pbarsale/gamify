@@ -4,16 +4,75 @@
 
 {% block body %}
 
-<section class="main-container">
-    <div class="main-wrapper">
+    <style>
+        .bluediv {
+            height: 560px;
+            overflow-y : auto;
+            text-align: center;
+        }
+
+        hr {
+            text-align:center;
+            margin: 0 auto;
+            width: 70%;
+            color: #cccccc;
+            height: 5px;
+        }
+    </style>
+
+    {% if current_user %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div style="text-align: center">
         <h2>Leaderboard</h2>
-        <div>
-            {% for game_type in game_types %}
-            <a href="leaderboard?game_type={{game_type.name}}">{{ game_type.name }}</a>
+        <input type="checkbox" id="point" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
+        <input type="checkbox" id="badge" onclick="changeBadges()" checked style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
+        <div class="bluediv">
+            {% for user in users %}
+            <div style="margin: 2%;font-size:large">
+                <span>{{ user.name }}</span>
+                <span class="points">{{ user.points }}</span>
+                <span class="badges">
+                    {% for badge in user.badges %}
+                    <img src="{{ badge.badge }}" width="2%" height="2%"/>
+                    {% endfor %}
+                </span>
+                <hr align="center"/>
+            </div>
             {% endfor %}
         </div>
     </div>
 
-</section>
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
 
+    <script>
+        function changePoints() {
+            if($('#point').is(":checked"))
+                $(".points").show();
+            else
+                $(".points").hide();
+        }
+        function changeBadges() {
+            if($('#badge').is(":checked"))
+                $(".badges").show();
+            else
+                $(".badges").hide();
+        }
+    </script>
 {% endblock %}

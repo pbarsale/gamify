@@ -11,12 +11,13 @@ use PDO;
  */
 class LeaderBoard extends \Core\Model
 {
-    public static function getLeaderBoardForQuiz($users) {
-        return self::getAllUsersFromQuiz($users);
-    }
-
-    public static function getLeaderBoardForScavengerHunt($users) {
-        return self::getAllUsersFromScavengerHunt($users);
+    public static function getLeaderBoard($users) {
+        self::getAllUsersFromQuiz($users);
+        self::getAllUsersFromScavengerHunt($users);
+        usort($users, function($a, $b) {
+            return $b->points == $a->points ? count($b->badges) - count($a->badges) : $b->points - $a->points;
+        });
+        return $users;
     }
 
     private static function getAllUsersFromQuiz($users)
@@ -32,21 +33,23 @@ class LeaderBoard extends \Core\Model
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $leaderBoardUsers = array();
-
         if($result) {
-            foreach ($result as $selected_row) {
-                $user = User::ifUserPresent($selected_row['user_id'], $users);
-                if($user) {
-                    $user->points = $selected_row['sum(points)'];
-                    $user->badges = self::getBadgesOfUserForQuiz($selected_row['user_id']);
-                    array_push($leaderBoardUsers, $user);
-                }
+            foreach ($users as $user) {
+                $presentUser = self::ifUserPresent($user->id, $result);
+                $user->points = $presentUser === null ? 0 : $presentUser['sum(points)'];
+                $user->badges = self::getBadgesOfUserForQuiz($user->id);
             }
-        } else {
-            $leaderBoardUsers = $result;
         }
-        return $leaderBoardUsers;
+        return $users;
+    }
+
+    public static function ifUserPresent($id, $users) {
+        foreach ($users as $user) {
+            if($user['user_id'] === $id) {
+                return $user;
+            }
+        }
+        return null;
     }
 
     private static function getAllUsersFromScavengerHunt($users)
@@ -62,21 +65,14 @@ class LeaderBoard extends \Core\Model
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $leaderBoardUsers = array();
-
         if($result) {
-            foreach ($result as $selected_row) {
-                $user = User::ifUserPresent($selected_row['user_id'], $users);
-                if($user) {
-                    $user->points = $selected_row['sum(points)'];
-                    $user->badges = self::getBadgesOfUserForScavengerHunt($selected_row['user_id']);
-                    array_push($leaderBoardUsers, $user);
-                }
+            foreach ($users as $user) {
+                $presentUser = self::ifUserPresent($user->id, $result);
+                $user->points += $presentUser === null ? 0 : $presentUser['sum(points)'];
+                array_push($user->badges, self::getBadgesOfUserForQuiz($user->id));
             }
-        } else {
-            $leaderBoardUsers = $result;
         }
-        return $leaderBoardUsers;
+        return $users;
     }
 
     private static function getBadgesOfUserForQuiz($user_id)
