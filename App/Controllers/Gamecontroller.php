@@ -44,6 +44,12 @@ class Gamecontroller extends \Core\Controller
                     $game->updateGame($_POST['game']);
                 }
             }
+        } else if(isset($_POST['edit'])) {
+            $game = Game::getGameById($_POST['select-game']);
+            $_SESSION['game_id'] = $game->id;
+            if($game) {
+                $this->redirect('/museum/gamify/questioncontroller/edit');
+            }
         }
     }
 

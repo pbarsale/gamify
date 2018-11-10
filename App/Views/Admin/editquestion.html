@@ -4,33 +4,54 @@
 
 {% block body %}
 
-<section class="main-container">
-    <div class="main-wrapper">
+    {% if current_user %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div style="text-align: center">
         <h2>Question</h2>
         <form class="question-form" action="/museum/gamify/questioncontroller/update" method="post">
             {% for q in question %}
             <input type="hidden" name="id" value="{{ q.id }}">
-            <div>
+            <div style="margin: 3%">
                 <label for="question">Q</label>
-                <textarea id="question" name="question">{{ q.question }}</textarea>
+                <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
+                          style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none">{{ q.question }}</textarea>
             </div>
             {% set i = 1 %}
             {% for o in q.options %}
-            <div>
-                <textarea id="optionA{{ i }}" name="option[optionA{{ i }}]">{{ o.option }}</textarea>
+            <div style="margin: 3%" id="option{{ i }}">
+                <textarea id="optionA{{ i }}" name="option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
+                          style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none">{{ o.option }}</textarea>
             </div>
             {% set i = i + 1 %}
             {% endfor %}
-            <div>
-                <label for="description">Description</label>
-                <textarea id="description" name="description" placeholder="Enter Description">{{ q.description}}</textarea>
+            <div style="margin: 3%">
+                    <textarea id="description" name="description" placeholder="Enter Information for the question" rows="2"
+                              cols="50" style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none"></textarea>
             </div>
-            <div>
+            <div style="margin: 3%">
                 <button type="submit" name="update">Update</button>
             </div>
             {% endfor %}
         </form>
     </div>
-</section>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
 
 {% endblock %}

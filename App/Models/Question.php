@@ -37,9 +37,7 @@ class Question extends \Core\Model
 
             $id = self::getLatestQuestionID($db);
             self::addQuestionResource($db, $id, $question);
-            if($description) {
-                self::addDescriptionResource($db, $id, $description);
-            }
+            self::addDescriptionResource($db, $id, $description);
 
             Option::addOptions($db, $id, $options);
             Option::updateAnswer($db, $id, $options, $answer);
@@ -163,7 +161,6 @@ class Question extends \Core\Model
         } else {
             $question = $result;
         }
-        var_dump($question);
         return $question;
     }
 

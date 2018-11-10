@@ -64,6 +64,7 @@
             <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
             <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
             <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
+            <button class="tablinks" onclick="openTab(event, 'Edit Question')">Edit Question</button>
         </div>
 
         <form class="game-form" action="/museum/gamify/gamecontroller/modify" method="post">
@@ -122,6 +123,20 @@
                 </div>
                 <div style="margin-bottom: 5%">
                     <button type="submit" name="delete">Delete</button>
+                </div>
+            </div>
+
+            <div id="Edit Question" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Game</label>
+                    <select name="select-game">
+                        {% for game in games %}
+                        <option value="{{ game.id }}">{{ game.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom: 5%">
+                    <button type="submit" name="edit">Edit Question</button>
                 </div>
             </div>
         </form>
