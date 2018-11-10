@@ -27,14 +27,15 @@ class Gametypecontroller extends \Core\Controller
     {
         if (isset($_POST['add'])) {
             GameType::addGameType($_POST['game-type']);
-        } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
-            $game_type = GameType::getGameTypeById($_POST['select-game-type']);
+        } elseif (isset($_POST['delete'])) {
+            $game_type = GameType::getGameTypeById($_POST['select-game-type-delete']);
             if($game_type) {
-                if(isset($_POST['delete'])) {
-                    $game_type->deleteGameType();
-                } elseif(isset($_POST['update'])) {
-                    $game_type->updateGameType($_POST['game-type']);
-                }
+                $game_type->deleteGameType();
+            }
+        } elseif(isset($_POST['update'])) {
+            $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
+            if($game_type) {
+                $game_type->updateGameType($_POST['game-type']);
             }
         }
     }

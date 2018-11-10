@@ -47,12 +47,13 @@
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/">
+                <a class="navbar-brand" href="/museum/gamify/admin">
                     Hello {{ current_user.name }}
                 </a>
             </div>
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
                 <li><a href="/museum/gamify/logout">Logout</a></li>
             </ul>
         </div>
@@ -86,6 +87,15 @@
                     </select>
                 </div>
                 <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Badge</label>
+                    <select name="select-badge">
+                        <option value="0">Select Badge</option>
+                        {% for badge in badges %}
+                        <option value="{{ badge.id }}">{{ badge.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin: 10%">
                     <input type="text" name="game" placeholder="Enter Game"
                            style="border: none;outline: 0;border-bottom: 2px solid blue;">
                 </div>
@@ -97,7 +107,7 @@
             <div id="Update" class="tabcontent">
                 <div style="margin: 10%">
                     <label style="margin-right: 5%; ">Select Game To Update</label>
-                    <select name="select-game">
+                    <select name="select-game-update">
                         {% for game in games %}
                         <option value="{{ game.id }}">{{ game.name }}</option>
                         {% endfor %}
@@ -115,7 +125,7 @@
             <div id="Delete" class="tabcontent">
                 <div style="margin: 10%">
                     <label style="margin-right: 5%; ">Select Game To Delete</label>
-                    <select name="select-game">
+                    <select name="select-game-delete">
                         {% for game in games %}
                         <option value="{{ game.id }}">{{ game.name }}</option>
                         {% endfor %}
@@ -129,7 +139,7 @@
             <div id="Edit Question" class="tabcontent">
                 <div style="margin: 10%">
                     <label style="margin-right: 5%; ">Select Game</label>
-                    <select name="select-game">
+                    <select name="select-game-edit">
                         {% for game in games %}
                         <option value="{{ game.id }}">{{ game.name }}</option>
                         {% endfor %}

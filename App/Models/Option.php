@@ -74,6 +74,32 @@ class Option extends \Core\Model
         }
     }
 
+    public static function updatePoints($db, $id, $options, $points) {
+        foreach($points as $key => $value) {
+            $option_id = self::getOptionByName($db, $id, $options[$key]);
+            if($option_id !== -1) {
+                $sql = "UPDATE options SET points=:points WHERE id=:id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
+                $stmt->bindValue(':points', $value, PDO::PARAM_BOOL);
+                $stmt->execute();
+            }
+        }
+    }
+
+    public static function updateBadges($db, $id, $options, $badges) {
+        foreach($badges as $key => $value) {
+            $option_id = self::getOptionByName($db, $id, $options[$key]);
+            if($option_id !== -1) {
+                $sql = "UPDATE options SET badge_id=:badge_id WHERE id=:id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
+                $stmt->bindValue(':badge_id', $value == 0 ? null : $value, PDO::PARAM_BOOL);
+                $stmt->execute();
+            }
+        }
+    }
+
     private static function getOptionByName($db, $id, $ans) {
         $sql = "Select * from options where question_id=:question_id";
 
@@ -187,6 +213,32 @@ class Option extends \Core\Model
         return $options;
     }
 
-    
+    public static function getOptionById($id)
+    {
+        $sql = "SELECT * FROM options WHERE id=:id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result) {
+            $resource = self::getResourceForId($result['id'], $db);
+            foreach ($resource as $selected_resource) {
+                $result[$selected_resource['column_n']] = $selected_resource['text'];
+            }
+            $rows[] = array_map(null, $result);
+            $option = $rows;
+        } else {
+            $option = $result;
+        }
+        return $option;
+    }
 
 }

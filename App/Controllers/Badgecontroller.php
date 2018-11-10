@@ -27,14 +27,15 @@ class Badgecontroller extends \Core\Controller
     {
         if (isset($_POST['add'])) {
             Badge::addBadge($_POST['badge-name'], $_FILES['badge'],$_POST['description']);
-        } elseif (isset($_POST['delete']) or isset($_POST['update'])) {
-            $badge = Badge::getBadgeById($_POST['select-badge']);
+        } elseif (isset($_POST['delete'])) {
+            $badge = Badge::getBadgeById($_POST['select-badge-delete']);
             if($badge) {
-                if(isset($_POST['delete'])) {
-                    $badge->deleteBadge();
-                } elseif(isset($_POST['update'])) {
-                    $badge->updateBadge($_FILES['badge']);
-                }
+                $badge->deleteBadge();
+            }
+        } elseif(isset($_POST['update'])) {
+            $badge = Badge::getBadgeById($_POST['select-badge-update']);
+            if($badge) {
+                $badge->updateBadge($_FILES['badge']);
             }
         }
     }

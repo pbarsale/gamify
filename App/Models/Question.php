@@ -16,7 +16,7 @@ class Question extends \Core\Model
     const LANGUAGE = "english";
     const DESCRIPTION = "description";
 
-    public static function addQuestion($question, $options, $points, $answer, $description, $badge)
+    public static function addQuestion($question, $options, $points, $answer, $description, $badge, $option_badges, $option_points)
     {
         $sql = "Insert into questions(game_id, points, badge_id, date_created, user_created, date_updated, user_updated, isdeleted)
                             values(:game_id, :points, :badge_id, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
@@ -26,7 +26,7 @@ class Question extends \Core\Model
 
         $stmt->bindValue(':game_id', $_SESSION['game_id'], PDO::PARAM_INT);
         $stmt->bindValue(':points', $points, PDO::PARAM_INT);
-        $stmt->bindValue(':badge_id', $badge, PDO::PARAM_INT);
+        $stmt->bindValue(':badge_id', $badge == 0 ? null : $badge, PDO::PARAM_INT);
         $stmt->bindValue(':date_created', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
         $stmt->bindValue(':user_created', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
@@ -37,11 +37,21 @@ class Question extends \Core\Model
 
             $id = self::getLatestQuestionID($db);
             self::addQuestionResource($db, $id, $question);
-            self::addDescriptionResource($db, $id, $description);
+            if($description) {
+                self::addDescriptionResource($db, $id, $description);
+            }
 
             Option::addOptions($db, $id, $options);
-            Option::updateAnswer($db, $id, $options, $answer);
 
+            if($answer) {
+                Option::updateAnswer($db, $id, $options, $answer);
+            }
+            if($option_points) {
+                Option::updatePoints($db, $id, $options, $option_points);
+            }
+            if($option_badges) {
+                Option::updateBadges($db, $id, $options, $option_badges);
+            }
         }
     }
 
