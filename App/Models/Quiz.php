@@ -38,7 +38,8 @@ class Quiz extends \Core\Model
         if(count(array_diff($option, $correctoptions[0]))==0 &&
             count(array_diff($correctoptions[0], $option))==0){
             $points_obtained = $points;
-            $badge_obtained = $badge_id;
+            if($badge_id!=0)
+                $badge_obtained = $badge_id;
         }
         static::updateUserScore($questionid,$points_obtained,$badge_obtained);
     }

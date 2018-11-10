@@ -22,27 +22,47 @@
         </div>
     </nav>
 
-    <h3> Quiz Game </h3>
-    <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
-    {% for question in questions %}
-        <div class="w3-container">
-            <input type="hidden" name="questionid" value={{ question.id }}>
-            <input type="hidden" name="points" value={{ question.points }}>
-            <input type="hidden" name="badge_id" value={{ question.badgeid }}>      
-            <p> {{ question.question }} </p>
-            <p> {{ question.description }}</p>
+<table style="width:50%;margin-left:25%;margin-top:5%">
+    <tr>
+        <td>
+            <h3> Quiz Game </h3>
+            <button class="btn btn-primary"><a id="prev">Prev</a></button>
+            <button class="btn btn-primary"><a id="next">Next</a></button>
+        </td>
+    </tr>
+    <tr>
+    <td>
+    <br>
 
-            {% for opt in question.options %}
-            <input type="checkbox" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
-            
-            {% endfor %}
-            <br><br>
-            <input type="hidden" name="opts" value={{ correctoptions }}>
-            <input type="submit" name="submit"/>
+    <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
+        {% set count = 1 %}
+        <div class="questiondivs">
+        {% for question in questions %}
+            <div class="w3-container">
+                <a name="qdiv{{ count }}"></a>
+                <input type="hidden" name="questionid{{ count }}" value={{ question.id }}>
+                <input type="hidden" name="points{{ count }}" value={{ question.points }}>
+                <input type="hidden" name="badge_id{{ count }}" value={{ question.badgeid }}>
+                <p> {{ count }}. {{ question.question }} </p>
+                <p> {{ question.description }}</p>
+
+                {% for opt in question.options %}
+                <input type="checkbox" name="option{{ count }}[]" value="{{opt.id}}"/> {{ opt.option }}
+
+                {% endfor %}
+                <br><br>
+                {% set count = count + 1 %}
+
+            </div>
+        {% endfor %}
         </div>
-    {% endfor %}
+        <input type="hidden" name="count" value={{ count }}>
+        <input   class="btn btn-success" type="submit" name="submit"/>
     </form>
 
+    </td>
+    </tr>
+</table>
 {% else %}
 
         <a href="/museum/gamify/signup/new">Sign Up</a>

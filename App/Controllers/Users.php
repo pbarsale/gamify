@@ -40,8 +40,20 @@ class Users extends \Core\Controller
      */
     public function quizAnswerAction()
     {
-        // View::renderTemplate('User/quiz.html');
-        Quiz::calculatePoints(intval($_POST['questionid']),intval($_POST['points']),intval($_POST['badge_id']),$_POST['option']);
+        $count = 0;
+        if(isset($_POST['count']))
+            $count = $_POST['count'];
+
+        for ($x = 1; $x < $count; $x++) {
+            $qid = 'questionid'.''.$x;
+            $pid = 'points'.''.$x;
+            $bid = 'badge_id'.''.$x;
+            $oid = 'option'.''.$x;
+
+            if(isset($_POST[$qid]) && isset($_POST[$pid]) && isset($_POST[$bid]) && isset($_POST[$oid])) {
+                Quiz::calculatePoints(intval($_POST[$qid]),intval($_POST[$pid]),intval($_POST[$bid]),$_POST[$oid]);
+            }
+        }
         Flash::addMessage('Points Updated Successful');
         $this->redirect(Auth::getReturnToPage());
     }
