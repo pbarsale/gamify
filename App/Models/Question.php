@@ -221,8 +221,8 @@ class Question extends \Core\Model
     }
 
     public static function getAllQuestionsByGameId($game_id) {
-        $sql = "SELECT * FROM questions WHERE isdeleted=:isdeleted and game_id=:game_id";
 
+        $sql = "SELECT * FROM questions WHERE isdeleted=:isdeleted and game_id=:game_id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
@@ -252,6 +252,28 @@ class Question extends \Core\Model
         return $questions;
     }
 
-    
+    public static function getUserScoreQuiz($questionid){
 
+        $sql = "SELECT points,badge_id FROM quiz_points WHERE question_id=:question_id 
+                          and user_id=:user_id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if($result){
+            $data['answered'] = true;
+            $data['userpoints'] = $result->points;
+            $data['userbadge'] = $result->badge_id;
+        }else{
+            $data['answered'] = false;
+            $data['userpoints'] = 0;
+            $data['userbadge'] = null;
+        }
+        return $data;
+    }
 }

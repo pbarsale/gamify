@@ -28,7 +28,6 @@ class Option extends \Core\Model
             $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-
             $stmt->execute();
 
             $option_id = self::getLatestOptionID($db);

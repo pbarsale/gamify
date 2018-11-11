@@ -17,10 +17,19 @@ class Users extends \Core\Controller
     */
     public function quizAction()
     {
+        $div_id = 0;
+        if(ISSET($_SESSION['div_id']))
+            $div_id = $_SESSION['div_id']-1;
+
         $gameid = $this->route_params['token'];
-        $questions = Question::getAllQuestionsByGameId($gameid);    
-        //var_dump($questions);    
-        View::renderTemplate('User/quiz.html',array('questions' => $questions));
+        $questions = Question::getAllQuestionsByGameId($gameid);
+        for ($counter=0; $counter<sizeof($questions);$counter++) {
+            $score = Question::getUserScoreQuiz($questions[$counter]['id']);
+            $questions[$counter]['answered'] = $score['answered'];
+            $questions[$counter]['userpoints'] = $score['userpoints'];
+            $questions[$counter]['userbadge'] = $score['userbadge'];
+        }
+        View::renderTemplate('User/quiz.html',array('questions' => $questions,'gameid' => $gameid,'div_id' => $div_id));
     }
 
     /**
@@ -28,8 +37,7 @@ class Users extends \Core\Controller
      *
      * @return void
      */
-    public function scavengerAction()
-    {
+    public function scavengerAction(){
         View::renderTemplate('User/quiz.html');
     }
 
@@ -38,28 +46,15 @@ class Users extends \Core\Controller
      *
      * @return void
      */
-    public function quizAnswerAction()
-    {
-        $count = 0;
-        if(isset($_POST['count']))
-            $count = $_POST['count'];
-
-        for ($x = 1; $x < $count; $x++) {
-            $qid = 'questionid'.''.$x;
-            $pid = 'points'.''.$x;
-            $bid = 'badge_id'.''.$x;
-            $oid = 'option'.''.$x;
-
-            if(isset($_POST[$qid]) && isset($_POST[$pid]) && isset($_POST[$bid]) && isset($_POST[$oid])) {
-                Quiz::calculatePoints(intval($_POST[$qid]),intval($_POST[$pid]),intval($_POST[$bid]),$_POST[$oid]);
-            }
-        }
+    public function quizAnswerAction(){
+        Quiz::calculatePoints(intval($_POST['questionid']),intval($_POST['points']),intval($_POST['badge_id']),$_POST['option']);
         Flash::addMessage('Points Updated Successful');
-        $this->redirect(Auth::getReturnToPage());
+        $url = '/museum/gamify/users/quiz/'.$_POST['gameid'];
+        $_SESSION['div_id'] = $_POST['div_id'];
+        $this->redirect($url);
     }
 
-    public function userAction()
-    {
+    public function userAction(){
         $user = User::getUserByName($_GET['user']);
         View::renderTemplate('User/profile.html', array('user' => $user));
     }

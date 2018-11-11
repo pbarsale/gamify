@@ -21,7 +21,7 @@
             </ul>
         </div>
     </nav>
-
+<input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
 <table style="width:50%;margin-left:25%;margin-top:5%">
     <tr>
         <td>
@@ -33,33 +33,57 @@
     <tr>
     <td>
     <br>
-
-    <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
         {% set count = 1 %}
         <div class="questiondivs">
         {% for question in questions %}
             <div class="w3-container">
+                <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
                 <a name="qdiv{{ count }}"></a>
-                <input type="hidden" name="questionid{{ count }}" value={{ question.id }}>
-                <input type="hidden" name="points{{ count }}" value={{ question.points }}>
-                <input type="hidden" name="badge_id{{ count }}" value={{ question.badgeid }}>
-                <p> {{ count }}. {{ question.question }} </p>
-                <p> {{ question.description }}</p>
+                <input type="hidden" name="gameid" value={{ gameid }}>
+                <input type="hidden" name="questionid" value={{ question.id }}>
+                <input type="hidden" name="points" value={{ question.points }}>
+                <input type="hidden" name="badge_id" value={{ question.badgeid }}>
+                <input type="hidden" name="div_id" value="{{count}}">
 
-                {% for opt in question.options %}
-                <input type="checkbox" name="option{{ count }}[]" value="{{opt.id}}"/> {{ opt.option }}
 
-                {% endfor %}
-                <br><br>
+                    <p> {{ count }}. {{ question.question }} </p>
+
+                {% if question.answered %}
+                    <p> You have earned : {{ question.userpoints }} points</p>
+
+                    {% for opt in question.options %}
+
+                    {% if opt.iscorrect %}
+                    <input type="checkbox"  disabled="true" checked name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                    {% else %}
+                    <input type="checkbox"  disabled="true" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                    {% endif %}
+
+                    <br><br>
+                    {% endfor %}
+
+                    {% if question.userpoints>0 %}
+                        <p> Great work! </p>
+                    {% else %}
+                        <p> Wrong answer! </p>
+                    {% endif %}
+
+                    <p>{{ question.description }}</p>
+                    <input  class="btn btn-success" disabled="true" type="submit" name="submit"/>
+                {% else %}
+
+                    <p> Unanswered question </p>
+                    {% for opt in question.options %}
+                    <input type="checkbox"  name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                    <br><br>
+                    {% endfor %}
+                    <input  class="btn btn-success" type="submit" name="submit"/>
+                {% endif %}
                 {% set count = count + 1 %}
-
+                </form>
             </div>
         {% endfor %}
         </div>
-        <input type="hidden" name="count" value={{ count }}>
-        <input   class="btn btn-success" type="submit" name="submit"/>
-    </form>
-
     </td>
     </tr>
 </table>
