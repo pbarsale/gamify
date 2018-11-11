@@ -23,15 +23,13 @@
     </nav>
 
     <table style="width:50%;margin-left:25%;margin-top:5%">
-        <tr>
+        <tr >
             {% for key,game in games %}
-            <td valign="top" style="width:300px;padding: 20px;">
-                <div class="w3-card-4" style="height:200px" >
-
-                    <header class="w3-container w3-blue">
-                        <h3>{{ key }}</h3>
-                    </header>
-
+            <td valign="top" style="width:50%;padding:20px;">
+                <header class="w3-container w3-blue">
+                    <h3>{{ key }}</h3>
+                </header>
+                <div class="w3-card-4" style="height: 300px;overflow-y: scroll">
                     {% for item in game %}
                     <div class="w3-container">
                         <p> <a href="/museum/gamify/users/quiz/{{item.id}}">{{ item.name }}</a></p>
@@ -42,7 +40,6 @@
             {% endfor %}
         </tr>
     </table>
-
     {% else %}
 
         <a href="/museum/gamify/signup/new">Sign Up</a>

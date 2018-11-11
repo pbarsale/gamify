@@ -1,10 +1,10 @@
 $(document).ready(function(){
     $(".questiondivs div").each(function(e) {
-
-        if (e != 0)
+        var mydiv = $("#mydiv").val();
+        //alert(mydiv);
+        if (e != mydiv)
             $(this).hide();
     });
-
 
     $("#next").click(function(){
         if ($(".questiondivs div:visible").next().length != 0)
