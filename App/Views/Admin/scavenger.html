@@ -4,92 +4,135 @@
 
 {% block body %}
 
-{% if current_user %}
+    {% if current_user %}
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="/museum/gamify/admin">
-                Hello {{ current_user.name }}
-            </a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-            <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
-            <li><a href="/museum/gamify/logout">Logout</a></li>
-        </ul>
-    </div>
-</nav>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/admin">
+                        Hello {{ current_user.name }}
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
 
-<div style="text-align: center">
-    <h2>Question</h2>
-    <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
-        <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
-        <div style="margin: 3%">
-            <label for="question">Q</label>
-            <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
-                      style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none"></textarea>
-            <label for="points">Points</label>
-            <input type="number" id="points" name="points" min="0" max="100" value="0">
-            <label for="select-badge">Select Badge</label>
-            <select id="select-badge" name="select-badge">
-                <option value="0">Select Badge</option>
-                {% for badge in badges %}
-                <option value="{{ badge.id }}">{{ badge.name }}</option>
-                {% endfor %}
-            </select>
-            <div id="badges" data-badges="{{ badges|json_encode }}"></div>
+        <div>
+            <h2 style="text-align: center; margin-bottom: 3%">Scavenger Hunt Question</h2>
+            <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
+                <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-6">
+                        <label for="question" style="text-align: center; margin-right: 8%;margin-bottom: 5%">Q</label>
+                        <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
+                                  style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="points">Points</label>
+                        <input type="number" id="points" name="points" min="0" max="100" value="0">
+                    </div>
+                    <div class="col-md-1">
+                        <select id="select-badge" name="select-badge">
+                            <option value="0">Select Badge</option>
+                            {% for badge in badges %}
+                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="badges" data-badges="{{ badges|json_encode }}"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2" style="margin-right: 4.5%"></div>
+                    <div class="col-md-5" style="margin-right: 4%">
+                        <textarea id="optionA1" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
+                        <input type="checkbox" name="options[]" value="optionA1" style="text-align: center; margin-right: 8%;margin-bottom: 5%"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="points">Points</label>
+                        <input type="number" name="point[optionA1]" min="0" max="100" value="0">
+                    </div>
+                    <div class="col-md-1">
+                        <select name="select-badges[optionA1]">
+                            <option value="0">Select Badge</option>
+                            {% for badge in badges %}
+                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2" style="margin-right: 4.5%"></div>
+                    <div class="col-md-5" style="margin-right: 4%">
+                        <textarea id="optionA2" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
+                        <input type="checkbox" name="options[]" value="optionA2" style="text-align: center; margin-right: 8%; margin-bottom: 5%"/>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="points">Points</label>
+                        <input type="number" name="point[optionA2]" min="0" max="100" value="0">
+                    </div>
+                    <div class="col-md-1">
+                        <select name="select-badges[optionA2]">
+                            <option value="0">Select Badge</option>
+                            {% for badge in badges %}
+                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row addOptionsBtn" style="margin-bottom: 5%">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <button id="addOptions" name="addOptions">+</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+                        <button type="submit" name="done">Done</button>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div style="margin: 3%" id="option1">
-            <textarea id="optionA1" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
-                      style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
-            <input type="checkbox" name="options[]" value="optionA1"/>
-            <input type="number" name="point[optionA1]" min="0" max="100" value="0">
-            <select name="select-badges[optionA1]">
-                <option value="0">Select Badge</option>
-                {% for badge in badges %}
-                <option value="{{ badge.id }}">{{ badge.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div style="margin: 3%" id="option2">
-            <textarea id="optionA2" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
-                      style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
-            <input type="checkbox" name="options[]" value="optionA2"/>
-            <input type="number" name="point[optionA2]" min="0" max="100" value="0">
-            <select name="select-badges[optionA2]">
-                <option value="0">Select Badge</option>
-                {% for badge in badges %}
-                <option value="{{ badge.id }}">{{ badge.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="addOptionsBtn">
-            <button id="addOptions" name="addOptions">+</button>
-        </div>
-        <div style="margin: 3%">
-            <button type="submit" name="done">Done</button>
-        </div>
-    </form>
-</div>
 
-{% else %}
-<a href="/museum/gamify/signup/new">Sign Up</a>
-<a href="/museum/gamify/login">Log In</a>
-{% endif %}
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
 
 <script>
     $(document).ready(function () {
         var i = 3;
         $("#addOptions").click(function (e) {
             e.preventDefault();
-            var container = document.createElement('div');
-            $(container).css({margin: '3%'});
-            container.id = "option" + i;
-            $(container).append('<textarea id="optionA2" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>');
-            $(container).append('<input type="checkbox" name="options[]" value="optionA' + i + '"/>');
-            $(container).append('<input type="button" class="deleteOption" id="option' + i + '" value="-"/>');
-            $(container).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0">');
+            var row = document.createElement('div');
+            row.className = "row";
+            row.id = "option" + i;
+            var column1 = document.createElement('div');
+            column1.className = "col-md-2";
+            $(column1).css({marginRight: '4.5%'});
+            row.appendChild(column1);
+            var column2 = document.createElement('div');
+            column2.className = "col-md-5";
+            $(column2).css({marginRight: '4%'});
+            $(column2).append('<textarea id="optionA2" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none;margin-right: 1%"></textarea>');
+            $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:1%;margin-bottom: 5%"/>');
+            $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%">Image Verify?</label>');
+            $(column2).append('<input type="button" class="deleteOption" id="option' + i + '" value="-"/>');
+            row.appendChild(column2);
+            var column3 = document.createElement('div');
+            column3.className = "col-md-2";
+            $(column3).append('<label for="points" style="margin-right: 2%">Points</label>');
+            $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0">');
+            row.appendChild(column3);
+            var column4 = document.createElement('div');
+            column4.className = "col-md-1";
             var select_container = document.createElement("select");
             select_container.name = "select-badges[optionA" + i + "]";
             var opt = document.createElement('option');
@@ -103,8 +146,9 @@
                 opt.text = badges[j].name;
                 select_container.appendChild(opt);
             }
-            container.appendChild(select_container);
-            $(".addOptionsBtn").before(container);
+            column4.appendChild(select_container);
+            row.appendChild(column4);
+            $(".addOptionsBtn").before(row);
             i++;
         });
     });

@@ -39,34 +39,37 @@
 
     <div>
         <h2 style="text-align: center">Manage Account</h2>
-        <div style="text-align: center">
+        <div style="text-align: center;margin: 2%">
             <span><i class="fa fa-search"></i>
             <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 30%;"/>
             </span>
         </div>
-        <!--<div>-->
-            <div class="bluediv" id="userlist">
-            {% for user in users %}
-                <div style="margin: 2%;font-size:large">
-                    <span style="padding-right: 10%;">
-                        <!--<img src="{{ user.avatar }}" width="2%" height="2%"/>-->
-                        {% if user.isblocked %}
-                        <span style="text-decoration:line-through; color: red">{{ user.name }}</span>
-                        {% else %}
-                        <span>{{ user.name }}</span>
-                        {% endif %}
-                    </span>
-                    <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
-                        <span><i class="fa fa-ban" style="color: red"></i></span>
-                    </a>
+        <div class="bluediv" id="userlist">
+        {% for user in users %}
+            <div>
+                <div class="row" style="margin: 1%;font-size:large">
+                    <div class="col-md-3"></div>
+                    <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
+                    {% if user.isblocked %}
+                    <div class="col-md-3 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
+                    {% else %}
+                    <div class="col-md-3 username" align="left">{{ user.name }}</div>
+                    {% endif %}
+                    <div class="col-md-1">
+                        <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
+                            <span><i class="fa fa-ban" style="color: red"></i></span>
+                        </a>
+                    </div>
+                    <div class="col-md-1">
                     <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
                         <span><i class="fa fa-edit"></i></span>
                     </a>
-                    <hr align="center">
+                    </div>
                 </div>
-            {% endfor %}
+                <hr align="center">
             </div>
-        <!--</div>-->
+        {% endfor %}
+        </div>
     </div>
 
     {% else %}
@@ -79,13 +82,12 @@
             var input = document.getElementById("search");
             var filter = input.value.toUpperCase();
             var ul = document.getElementById("userlist");
-            var div = ul.getElementsByTagName("div");
+            var div = ul.getElementsByClassName("username");
             for (var i = 0; i < div.length; i++) {
-                var a = div[i].getElementsByTagName("span")[0];
-                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    div[i].style.display = "";
+                if (div[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    div[i].parentElement.parentElement.style.display = "";
                 } else {
-                    div[i].style.display = "none";
+                    div[i].parentElement.parentElement.style.display = "none";
                 }
             }
         }

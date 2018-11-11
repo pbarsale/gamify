@@ -11,7 +11,6 @@
             {{ user.name }}
         </div>
         <div hidden id="user_id">{{ user.id }}</div>
-        <input type="checkbox" id="block"/>
         <form action="" method="post">
 
         </form>
@@ -21,25 +20,5 @@
     </div>
 
 </section>
-
-<script>
-    $(document).ready(function () {
-        $("#block").click(function () {
-            var block = !!$(this).is(':checked');
-            var user_id = $("#user_id").text();
-            $.ajax({
-                method: "POST",
-                url: "/museum/gamify/manageaccount",
-                data: {
-                    user_id: user_id,
-                    block: block
-                }
-            })
-                .done(function() {
-                    alert("Data Saved");
-                });
-        });
-    });
-</script>
 
 {% endblock %}

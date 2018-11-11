@@ -14,7 +14,7 @@
         hr {
             text-align: center;
             margin: 0 auto;
-            width: 50%;
+            width: 60%;
             color: #cccccc;
             height: 5px;
         }
@@ -39,16 +39,21 @@
         <div>
             <h2 style="text-align: center">Questions</h2>
             <div class="bluediv">
+                {% for q in questions %}
                 <div>
-                    {% for q in questions %}
-                    <span>{{ q.question }}</span>
-                    <a href="/museum/gamify/questioncontroller/modify?question={{ q.id }}"
-                       style="display:inline-block; padding: 1%">
-                        <span><i class="fa fa-edit"></i></span>
-                    </a>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-5">{{ q.question }}</div>
+                        <div class="col-md-1">
+                            <a href="/museum/gamify/questioncontroller/modify?question={{ q.id }}"
+                               style="display:inline-block; padding: 1%">
+                                <span><i class="fa fa-edit"></i></span>
+                            </a>
+                        </div>
+                    </div>
                     <hr align="center"/>
-                    {% endfor %}
                 </div>
+                {% endfor %}
             </div>
         </div>
     {% else %}

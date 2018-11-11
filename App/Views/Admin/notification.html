@@ -1,8 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Notification{% endblock %}
 
 {% block body %}
+
+    <style>
+        .bluediv {
+            height: 560px;
+            overflow-y : auto;
+            text-align: center;
+        }
+
+        hr {
+            text-align:center;
+            margin: 0 auto;
+            width: 50%;
+            color: #cccccc;
+            height: 5px;
+        }
+    </style>
 
     {% if current_user %}
 
@@ -21,13 +37,20 @@
             </div>
         </nav>
 
-        <div style="text-align: center">
+        <div class="bluediv" id="userlist">
             {% for notification in notifications %}
-                <span>{{ notification.option }}</span>
-                <span><img src="{{ notification.image }}"/></span>
-                <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}" style="display:inline-block; padding: 1%;">
-                    <span><i class="fa fa-check"></i></span>
-                </a>
+            <div>
+                <div class="row" style="margin: 1%;font-size:large">
+                    <div class="col-md-3" align="left">{{ notification.option }}</div>
+                    <div class="col-md-1"><img src="{{ notification.image }}"/></div>
+                    <div class="col-md-1">
+                        <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}" style="display:inline-block; padding: 1%;">
+                            <span><i class="fa fa-check"></i></span>
+                        </a>
+                    </div>
+                </div>
+                <hr align="center">
+            </div>
             {% endfor %}
         </div>
 
