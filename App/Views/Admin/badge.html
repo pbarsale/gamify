@@ -54,6 +54,7 @@
             </div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
                 <li><a href="/museum/gamify/logout">Logout</a></li>
             </ul>
         </div>
@@ -84,7 +85,7 @@
             <div id="Update" class="tabcontent">
                 <div style="margin: 10%">
                     <label style="margin-right: 5%; ">Select Badge To Update</label>
-                    <select name="select-badge">
+                    <select name="select-badge-update">
                         {% for badge in badges %}
                         <option value="{{ badge.id }}">{{ badge.name }}</option>
                         {% endfor %}
@@ -101,7 +102,7 @@
             <div id="Delete" class="tabcontent">
                 <div style="margin: 10%">
                     <label style="margin-right: 5%; ">Select Badge To Delete</label>
-                    <select name="select-badge">
+                    <select name="select-badge-delete">
                         {% for badge in badges %}
                         <option value="{{ badge.id }}">{{ badge.name }}</option>
                         {% endfor %}

@@ -15,6 +15,7 @@
             </div>
             <ul class="nav navbar-nav">
                 <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
                 <li><a href="/museum/gamify/logout">Logout</a></li>
             </ul>
         </div>
@@ -38,10 +39,12 @@
             </div>
             {% set i = i + 1 %}
             {% endfor %}
+            {% if game_type_id == 4 %}
             <div style="margin: 3%">
                     <textarea id="description" name="description" placeholder="Enter Information for the question" rows="2"
-                              cols="50" style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none"></textarea>
+                              cols="50" style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none">{{ q.description }}</textarea>
             </div>
+            {% endif %}
             <div style="margin: 3%">
                 <button type="submit" name="update">Update</button>
             </div>

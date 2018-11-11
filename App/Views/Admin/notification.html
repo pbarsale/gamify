@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+
+    {% if current_user %}
+
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/admin">
+                        Hello {{ current_user.name }}
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/logout">Logout</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div style="text-align: center">
+            {% for notification in notifications %}
+                <span>{{ notification.option }}</span>
+                <span><img src="{{ notification.image }}"/></span>
+                <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}" style="display:inline-block; padding: 1%;">
+                    <span><i class="fa fa-check"></i></span>
+                </a>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+{% endblock %}

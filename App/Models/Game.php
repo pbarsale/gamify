@@ -14,13 +14,13 @@ class Game extends \Core\Model
     const TABLE_NAME = "games";
     const LANGUAGE = "english";
 
-    public static function addGame($game, $selected_game_type, $selected_age_group) {
+    public static function addGame($game, $selected_game_type, $selected_age_group, $selected_badge) {
         $game_obj = self::getGameByName($game);
         $game_type_obj = GameType::getGameTypeById($selected_game_type);
         $age_group_obj = AgeGroup::getAgeGroupById($selected_age_group);
-        if(!$game_obj && $game_type_obj && $age_group_obj) {
-            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id)
-                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id)";
+        if(!$game_obj and $game_type_obj and $age_group_obj) {
+            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id, badge_id)
+                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id, :badge_id)";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -31,7 +31,8 @@ class Game extends \Core\Model
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
             $stmt->bindValue(':game_type_id', $game_type_obj->id, PDO::PARAM_INT);
-            $stmt->bindValue(':age_group_id', $age_group_obj->id, PDO::PARAM_STR);
+            $stmt->bindValue(':age_group_id', $age_group_obj->id, PDO::PARAM_INT);
+            $stmt->bindValue(':badge_id', $selected_badge == 0 ? null : $selected_badge, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
 
@@ -68,6 +69,12 @@ class Game extends \Core\Model
         $result = $stmt->fetch();
         $id = $result['MAX(id)'];
         return $id;
+    }
+
+    public static function getGameType($game_id)
+    {
+        $game = self::getGameById($game_id);
+        return $game->game_type_id;
     }
 
     public function deleteGame() {

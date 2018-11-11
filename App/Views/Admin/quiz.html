@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Question{% endblock %}
+{% block title %}Quiz{% endblock %}
 
 {% block body %}
 
@@ -15,6 +15,7 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
                     <li><a href="/museum/gamify/logout">Logout</a></li>
                 </ul>
             </div>
@@ -23,6 +24,7 @@
         <div style="text-align: center">
             <h2>Question</h2>
             <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
+                <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
                 <div style="margin: 3%">
                     <label for="question">Q</label>
                     <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
@@ -76,15 +78,12 @@
                 var container = document.createElement('div');
                 $(container).css({margin: '3%'});
                 container.id = "option" + i;
+                var game_type_id = $("#game_type_id").val();
                 $(container).append('<input type="checkbox" name="options[]" value="optionA' + i + '"/>');
                 $(container).append('<textarea id="optionA2" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>');
                 $(container).append('<input type="button" class="deleteOption" id="option' + i + '" value="-"/>');
                 $(".addOptionsBtn").before(container);
                 i++;
-            });
-
-            $(".deleteOption").click(function () {
-                alert("bsbsbcjb");
             });
         });
     </script>
