@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     {% if current_user %}
 
     <nav class="navbar navbar-inverse">
@@ -59,7 +61,7 @@
                 <!--</div>-->
                 <div style="margin: 10%">
                     <input type="text" name="game-add" placeholder="Enter Game"
-                           style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                           style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                 </div>
                 <div style="margin-bottom: 5%">
                     <button type="submit" name="add" class="btn btn-primary">Add</button>
@@ -79,7 +81,7 @@
                 </div>
                 <div style="margin: 10%">
                     <input type="text" name="game-update" placeholder="Enter New Game"
-                           style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                           style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                 </div>
                 <div style="margin-bottom: 5%">
                     <button type="submit" name="update" class="btn btn-primary">Update</button>
