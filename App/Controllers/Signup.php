@@ -35,11 +35,20 @@ class Signup extends \Core\Controller
 
         if($user->save()){
             Flash::addMessage('Registered Successfully, Please login!');
-            $this->redirect('/museum/gamify/');
+            if($_SESSION['admin'])
+                $this->redirect('/museum/gamify/admin');
+            else
+                $this->redirect('/museum/gamify');
+
+
         }else{
-            View::renderTemplate('Home/index.html', array(
-                'user' => $user
-            ));
+
+            if($_SESSION['admin'])
+                View::renderTemplate('Admin/index.html', array(
+                'user' => $user));
+            else
+                View::renderTemplate('Home/index.html', array(
+                    'user' => $user));
             //var_dump($user->errors);
         }        
     }
