@@ -1,11 +1,7 @@
 {% extends "base.html" %}
-
 {% block title %}Home{% endblock %}
-
 {% block body %}
-
     {% if current_user %}
-
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -42,8 +38,60 @@
     </table>
     {% else %}
 
-        <a href="/museum/gamify/signup/new">Sign Up</a>
-		<a href="/museum/gamify/login">Log In</a>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+        <div class="navbar-header" style="font-size: xx-large">
+                <span style="color: white"> Welcome! </span>
+        </div>
+        <ul class="nav navbar-nav" style="float: right; margin-right: 3%">
 
+            <form method="post" action="/museum/gamify/login/create">
+                <input type="text" name="email" placeholder="E-Mail" required autofocus value={{ email }}>
+                <input type="password" name="password" placeholder="Password" required>
+                <button type="submit" name="submit"> Log in</button><br>
+                <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %} />
+                <span style="color: white">Remember me</span>
+                <a href="/museum/gamify/password/forgot" style="float: right;margin-right: 15%;color:white">Reset password</a>
+            </form>
+        </ul>
+    </div>
+</nav>
+
+<div id="wrapper">
+    <h1> Sign Up</h1>
+    {% if user.errors is not empty %}
+    <ul>
+        {% for error in user.errors %}
+        <li style="color: red">{{ error }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form method="post" action="/museum/gamify/signup/create">
+
+        <label for="name" data-icon="u">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Full Name" value="{{ user.name }}" required>
+
+        <label for="member_id" data-icon="u">Member-ID</label>
+        <input type="text" id="member_id" name="member_id" placeholder="Member ID" value="{{ user.member_id }}">
+
+        <label for="birth_date" data-icon="u">Birth Date</label>
+        <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ user.birth_date }}" required>
+
+        <label for="email" data-icon="e">E-Mail</label>
+        <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ user.email }}" required>
+
+        <label for="password" data-icon="p">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number">
+
+        <label for="confirmPwd" data-icon="p">Confirm Password</label>
+        <input type="password" id="confirmPwd" name="confirmPwd" placeholder="Confirm Password" required>
+
+        <p class="signin button">
+            <input type="submit" value="Sign up"/>
+        </p>
+
+    </form>
+</div>
     {% endif %}
 {% endblock %}

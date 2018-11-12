@@ -4,7 +4,18 @@
 
 {% block body %}
 
-    <h3>Request password reset</h3>
-	<p>Password reset link invalid or expired, please click <a href="/museum/gamify/password/forgot">here</a> to request another one.</p>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+        <div class="navbar-header" style="font-size: xx-large">
+            <span style="color: white"> Welcome! </span>
+        </div>
+    </div>
+</nav>
+
+<div id="wrapper">
+    <h1> Request Password Reset </h1>
+    <h3><span style="margin-left:10%">Password reset link invalid or expired</span></h3>
+    <h3><span style="margin-left:10%">Please click <a href="/museum/gamify/password/forgot">here</a> to request another one.</span></h3>
+</div>
 
 {% endblock %}

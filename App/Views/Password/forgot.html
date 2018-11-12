@@ -1,15 +1,28 @@
 {% extends "base.html" %}
 
 {% block title %}Forgot password{% endblock %}
-
 {% block body %}
 
-    <h3>Request password reset</h3>
+	<nav class="navbar navbar-inverse">
+		<div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+			<div class="navbar-header" style="font-size: xx-large">
+				<span style="color: white"> Welcome! </span>
+			</div>
+		</div>
+	</nav>
+
+	<div id="wrapper">
+		<h1> Request Password Reset </h1>
+
 	<form method="post" action="/museum/gamify/password/request-reset">
-		
+
+		<label for="inputEmail" data-icon="e">E-Mail</label>
 		<div><input type="email" id='inputEmail' name="email" placeholder="Email address" autofocus required /></div><br>
 
-		<div><button type="submit"> Send password reset</button></div><br>
-	</form>
+		<p class="signin button">
+			<input type="submit" value="Submit"/>
+		</p>
 
+	</form>
+	</div>
 {% endblock %}

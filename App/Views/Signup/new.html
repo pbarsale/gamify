@@ -16,23 +16,33 @@
 
     </ul>
     {% endif %}
-    <form method="post" action="/museum/gamify/signup/create">
-		
-        <div><input type="text" name="name" placeholder="Full Name" value="{{ user.name }}" required></div><br>
-    	
-        <div><input type="text" name="member_id" placeholder="Member ID" value="{{ user.member_id }}"></div><br>
-        
-        <div><input type="date" name="birth_date" placeholder="Birth Date" value="{{ user.birth_date }}" required></div><br>
-    	
-        <div><input type="email" name="email" placeholder="E-Mail" value="{{ user.email }}" required></div><br>
-    	
-        <div><input type="password" name="password" placeholder="Password" required         pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number"></div><br>
 
-    	<div><input type="password" name="confirmPwd" placeholder="Confirm Password" required></div><br>
-        
-        <div><button type="submit" name="submit"> Sign Up</button></div><br>
+    <div id="wrapper">
+    <form method="post" action="/museum/gamify/signup/create">
+
+        <label for="name" data-icon="u">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="Full Name" value="{{ user.name }}" required>
+
+        <label for="member_id" data-icon="u">Member-ID</label>
+        <input type="text" id="member_id" name="member_id" placeholder="Member ID" value="{{ user.member_id }}">
+
+        <label for="birth_date" data-icon="u">Birth Date</label>
+        <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ user.birth_date }}" required>
+
+        <label for="email" data-icon="e">E-Mail</label>
+        <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ user.email }}" required>
+
+        <label for="password" data-icon="p">Password</label>
+        <input type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number">
+
+        <label for="confirmPwd" data-icon="p">Confirm Password</label>
+    	<input type="password" id="confirmPwd" name="confirmPwd" placeholder="Confirm Password" required>
+
+        <p class="signin button">
+            <input type="submit" value="Sign up"/>
+        </p>
 
     </form>
-
+    </div>
 {% endblock %}
  

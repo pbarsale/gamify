@@ -6,6 +6,7 @@ use \App\Models\User;
 use \App\Auth;
 use \App\Flash;
 
+
 /**
  * Login controller
  *
@@ -19,8 +20,8 @@ class Login extends \Core\Controller
      * @return void
      */
     public function newAction(){
-
-        View::renderTemplate('Login/new.html');
+        //View::renderTemplate('Login/new.html');
+        View::renderTemplate('Home/index.html');
     }
 
     /**
@@ -30,27 +31,30 @@ class Login extends \Core\Controller
      */
     public function createAction()
     {
-        try{
-            $user = User::authenticate($_POST['email'], $_POST['password']);
             $remember_me = isset($_POST['remember_me']);
 
-            if($user){
+            if(!isset($_POST['email']) || !isset($_POST['password'])){
+                View::renderTemplate('Home/index.html',array(
+                    'email' => '',
+                    'remember_me' => $remember_me
+                ));
+            }
 
+            $user = User::authenticate($_POST['email'], $_POST['password']);
+
+            if($user){
                 Auth::login($user,$remember_me);
-                // Remember the login code
-                Flash::addMessage('Login Successful');
+                //Flash::addMessage('Login Successful');
                 $this->redirect(Auth::getReturnToPage());
 
             }else{
                 Flash::addMessage('Login unsuccessful, please try again',Flash::WARNING);
-                View::renderTemplate('Login/new.html',array(
+                // add admin code here
+                View::renderTemplate('Home/index.html',array(
                     'email' => $_POST['email'],
                     'remember_me' => $remember_me
                 ));
             }
-        }
-    	 catch(Exception $ex){
-        }
     }
 
      /**
