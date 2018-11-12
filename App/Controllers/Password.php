@@ -16,8 +16,7 @@ class Password extends \Core\Controller
      *
      * @return void
      */
-    public function forgotAction()
-    {
+    public function forgotAction(){
         View::renderTemplate('Password/forgot.html');
     }
 
@@ -26,9 +25,10 @@ class Password extends \Core\Controller
      *
      * @return void
      */
-    public function requestResetAction()
-    {
-        User::sendPasswordReset($_POST['email']);
+    public function requestResetAction(){
+        if(isset($_POST['email'])){
+            User::sendPasswordReset($_POST['email']);
+        }
         View::renderTemplate('Password/reset_requested.html');
     }
 
@@ -37,8 +37,7 @@ class Password extends \Core\Controller
      *
      * @return void
      */
-    public function resetAction()
-    {
+    public function resetAction(){
         $token = $this->route_params['token'];
         $user = $this->getUserOrExit($token);
         View::renderTemplate('Password/reset.html', array('token' => $token));
@@ -49,8 +48,11 @@ class Password extends \Core\Controller
      *
      * @return void
      */
-    public function resetPasswordAction()
-    {   
+    public function resetPasswordAction(){
+
+        if(!isset($_POST['token'])){
+            View::renderTemplate('Password/reset_success.html');
+        }
         $token = $_POST['token'];
         $user = $this->getUserOrExit($token);
 
@@ -66,8 +68,7 @@ class Password extends \Core\Controller
      * @param string $token 
      * @return mixed - user object if found and valid token, otherwise null
      */
-    public function getUserOrExit($token)
-    {   
+    public function getUserOrExit($token){
         $user = User::findByPasswordReset($token);
 
         if($user){

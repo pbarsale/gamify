@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use \Core\View;
 use \App\Models\User;
+use \App\Flash;
 
 /**
  * Signup controller
@@ -33,9 +34,10 @@ class Signup extends \Core\Controller
         $user = new User($_POST);
 
         if($user->save()){
-            $this->redirect('/museum/gamify/signup/success');
+            Flash::addMessage('Registered Successfully, Please login!');
+            $this->redirect('/museum/gamify/');
         }else{
-            View::renderTemplate('Signup/new.html', array(
+            View::renderTemplate('Home/index.html', array(
                 'user' => $user
             ));
             //var_dump($user->errors);
