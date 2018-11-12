@@ -98,7 +98,11 @@ abstract class Controller
 
             Flash::addMessage('Please login to access that page', Flash::INFO);
             Auth::rememberRequestedPage();
-            $this->redirect('/museum/gamify/login');
+
+            if(isset($_SESSION['admin']) && $_SESSION['admin'])
+                $this->redirect('/museum/gamify/admin');
+            else
+                $this->redirect('/museum/gamify/');
         }
     }
 }

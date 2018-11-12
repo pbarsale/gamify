@@ -399,7 +399,7 @@ class User extends \Core\Model
     }
 
     public static function getAllUsersByAgeGroup($currUserAgeGroup) {
-        $sql = "SELECT * FROM users where isblocked=:isblocked";
+        $sql = "SELECT * FROM users where isblocked=:isblocked and isadmin=0";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
