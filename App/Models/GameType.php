@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Flash;
 use PDO;
 /**
  * Example GameType model
@@ -35,24 +36,28 @@ class GameType extends \Core\Model
 
                 $id = self::getLatestID($db);
 
-                $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
-                            values(:table_n, :column_n, :row_id, :text, :lang)";
-
-                $stmt = $db->prepare($sql);
-                $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
-                $stmt->bindValue(':text', $game_type, PDO::PARAM_STR);
-                $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-                return $stmt->execute();
+                return self::insertGameTypeInResource($db, $id, $game_type);
 
             } else {
-                var_dump("Already present");
+                Flash::addMessage('Query execution failed', 'warning');
             }
         } else {
-            var_dump("Already present");
+            Flash::addMessage('GameType Already Exists!', 'warning');
         }
+        return false;
+    }
+
+    private static function insertGameTypeInResource($db, $id, $game_type) {
+        $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
+                            values(:table_n, :column_n, :row_id, :text, :lang)";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $game_type, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+        return $stmt->execute();
     }
 
     private static function getLatestID($db) {

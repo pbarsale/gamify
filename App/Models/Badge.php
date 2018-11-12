@@ -2,9 +2,8 @@
 
 namespace App\Models;
 
+use App\Flash;
 use PDO;
-use \Core\View;
-
 /**
  * Example GameType model
  *
@@ -46,36 +45,45 @@ class Badge extends \Core\Model
 
                 $id = self::getLatestID($db);
 
-                $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
-                            values(:table_n, :column_n, :row_id, :text, :lang)";
+                self::insertBadgeInResource($db, $id, $badge_name);
 
-                $stmt = $db->prepare($sql);
-                $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
-                $stmt->bindValue(':text', $badge_name, PDO::PARAM_STR);
-                $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-                $stmt->execute();
-
-                $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
-                            values(:table_n, :column_n, :row_id, :text, :lang)";
-
-                $stmt = $db->prepare($sql);
-                $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
-                $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
-                $stmt->bindValue(':text', $description, PDO::PARAM_STR);
-                $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-                return $stmt->execute();
+                self::insertDescriptionInResource($db, $id, $description);
 
             } else {
-                var_dump("Already present");
+                Flash::addMessage('Query execution failed', 'warning');
             }
         } else {
-            var_dump("Already present");
+            Flash::addMessage('Badge Already Exists!', 'warning');
         }
+        return false;
+    }
+
+    private static function insertBadgeInResource($db, $id, $badge_name) {
+        $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
+                            values(:table_n, :column_n, :row_id, :text, :lang)";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $badge_name, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+
+        return $stmt->execute();
+    }
+
+    private static function insertDescriptionInResource($db, $id, $description) {
+        $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
+                            values(:table_n, :column_n, :row_id, :text, :lang)";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $description, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     private static function getLatestID($db) {
@@ -121,8 +129,9 @@ class Badge extends \Core\Model
             move_uploaded_file($badge_tmp, $filepath)) {
             return $stmt->execute();
         } else {
-            var_dump("Already present");
+            Flash::addMessage('Badge File Exists!');
         }
+        return false;
     }
 
     public static function getAllBadges() {

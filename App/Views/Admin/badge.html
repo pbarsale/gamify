@@ -4,45 +4,6 @@
 
 {% block body %}
 
-<style>
-    .tab {
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-    }
-
-    /* Style the buttons inside the tab */
-    .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-        font-size: 17px;
-    }
-
-    /* Change background color of buttons on hover */
-    .tab button:hover {
-        background-color: #ddd;
-    }
-
-    /* Create an active/current tablink class */
-    .tab button.active {
-        background-color: #ccc;
-    }
-
-    /* Style the tab content */
-    .tabcontent {
-        display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-top: none;
-    }
-
-</style>
-
     {% if current_user %}
 
     <nav class="navbar navbar-inverse">
@@ -67,49 +28,54 @@
             <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
             <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
         </div>
-        <form class="badge-form" action="/museum/gamify/badgecontroller/modify" method="post" enctype="multipart/form-data">
+        <form class="badge-form" action="/museum/gamify/badgecontroller/add" method="post" enctype="multipart/form-data">
             <div id="Add" class="tabcontent">
                 <div style="margin: 10%">
-                    <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid blue;">
+                    <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
                 </div>
                 <div style="margin: 10%">
-                    <input type="file" name="badge"/>
+                    <input type="file" name="badge-add" required class="btn btn-primary"/>
                 </div>
                 <div style="margin: 10%">
-                    <input type="text" id="description" name="description" placeholder="Enter Description" style="border: none;outline: 0;border-bottom: 2px solid blue;"/>
+                    <input type="text" id="description" name="description" placeholder="Enter Description (optional)" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 100%;"/>
                 </div>
                 <div style="margin-bottom: 5%">
-                    <button type="submit" name="add">Add</button>
+                    <button type="submit" name="add" class="btn btn-primary">Add</button>
                 </div>
             </div>
+        </form>
+
+        <form class="badge-form" action="/museum/gamify/badgecontroller/update" method="post" enctype="multipart/form-data">
             <div id="Update" class="tabcontent">
                 <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Badge To Update</label>
-                    <select name="select-badge-update">
+                    <label style="margin-right: 5%; ">Select Badge</label>
+                    <select name="select-badge-update" class="selcls">
                         {% for badge in badges %}
                         <option value="{{ badge.id }}">{{ badge.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div style="margin: 10%">
-                    <input type="file" name="badge"/>
+                    <input type="file" name="badge-update" required class="btn btn-primary"/>
                 </div>
                 <div style="margin-bottom: 5%">
-                    <button type="submit" name="update">Update</button>
+                    <button type="submit" name="update" class="btn btn-primary">Update</button>
                 </div>
             </div>
+        </form>
 
+        <form class="badge-form" action="/museum/gamify/badgecontroller/delete" method="post" enctype="multipart/form-data">
             <div id="Delete" class="tabcontent">
                 <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Badge To Delete</label>
-                    <select name="select-badge-delete">
+                    <label style="margin-right: 5%; ">Select Badge</label>
+                    <select name="select-badge-delete" class="selcls">
                         {% for badge in badges %}
                         <option value="{{ badge.id }}">{{ badge.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div style="margin-bottom: 5%">
-                    <button type="submit" name="delete">Delete</button>
+                    <button type="submit" name="delete" class="btn btn-primary">Delete</button>
                 </div>
             </div>
         </form>

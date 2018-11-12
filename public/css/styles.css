@@ -16,7 +16,7 @@
 }
 
 .btn-primary:hover{
-	color: #ffffff;
+	color: #000000;
 	background-color: #ffffff;
 }
 
@@ -25,49 +25,51 @@ body{
 	background-size:cover;
 }
 
-a:hover{
-	color : black;
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+>>>>>>> 5c7ea8ad8cae9bd8fda77565115118d81a2bb9ac
 }
 
-/*
-CSS for animated button #d9edf7
-*/
-
-.animated_button {
-	border-radius: 4px;
-	background-color:mediumseagreen;
-	border: none;
-	color: #FFFFFF;
-	text-align: center;
-	font-size: 28px;
-	padding: 20px;
-	width: 200px;
-	transition: all 0.5s;
-	cursor: pointer;
-	margin: 5px;
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
 }
 
-.animated_button span {
-	cursor: pointer;
-	display: inline-block;
-	position: relative;
-	transition: 0.5s;
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
 }
 
-.animated_button span:after {
-	content: '\00bb';
-	position: absolute;
-	opacity: 0;
-	top: 0;
-	right: -20px;
-	transition: 0.5s;
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
 }
 
-.animated_button:hover span {
-	padding-right: 25px;
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
 }
 
-.animated_button:hover span:after {
-	opacity: 1;
-	right: 0;
+.selcls {
+    padding: 9px;
+    border: solid 1px #517B97;
+    outline: 0;
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #CAD9E3), to(#FFFFFF));
+    background: -moz-linear-gradient(top, #FFFFFF, #CAD9E3 1px, #FFFFFF 25px);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
 }

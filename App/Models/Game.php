@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Flash;
 use PDO;
 /**
  * Example Game model
@@ -14,13 +15,13 @@ class Game extends \Core\Model
     const TABLE_NAME = "games";
     const LANGUAGE = "english";
 
-    public static function addGame($game, $selected_game_type, $selected_age_group, $selected_badge) {
+    public static function addGame($game, $selected_game_type, $selected_age_group) {
         $game_obj = self::getGameByName($game);
         $game_type_obj = GameType::getGameTypeById($selected_game_type);
         $age_group_obj = AgeGroup::getAgeGroupById($selected_age_group);
         if(!$game_obj and $game_type_obj and $age_group_obj) {
-            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id, badge_id)
-                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id, :badge_id)";
+            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id)
+                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id)";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -32,32 +33,37 @@ class Game extends \Core\Model
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
             $stmt->bindValue(':game_type_id', $game_type_obj->id, PDO::PARAM_INT);
             $stmt->bindValue(':age_group_id', $age_group_obj->id, PDO::PARAM_INT);
-            $stmt->bindValue(':badge_id', $selected_badge == 0 ? null : $selected_badge, PDO::PARAM_INT);
+//            $stmt->bindValue(':badge_id', $selected_badge == 0 ? null : $selected_badge, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
 
                 $id = self::getLatestID($db);
 
-                $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
-                            values(:table_n, :column_n, :row_id, :text, :lang)";
-
-                $stmt = $db->prepare($sql);
-                $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
-                $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
-                $stmt->bindValue(':text', $game, PDO::PARAM_STR);
-                $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-                $stmt->execute();
+                self::insertGameInResource($db, $id, $game);
 
                 return $id;
 
             } else {
-                var_dump("Already present");
+                Flash::addMessage('Query execution failed', 'warning');
             }
         } else {
-            var_dump("Already exists!");
+            Flash::addMessage('Game Already Exists!', 'warning');
         }
+        return null;
+    }
+
+    private static function insertGameInResource($db, $id, $game) {
+        $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
+                            values(:table_n, :column_n, :row_id, :text, :lang)";
+
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':text', $game, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+
+        $stmt->execute();
     }
 
     private static function getLatestID($db) {
@@ -91,6 +97,7 @@ class Game extends \Core\Model
     }
 
     public function updateGame($game) {
+        var_dump($game);
         $sql = 'UPDATE games SET date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
@@ -101,14 +108,15 @@ class Game extends \Core\Model
 
         $stmt->execute();
 
-        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id';
+        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and column_n=:column_n and table_n=:table_n';
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':text', $game, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
 
         return $stmt->execute();
-
     }
 
     public static function getAllGames() {

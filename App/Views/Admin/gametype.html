@@ -4,44 +4,6 @@
 
 {% block body %}
 
-<style>
-    .tab {
-        overflow: hidden;
-        border: 1px solid #ccc;
-        background-color: #f1f1f1;
-    }
-
-    /* Style the buttons inside the tab */
-    .tab button {
-        background-color: inherit;
-        float: left;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        padding: 14px 16px;
-        transition: 0.3s;
-        font-size: 17px;
-    }
-
-    /* Change background color of buttons on hover */
-    .tab button:hover {
-        background-color: #ddd;
-    }
-
-    /* Create an active/current tablink class */
-    .tab button.active {
-        background-color: #ccc;
-    }
-
-    /* Style the tab content */
-    .tabcontent {
-        display: none;
-        padding: 6px 12px;
-        border: 1px solid #ccc;
-        border-top: none;
-    }
-</style>
-
     {% if current_user %}
 
         <nav class="navbar navbar-inverse">
@@ -59,7 +21,7 @@
             </div>
         </nav>
 
-        <div id="game-type-form-div" style="text-align: center;margin: 5% 35% 35%;">
+        <div id="game-type-form-div" style="text-align: center;margin: 5% 33% 33%;">
             <h2>Game Type</h2>
             <div class="tab">
                 <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
@@ -67,47 +29,51 @@
                 <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
             </div>
 
-            <form class="game-type-form" action="/museum/gamify/gametypecontroller/modify" method="post">
-            <div id="Add" class="tabcontent">
-                <div style="margin: 10%">
-                    <input type="text" name="game-type" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;">
-                </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="add">Add</button>
-                </div>
-            </div>
-
-            <div id="Update" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game Type To Update</label>
-                    <select name="select-game-type-update">
-                        {% for game_type in game_types %}
-                        <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                        {% endfor %}
-                    </select>
+            <form class="game-type-form" action="/museum/gamify/gametypecontroller/add" method="post">
+                <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
-                        <input type="text" name="game-type" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;">
+                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="update">Update</button>
+                        <button type="submit" name="add" class="btn btn-primary">Add</button>
                     </div>
                 </div>
-            </div>
+            </form>
 
-            <div id="Delete" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game Type To Delete</label>
-                    <select name="select-game-type-delete">
-                        {% for game_type in game_types %}
-                        <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                        {% endfor %}
-                    </select>
+            <form class="game-type-form" action="/museum/gamify/gametypecontroller/update" method="post">
+                <div id="Update" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game Type</label>
+                        <select name="select-game-type-update" class="selcls">
+                            {% for game_type in game_types %}
+                            <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div style="margin: 10%">
+                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                        </div>
+                        <div style="margin-bottom: 5%">
+                            <button type="submit" name="update" class="btn btn-primary">Update</button>
+                        </div>
+                    </div>
                 </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="delete">Delete</button>
+            </form>
+
+            <form class="game-type-form" action="/museum/gamify/gametypecontroller/delete" method="post">
+                <div id="Delete" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game Type</label>
+                        <select name="select-game-type-delete" class="selcls">
+                            {% for game_type in game_types %}
+                            <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="delete" class="btn btn-primary">Delete</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
         </div>
     {% else %}
         <a href="/museum/gamify/signup/new">Sign Up</a>

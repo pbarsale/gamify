@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Flash;
 use \Core\View;
 use \App\Models\GameType;
 
@@ -23,21 +24,44 @@ class Gametypecontroller extends \Core\Controller
         View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types));
     }
 
-    public function modifyAction()
+    public function addAction()
     {
         if (isset($_POST['add'])) {
-            GameType::addGameType($_POST['game-type']);
-        } elseif (isset($_POST['delete'])) {
+            if(GameType::addGameType($_POST['game-type-add'])) {
+                Flash::addMessage('GameType Added Successfully!');
+            } else {
+                Flash::addMessage('GameType Addition Failed!', 'warning');
+            }
+        }
+        $this->redirect('/museum/gamify/gametypecontroller/new');
+    }
+
+    public function deleteAction()
+    {
+        if (isset($_POST['delete'])) {
             $game_type = GameType::getGameTypeById($_POST['select-game-type-delete']);
             if($game_type) {
                 $game_type->deleteGameType();
-            }
-        } elseif(isset($_POST['update'])) {
-            $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
-            if($game_type) {
-                $game_type->updateGameType($_POST['game-type']);
+                Flash::addMessage('GameType Deleted Successfully!');
+            } else {
+                Flash::addMessage('GameType Deletion Failed!', 'warning');
             }
         }
+        $this->redirect('/museum/gamify/gametypecontroller/new');
+    }
+
+    public function updateAction()
+    {
+        if(isset($_POST['update'])) {
+            $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
+            if($game_type) {
+                $game_type->updateGameType($_POST['game-type-update']);
+                Flash::addMessage('GameType Updated Successfully!', 'warning');
+            } else {
+                Flash::addMessage('GameType Update Failed!');
+            }
+        }
+        $this->redirect('/museum/gamify/gametypecontroller/new');
     }
 
 }
