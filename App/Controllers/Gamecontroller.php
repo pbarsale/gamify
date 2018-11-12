@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Flash;
 use App\Models\AgeGroup;
 use App\Models\Badge;
 use App\Models\GameType;
@@ -29,26 +30,54 @@ class Gamecontroller extends \Core\Controller
         View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups, 'badges' => $badges));
     }
 
-    public function modifyAction()
+    public function addAction()
     {
         if (isset($_POST['add'])) {
-            $id = Game::addGame($_POST['game'], $_POST['select-game-type'], $_POST['select-age-group'], $_POST['select-badge']);
+            $id = Game::addGame($_POST['game-add'], $_POST['select-game-type'], $_POST['select-age-group']);
             if ($id) {
                 $_SESSION['game_id'] = $id;
                 $_SESSION['game_type_id'] = $_POST['select-game-type'];
-                $this->redirect('/museum/gamify/questioncontroller/new');
+                Flash::addMessage('Game Added Successfully!');
+            } else {
+                Flash::addMessage('Game Addition Failed!', 'warning');
             }
-        } elseif (isset($_POST['delete'])) {
-            $game = Game::getGameById($_POST['select-game-delete']);
-            if($game) {
-                $game->deleteGame();
-            }
-        } elseif(isset($_POST['update'])) {
+            $this->redirect('/museum/gamify/questioncontroller/new');
+        }
+    }
+
+    public function updateAction()
+    {
+        if(isset($_POST['update'])) {
             $game = Game::getGameById($_POST['select-game-update']);
             if($game) {
-                $game->updateGame($_POST['game']);
+                if($game->updateGame($_POST['game-update'])) {
+                    Flash::addMessage('Game Updated Successfully!');
+                } else {
+                    Flash::addMessage('Game Update Failed!', 'warning');
+                }
+                $this->redirect('/museum/gamify/gamecontroller/new');
             }
-        } elseif(isset($_POST['edit'])) {
+        }
+    }
+
+    public function deleteAction()
+    {
+        if (isset($_POST['delete'])) {
+            $game = Game::getGameById($_POST['select-game-delete']);
+            if($game) {
+                if($game->deleteGame()) {
+                    Flash::addMessage('Game Deleted Successfully!');
+                } else {
+                    Flash::addMessage('Game Deletion Failed!', 'warning');
+                }
+                $this->redirect('/museum/gamify/gamecontroller/new');
+            }
+        }
+    }
+
+    public function editAction()
+    {
+        if(isset($_POST['edit'])) {
             $game = Game::getGameById($_POST['select-game-edit']);
             $_SESSION['game_id'] = $game->id;
             if($game) {
