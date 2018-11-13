@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     <style>
         .bluediv {
             height: 560px;
@@ -14,9 +16,8 @@
         hr {
             text-align:center;
             margin: 0 auto;
-            width: 70%;
-            color: #cccccc;
-            height: 5px;
+            width: 50%;
+            border-color: #0099cc;
         }
     </style>
 
@@ -40,18 +41,23 @@
 
     <div style="text-align: center">
         <h2>Leaderboard</h2>
-        <input type="checkbox" id="point" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
-        <input type="checkbox" id="badge" onclick="changeBadges()" checked style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
+        <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
+        <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
         <div class="bluediv">
             {% for user in users %}
-            <div style="margin: 2%;font-size:large">
-                <span>{{ user.name }}</span>
-                <span class="points">{{ user.points }}</span>
-                <span class="badges">
-                    {% for badge in user.badges %}
-                    <img src="{{ badge.badge }}" width="2%" height="2%"/>
-                    {% endfor %}
-                </span>
+            <div>
+                <div class="row" style="margin: 1%;font-size:large">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-2" align="left">{{ user.name }}</div>
+                    <div class="col-md-1 points" align="left">{{ user.points }}</div>
+                    <div class="col-md-6 badges" align="left">
+                        {% for badge in user.badges %}
+                        {% if badge.badge %}
+                        <img src="{{ badge.badge }}" width="4%" height="4%"/>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
                 <hr align="center"/>
             </div>
             {% endfor %}
@@ -65,16 +71,26 @@
 
     <script>
         function changePoints() {
-            if($('#point').is(":checked"))
-                $(".points").show();
-            else
-                $(".points").hide();
+            if($('#point').is(":checked")) {
+                var rows = $(".row");
+                rows.sort(function(row1, row2) {
+                    var pointsRow1 = row1.getElementsByClassName('points')[0].innerHTML;
+                    var pointsRow2 = row2.getElementsByClassName('points')[0].innerHTML;
+                    return pointsRow2 - pointsRow1;
+                });
+                console.log(rows);
+            }
         }
         function changeBadges() {
-            if($('#badge').is(":checked"))
-                $(".badges").show();
-            else
-                $(".badges").hide();
+            if($('#badge').is(":checked")) {
+                var rows = $(".row");
+                rows.sort(function(row1, row2) {
+                    var badgesRow1 = row1.getElementsByTagName('img');
+                    var badgesRow2 = row2.getElementsByTagName('img');
+                    return badgesRow2.length - badgesRow1.length;
+                });
+                console.log(rows);
+            }
         }
     </script>
 {% endblock %}

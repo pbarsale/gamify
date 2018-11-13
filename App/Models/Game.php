@@ -139,7 +139,7 @@ class Game extends \Core\Model
                 foreach ($resource as $selected_resource) {
                     $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
                 }
-                $rows[] = array_map('utf8_encode', $selected_row);
+                $rows[] = array_map(null, $selected_row);
             }
             $games = $rows;
         } else {

@@ -21,7 +21,7 @@ input {
     outline: none;
 }
 
-input:not([type="checkbox"]){
+input:not([type="checkbox"], [type="radio"]){
     width: 92%;
     margin-top: 4px;
     padding: 10px 5px 10px 32px;

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Flash;
 use PDO;
 
 /**
@@ -52,7 +53,11 @@ class Question extends \Core\Model
             if($option_badges) {
                 Option::updateBadges($db, $id, $options, $option_badges);
             }
+            return true;
+        } else {
+            Flash::addMessage('Query execution failed', 'warning');
         }
+        return false;
     }
 
     private static function getLatestQuestionID($db) {
@@ -77,7 +82,7 @@ class Question extends \Core\Model
         $stmt->bindValue(':text', $question, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     private static function addDescriptionResource($db, $id, $description) {
@@ -91,7 +96,7 @@ class Question extends \Core\Model
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public static function getAllQuestions() {
@@ -217,7 +222,7 @@ class Question extends \Core\Model
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
 
-        $stmt->execute();
+        return $stmt->execute();
     }
 
     public static function getAllQuestionsByGameId($game_id) {

@@ -8,6 +8,7 @@
 
 namespace App\Controllers;
 
+use App\Flash;
 use App\Models\Badge;
 use App\Models\Game;
 use \Core\View;
@@ -33,8 +34,18 @@ class Questioncontroller extends \Core\Controller
 
     public function addAction()
     {
+        if(isset($_POST['game_type_id']) and $_POST['game_type_id'] == 4) {
+            if(!isset($_POST['options'])) {
+                Flash::addMessage('Please select correct options', 'warning');
+                $this->redirect('/museum/gamify/questioncontroller/new');
+            }
+        }
         if (isset($_POST['add']) or isset($_POST['done'])) {
-            Question::addQuestion($_POST['question'], $_POST['option'], $_POST['points'], isset($_POST['options']) ? $_POST['options'] : null, isset($_POST['description']) ? $_POST['description'] : null, $_POST['select-badge'], isset($_POST['select-badges']) ? $_POST['select-badges'] : null, isset($_POST['point']) ? $_POST['point'] : null);
+            if(Question::addQuestion($_POST['question'], $_POST['option'], $_POST['points'], isset($_POST['options']) ? $_POST['options'] : null, isset($_POST['description']) ? $_POST['description'] : null, $_POST['select-badge'], isset($_POST['select-badges']) ? $_POST['select-badges'] : null, isset($_POST['point']) ? $_POST['point'] : null)) {
+                Flash::addMessage('Question Added Successfully!');
+            } else {
+                Flash::addMessage('Question Addition Failed!', 'warning');
+            }
         }
         if (isset($_POST['add'])) {
             $this->redirect('/museum/gamify/questioncontroller/new');
@@ -63,8 +74,13 @@ class Questioncontroller extends \Core\Controller
     public function updateAction()
     {
         if (isset($_POST['update'])) {
-            Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], $_POST['description']);
-            $this->redirect('/museum/gamify/questioncontroller/edit');
+            if(Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], $_POST['description'])) {
+                Flash::addMessage('Question Updated Successfully!');
+                $this->redirect('/museum/gamify/questioncontroller/edit');
+            } else {
+                Flash::addMessage('Question Update Failed!', 'warning');
+                $this->redirect('/museum/gamify/questioncontroller/update');
+            }
         }
     }
 
