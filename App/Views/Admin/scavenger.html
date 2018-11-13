@@ -22,6 +22,12 @@
             </div>
         </nav>
 
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
         <div>
             <h2 style="text-align: center; margin-bottom: 3%">Scavenger Hunt Question</h2>
             <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
@@ -109,53 +115,53 @@
         <a href="/museum/gamify/login">Log In</a>
     {% endif %}
 
-<script>
-    $(document).ready(function () {
-        var i = 3;
-        $("#addOptions").click(function (e) {
-            e.preventDefault();
-            var row = document.createElement('div');
-            row.className = "row";
-            row.id = "option" + i;
-            var column1 = document.createElement('div');
-            column1.className = "col-md-1";
-            $(column1).css({marginRight: '6%'});
-            row.appendChild(column1);
-            var column2 = document.createElement('div');
-            column2.className = "col-md-6";
-            // $(column2).css({marginRight: '4%'});
-            $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;"></textarea>');
-            $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%"/>');
-            $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%">Image Verify?</label>');
-            $(column2).append('<button id="option'+i+'" name="addOptions" class="w3-button w3-circle w3-teal">-</button>');
-            row.appendChild(column2);
-            var column3 = document.createElement('div');
-            column3.className = "col-md-2";
-            $(column3).append('<label for="points" style="margin-right: 2%">Points</label>');
-            $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0" style="width:20%"/>');
-            row.appendChild(column3);
-            var column4 = document.createElement('div');
-            column4.className = "col-md-1";
-            var select_container = document.createElement("select");
-            select_container.name = "select-badges[optionA" + i + "]";
-            select_container.className = "selcls";
-            var opt = document.createElement('option');
-            opt.value = 0;
-            opt.text = "Select Badge";
-            select_container.appendChild(opt);
-            var badges = $('#badges').data("badges");
-            for (var j = 0; j < badges.length; j++) {
-                opt = document.createElement('option');
-                opt.value = badges[j].id;
-                opt.text = badges[j].name;
+    <script>
+        $(document).ready(function () {
+            var i = 3;
+            $("#addOptions").click(function (e) {
+                e.preventDefault();
+                var row = document.createElement('div');
+                row.className = "row";
+                row.id = "option" + i;
+                var column1 = document.createElement('div');
+                column1.className = "col-md-1";
+                $(column1).css({marginRight: '6%'});
+                row.appendChild(column1);
+                var column2 = document.createElement('div');
+                column2.className = "col-md-6";
+                // $(column2).css({marginRight: '4%'});
+                $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;"></textarea>');
+                $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%"/>');
+                $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%">Image Verify?</label>');
+                $(column2).append('<button id="option'+i+'" name="addOptions" class="w3-button w3-circle w3-teal">-</button>');
+                row.appendChild(column2);
+                var column3 = document.createElement('div');
+                column3.className = "col-md-2";
+                $(column3).append('<label for="points" style="margin-right: 2%">Points</label>');
+                $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0" style="width:20%"/>');
+                row.appendChild(column3);
+                var column4 = document.createElement('div');
+                column4.className = "col-md-1";
+                var select_container = document.createElement("select");
+                select_container.name = "select-badges[optionA" + i + "]";
+                select_container.className = "selcls";
+                var opt = document.createElement('option');
+                opt.value = 0;
+                opt.text = "Select Badge";
                 select_container.appendChild(opt);
-            }
-            column4.appendChild(select_container);
-            row.appendChild(column4);
-            $(".addOptionsBtn").before(row);
-            i++;
+                var badges = $('#badges').data("badges");
+                for (var j = 0; j < badges.length; j++) {
+                    opt = document.createElement('option');
+                    opt.value = badges[j].id;
+                    opt.text = badges[j].name;
+                    select_container.appendChild(opt);
+                }
+                column4.appendChild(select_container);
+                row.appendChild(column4);
+                $(".addOptionsBtn").before(row);
+                i++;
+            });
         });
-    });
-</script>
+    </script>
 
 {% endblock %}

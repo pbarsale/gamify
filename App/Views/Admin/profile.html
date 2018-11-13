@@ -1,11 +1,33 @@
 {% extends "base.html" %}
 
-{% block title %}Leaderboard{% endblock %}
+{% block title %}Profile{% endblock %}
 
 {% block body %}
 
-<section class="main-container">
-    <div class="main-wrapper">
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    Hello {{ current_user.name }}
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <div>
         <h2>Account</h2>
         <div>
             {{ user.name }}
@@ -18,7 +40,4 @@
 
         </form>
     </div>
-
-</section>
-
 {% endblock %}

@@ -38,6 +38,13 @@
                 </ul>
             </div>
         </nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
         <div>
             <h2 style="text-align: center">Questions</h2>
             <div class="bluediv">

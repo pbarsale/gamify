@@ -23,46 +23,52 @@
 
     {% if current_user %}
 
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/">
-                    Hello {{ current_user.name }}
-                </a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/">Home</a></li>
-                <li><a href="/museum/gamify/users/user?user={{ current_user.name }}">Profile</a></li>
-                <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
-                <li><a href="/museum/gamify/logout">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div style="text-align: center">
-        <h2>Leaderboard</h2>
-        <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
-        <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
-        <div class="bluediv">
-            {% for user in users %}
-            <div>
-                <div class="row" style="margin: 1%;font-size:large">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-2" align="left">{{ user.name }}</div>
-                    <div class="col-md-1 points" align="left">{{ user.points }}</div>
-                    <div class="col-md-6 badges" align="left">
-                        {% for badge in user.badges %}
-                        {% if badge.badge %}
-                        <img src="{{ badge.badge }}" width="4%" height="4%"/>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/">
+                        Hello {{ current_user.name }}
+                    </a>
                 </div>
-                <hr align="center"/>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/">Home</a></li>
+                    <li><a href="/museum/gamify/users/user?user={{ current_user.name }}">Profile</a></li>
+                    <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
+                    <li><a href="/museum/gamify/logout">Logout</a></li>
+                </ul>
             </div>
-            {% endfor %}
+        </nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
         </div>
-    </div>
+        {% endfor %}
+
+        <div style="text-align: center">
+            <h2>Leaderboard</h2>
+            <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
+            <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
+            <div class="bluediv">
+                {% for user in users %}
+                <div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2" align="left">{{ user.name }}</div>
+                        <div class="col-md-1 points" align="left">{{ user.points }}</div>
+                        <div class="col-md-6 badges" align="left">
+                            {% for badge in user.badges %}
+                            {% if badge.badge %}
+                            <img src="{{ badge.badge }}" width="4%" height="4%"/>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <hr align="center"/>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
 
     {% else %}
         <a href="/museum/gamify/signup/new">Sign Up</a>

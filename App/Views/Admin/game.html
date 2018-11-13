@@ -8,119 +8,125 @@
 
     {% if current_user %}
 
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/admin">
-                    Hello {{ current_user.name }}
-                </a>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/admin">
+                        Hello {{ current_user.name }}
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+                </ul>
             </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
-                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
-            </ul>
+        </nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
         </div>
-    </nav>
+        {% endfor %}
 
-    <div id="game-form-div" style="text-align: center;margin: 5% 35% 35%;">
-        <h2>Game</h2>
-        <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
-            <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
-            <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
-            <button class="tablinks" onclick="openTab(event, 'Edit Question')">Edit Question</button>
+        <div id="game-form-div" style="text-align: center;margin: 5% 35% 35%;">
+            <h2>Game</h2>
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
+                <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
+                <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
+                <button class="tablinks" onclick="openTab(event, 'Edit Question')">Edit Question</button>
+            </div>
+
+            <form class="game-form" action="/museum/gamify/gamecontroller/add" method="post">
+                <div id="Add" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game Type</label>
+                        <select name="select-game-type" class="selcls">
+                            {% for game_type in game_types %}
+                            <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Age Group</label>
+                        <select name="select-age-group" class="selcls">
+                            {% for age_group in age_groups %}
+                            <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <!--<div style="margin: 10%">-->
+                        <!--<label style="margin-right: 5%; ">Select Badge</label>-->
+                        <!--<select name="select-badge" class="selcls">-->
+                            <!--<option value="0">Select Badge</option>-->
+                            <!--{% for badge in badges %}-->
+                            <!--<option value="{{ badge.id }}">{{ badge.name }}</option>-->
+                            <!--{% endfor %}-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <div style="margin: 10%">
+                        <input type="text" name="game-add" placeholder="Enter Game"
+                               style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="add" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </form>
+
+            <form class="game-form" action="/museum/gamify/gamecontroller/update" method="post">
+                <div id="Update" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game</label>
+                        <select name="select-game-update" class="selcls">
+                            {% for game in games %}
+                            <option value="{{ game.id }}">{{ game.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin: 10%">
+                        <input type="text" name="game-update" placeholder="Enter New Game"
+                               style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="update" class="btn btn-primary">Update</button>
+                    </div>
+                </div>
+            </form>
+
+            <form class="game-form" action="/museum/gamify/gamecontroller/delete" method="post">
+                <div id="Delete" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game</label>
+                        <select name="select-game-delete" class="selcls">
+                            {% for game in games %}
+                            <option value="{{ game.id }}">{{ game.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="delete" class="btn btn-primary">Delete</button>
+                    </div>
+                </div>
+            </form>
+
+            <form class="game-form" action="/museum/gamify/gamecontroller/edit" method="post">
+                <div id="Edit Question" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game</label>
+                        <select name="select-game-edit" class="selcls">
+                            {% for game in games %}
+                            <option value="{{ game.id }}">{{ game.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="edit" class="btn btn-primary">Edit Question</button>
+                    </div>
+                </div>
+            </form>
         </div>
-
-        <form class="game-form" action="/museum/gamify/gamecontroller/add" method="post">
-            <div id="Add" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game Type</label>
-                    <select name="select-game-type" class="selcls">
-                        {% for game_type in game_types %}
-                        <option value="{{ game_type.id }}">{{ game_type.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Age Group</label>
-                    <select name="select-age-group" class="selcls">
-                        {% for age_group in age_groups %}
-                        <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <!--<div style="margin: 10%">-->
-                    <!--<label style="margin-right: 5%; ">Select Badge</label>-->
-                    <!--<select name="select-badge" class="selcls">-->
-                        <!--<option value="0">Select Badge</option>-->
-                        <!--{% for badge in badges %}-->
-                        <!--<option value="{{ badge.id }}">{{ badge.name }}</option>-->
-                        <!--{% endfor %}-->
-                    <!--</select>-->
-                <!--</div>-->
-                <div style="margin: 10%">
-                    <input type="text" name="game-add" placeholder="Enter Game"
-                           style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
-                </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="add" class="btn btn-primary">Add</button>
-                </div>
-            </div>
-        </form>
-
-        <form class="game-form" action="/museum/gamify/gamecontroller/update" method="post">
-            <div id="Update" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game</label>
-                    <select name="select-game-update" class="selcls">
-                        {% for game in games %}
-                        <option value="{{ game.id }}">{{ game.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin: 10%">
-                    <input type="text" name="game-update" placeholder="Enter New Game"
-                           style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
-                </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="update" class="btn btn-primary">Update</button>
-                </div>
-            </div>
-        </form>
-
-        <form class="game-form" action="/museum/gamify/gamecontroller/delete" method="post">
-            <div id="Delete" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game</label>
-                    <select name="select-game-delete" class="selcls">
-                        {% for game in games %}
-                        <option value="{{ game.id }}">{{ game.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="delete" class="btn btn-primary">Delete</button>
-                </div>
-            </div>
-        </form>
-
-        <form class="game-form" action="/museum/gamify/gamecontroller/edit" method="post">
-            <div id="Edit Question" class="tabcontent">
-                <div style="margin: 10%">
-                    <label style="margin-right: 5%; ">Select Game</label>
-                    <select name="select-game-edit" class="selcls">
-                        {% for game in games %}
-                        <option value="{{ game.id }}">{{ game.name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div style="margin-bottom: 5%">
-                    <button type="submit" name="edit" class="btn btn-primary">Edit Question</button>
-                </div>
-            </div>
-        </form>
-    </div>
     {% else %}
         <a href="/museum/gamify/signup/new">Sign Up</a>
         <a href="/museum/gamify/login">Log In</a>
