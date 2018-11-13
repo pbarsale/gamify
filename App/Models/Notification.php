@@ -43,6 +43,7 @@ class Notification extends \Core\Model
 
     public static function approvePendingRequest($question, $option)
     {
+        // writ user id in query
         $sql = "UPDATE scavenger_hunt_points SET status=:status WHERE question_id=:question_id and option_id=:option_id";
 
         $db = static::getDB();

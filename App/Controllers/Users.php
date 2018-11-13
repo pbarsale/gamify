@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 
+use App\Models\Scavenger;
 use App\Models\User;
 use \Core\View;
 use \App\Models\Quiz;
@@ -101,6 +102,22 @@ class Users extends \Core\Controller
         Flash::addMessage('Points Updated Successful');
         $url = '/museum/gamify/users/quiz/'.$_POST['gameid'];
         $_SESSION['div_id'] = $_POST['div_id'];
+        $this->redirect($url);
+    }
+
+
+    public function scavengerAnswerAction(){
+
+        if(!isset($_SESSION['user_id'])){
+            $url = '/museum/gamify/';
+            $this->redirect($url);
+        }
+        $message = Scavenger::calculateScore(intval($_POST['gameid']), intval($_POST['questionid']),intval($_POST['optionid']),
+                                    intval($_POST['points']),intval($_POST['badge_id']),$_POST['iscorrect'],
+                                    $_FILES['schunt']);
+
+        Flash::addMessage($message);
+        $url = '/museum/gamify/users/quiz/'.$_POST['gameid'];
         $this->redirect($url);
     }
 

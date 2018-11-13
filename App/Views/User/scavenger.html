@@ -22,9 +22,10 @@
 
 <div id="wrapper" style="width: 70%">
     <h1> {{ game_name }} </h1>
-    {% set count = 1 %}
 
-    {% for question in questions %}
+    {% if questions|length %}
+        {% set count = 1 %}
+        {% for question in questions %}
         <table style="width: 100%;position: relative;height:300px;">
             <tr>
                 <td>
@@ -35,44 +36,44 @@
             <tr>
                 <td>
                     {% if question.answered %}
-                        <p style="color:green;"> Total score earned : {{ question.userpoints }} points</p>
+                    <p style="color:green;"> Total score earned : {{ question.userpoints }} points</p>
                     {% else %}
-                        <p style="color:blueviolet;"> Unanswered question </p>
+                    <p style="color:blueviolet;"> Unanswered question </p>
                     {% endif %}
                 </td>
             </tr>
             {% for opt in question.options %}
-                <tr>
-                    <td>
-                        <i class="fas fa-check-square"></i>
-                        {{ opt.option }}
-                    </td>
-                    <td>
-                        {% if opt.answered %}
-                            <p style="color:green;"> opt.userpoints </p>
-                            <p style="color:green;"> opt.userbadge </p>
-                            <p style="color:green;"> opt.status </p>
-                            <p style="color:green;"> opt.image </p>
-                        {% else %}
-                            <form action="/museum/gamify/users/scavenger-answer" method="post" enctype="multipart/form-data">
-                                <input type="hidden" name="gameid" value={{ gameid }}>
-                                <input type="hidden" name="questionid" value={{ question.id }}>
-                                <input type="hidden" name="optionid" value={{ opt.id }}>
-                                <input type="hidden" name="iscorrect" value={{ opt.iscorrect }}>
-                                <input type="hidden" name="points" value={{ opt.points }}>
-                                <input type="hidden" name="badge_id" value={{ opt.badgeid }}>
+            <tr>
+                <td>
+                    <i class="fas fa-check-square"></i>
+                    {{ opt.option }}
+                </td>
+                <td>
+                    {% if opt.answered %}
+                    <p style="color:green;"> Points : {{ opt.userpoints }}  | Badge : {{ opt.userbadge }} | Status : {{ opt.status }}  </p>
+                    {% else %}
+                    <form action="/museum/gamify/users/scavenger-answer" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="gameid" value={{ gameid }}>
+                        <input type="hidden" name="questionid" value={{ question.id }}>
+                        <input type="hidden" name="optionid" value={{ opt.id }}>
+                        <input type="hidden" name="iscorrect" value={{ opt.iscorrect }}>
+                        <input type="hidden" name="points" value={{ opt.points }}>
+                        <input type="hidden" name="badge_id" value={{ opt.badge_id }}>
 
-                                <input style="width:auto;display: inline-block;padding: 5px" type="file" name="badge-add" required class="btn btn-primary"/>
-                                <input  style="width:auto;display: inline-block;padding: 7px" class="btn btn-success" type="submit" name="submit"/>
+                        <input style="width:auto;display: inline-block;padding: 5px" type="file" name="schunt" required class="btn btn-primary"/>
+                        <input  style="width:auto;display: inline-block;padding: 7px" class="btn btn-success" type="submit" name="submit"/>
 
-                            </form>
-                        {% endif %}
-                    </td>
-                </tr>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
             {% endfor %}
         </table>
-    {% set count = count + 1 %}
-    {% endfor %}
+        {% set count = count + 1 %}
+        {% endfor %}
+    {% else %}
+        <h1>{{ game_name }} is not yet ready. Please try again later!</h1>
+    {% endif %}
 </div>
 {% else %}
 

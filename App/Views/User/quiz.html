@@ -23,6 +23,8 @@
 <input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
 <div id="wrapper" style="width: 70%">
     <h1> {{ game_name }} </h1>
+
+    {% if questions|length %}
     <table style="width: 100%;position: relative;height:300px;">
         <tr>
             <td style="width:15%;position: relative">
@@ -38,7 +40,7 @@
                             <input type="hidden" name="gameid" value={{ gameid }}>
                             <input type="hidden" name="questionid" value={{ question.id }}>
                             <input type="hidden" name="points" value={{ question.points }}>
-                            <input type="hidden" name="badge_id" value={{ question.badgeid }}>
+                            <input type="hidden" name="badge_id" value={{ question.badge_id }}>
                             <input type="hidden" name="div_id" value="{{count}}">
 
                             <p> {{ count }}. {{ question.question }} </p>
@@ -84,6 +86,10 @@
             </td>
         </tr>
     </table>
+    {% else %}
+        <h1>{{ game_name }} is not yet ready. Please try again later!</h1>
+    {% endif %}
+
 </div>
 {% else %}
 

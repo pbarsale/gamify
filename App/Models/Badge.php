@@ -205,5 +205,4 @@ class Badge extends \Core\Model
         preg_match('/^image\\/gif$/i', $badge_type) or
         preg_match('/^image\\/(x-)?png$/i', $badge_type);
     }
-
 }
