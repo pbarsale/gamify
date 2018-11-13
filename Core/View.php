@@ -61,8 +61,9 @@ class View
             $twig->addGlobal('current_user',\App\Auth::getUser());
             $twig->addGlobal('flash_messages',\App\Flash::getMessages());
             $twig->addGlobal('games',\App\Models\Quiz::getAllGames());
+            $twig->addGlobal('QUIZ_CONST',4);
+            $twig->addGlobal('SCAVENGER_HUNT_CONST',16);
         }
-
         return $twig->render($template, $args);
     }
 }

@@ -13,12 +13,12 @@ use \App\Flash;
  */
 abstract class Controller
 {
-
     /**
      * Parameters from the matched route
      * @var array
      */
     protected $route_params = array();
+    protected $QUIZ_CONST = 4, $SCAVENGER_HUNT_CONST = 16;
 
     /**
      * Class constructor

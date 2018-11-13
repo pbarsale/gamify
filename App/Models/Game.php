@@ -148,7 +148,11 @@ class Game extends \Core\Model
         return $games;
     }
 
-    private static function getResourceForId($id, $db) {
+    public static function getResourceForId($id, $db = null) {
+
+        if($db==null)
+            $db = static::getDB();
+
         $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
@@ -165,11 +169,8 @@ class Game extends \Core\Model
         $stmt->bindParam(':text', $name, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-
         $stmt->execute();
-
         return $stmt->fetch();
     }
 
@@ -178,9 +179,7 @@ class Game extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-
         $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
-
         $stmt->execute();
         return $stmt->fetch();
     }

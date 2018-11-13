@@ -39,6 +39,7 @@ $router->add('admin', array('controller' => 'Admin', 'action' => 'new'));
 $router->add('password/reset/{token:[\da-f]+}', array('controller' => 'Password', 'action' => 'reset'));
 $router->add('login/create', array('controller' => 'Login', 'action' => 'create'));
 $router->add('users/quiz/{token:[0-9]+}', array('controller' => 'Users', 'action' => 'quiz'));
+$router->add('users/scavenger/{token:[0-9]+}', array('controller' => 'Users', 'action' => 'scavenger'));
 $router->add('{controller}/{action}');
 
 if(!isset($_SESSION['admin']))

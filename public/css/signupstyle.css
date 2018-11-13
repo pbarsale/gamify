@@ -273,7 +273,8 @@ p.change_link{
 	transition: all 0.4s  linear;
 }
 #wrapper p.change_link a:hover {
-	color: rgb(57, 191, 215);
+	/* color: rgb(57, 191, 215);*/
+	color : black;
 	background: rgb(247, 247, 247);
 	border: 1px solid rgb(74, 179, 198);
 }

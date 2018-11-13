@@ -281,4 +281,79 @@ class Question extends \Core\Model
         }
         return $data;
     }
+
+    public static function getUserScoreForScavengerHuntOption($questionid,$optionid){
+
+        $sql = "SELECT * FROM scavenger_hunt_points WHERE question_id=:question_id 
+                          and user_id=:user_id and option_id=:option_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
+        $stmt->bindValue(':option_id', $optionid, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if($result){
+            $data['answered'] = true;
+            $data['userpoints'] = $result->points;
+            $data['userbadge'] = $result->badge_id;
+            $data['status'] = $result->status;
+            $data['image'] = $result->image;
+        }else{
+            $data['answered'] = false;
+            $data['userpoints'] = 0;
+            $data['userbadge'] = null;
+            $data['status'] = null;
+            $data['image'] = null;
+        }
+        return $data;
+    }
+
+    public static function getUserScoreForScavengerHuntQuestion($questionid){
+
+        $sql = "SELECT * FROM scavenger_hunt_points WHERE question_id=:question_id 
+                          and user_id=:user_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
+        $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        $result = $stmt->fetch();
+
+        if($result){
+            $data['answered'] = true;
+            $sql = "SELECT sum(points) as points FROM scavenger_hunt_points WHERE question_id=:question_id 
+                          and user_id=:user_id and status=:status";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
+            $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':status', "completed", PDO::PARAM_STR);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if($result){
+                $data['userpoints'] = $result->points;
+            }
+            else{
+                $data['userpoints'] = 0;
+            }
+        }else{
+            $data['answered'] = false;
+            $data['userpoints'] = 0;
+        }
+        return $data;
+    }
+
 }

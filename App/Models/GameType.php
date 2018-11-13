@@ -109,7 +109,6 @@ class GameType extends \Core\Model
     public static function getAllGameTypes()
     {
         $sql = "SELECT * FROM game_types WHERE isdeleted=:isdeleted";
-
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
