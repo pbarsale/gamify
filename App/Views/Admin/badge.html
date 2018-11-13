@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     {% if current_user %}
 
     <nav class="navbar navbar-inverse">
@@ -31,13 +33,13 @@
         <form class="badge-form" action="/museum/gamify/badgecontroller/add" method="post" enctype="multipart/form-data">
             <div id="Add" class="tabcontent">
                 <div style="margin: 10%">
-                    <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                    <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                 </div>
                 <div style="margin: 10%">
                     <input type="file" name="badge-add" required class="btn btn-primary"/>
                 </div>
                 <div style="margin: 10%">
-                    <input type="text" id="description" name="description" placeholder="Enter Description (optional)" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 100%;"/>
+                    <input type="text" id="description" name="description" placeholder="Enter Description (optional)" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;"/>
                 </div>
                 <div style="margin-bottom: 5%">
                     <button type="submit" name="add" class="btn btn-primary">Add</button>

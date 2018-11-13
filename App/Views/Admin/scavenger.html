@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     {% if current_user %}
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
@@ -25,18 +27,18 @@
             <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
                 <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
                 <div class="row">
-                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
                     <div class="col-md-6">
-                        <label for="question" style="text-align: center; margin-right: 8%;margin-bottom: 5%">Q</label>
+                        <label for="question" style="text-align: center; margin-right: 8%;margin-bottom: 5%;font-size: x-large">Q</label>
                         <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
-                                  style="border: none;outline: 0;border-bottom: 2px solid blue; resize: none"></textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required></textarea>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-2" style="margin-left: 6%">
                         <label for="points">Points</label>
-                        <input type="number" id="points" name="points" min="0" max="100" value="0">
+                        <input type="number" id="points" name="points" min="0" max="100" value="0" style="width:20%">
                     </div>
                     <div class="col-md-1">
-                        <select id="select-badge" name="select-badge">
+                        <select id="select-badge" name="select-badge" class="selcls">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
                             <option value="{{ badge.id }}">{{ badge.name }}</option>
@@ -46,18 +48,19 @@
                     <div id="badges" data-badges="{{ badges|json_encode }}"></div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2" style="margin-right: 4.5%"></div>
-                    <div class="col-md-5" style="margin-right: 4%">
-                        <textarea id="optionA1" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
-                                  style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
-                        <input type="checkbox" name="options[]" value="optionA1" style="text-align: center; margin-right: 8%;margin-bottom: 5%"/>
+                    <div class="col-md-1" style="margin-right: 6%"></div>
+                    <div class="col-md-6">
+                        <textarea id="optionA1" class="options" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%"></textarea>
+                        <input type="checkbox" name="options[]" value="optionA1" style="text-align: center; margin-right: 5%;margin-bottom: 5%"/>
+                        <label style="margin-bottom: 5%;">Image Verify?</label>
                     </div>
                     <div class="col-md-2">
                         <label for="points">Points</label>
-                        <input type="number" name="point[optionA1]" min="0" max="100" value="0">
+                        <input type="number" name="point[optionA1]" min="0" max="100" value="0" style="width:20%">
                     </div>
                     <div class="col-md-1">
-                        <select name="select-badges[optionA1]">
+                        <select name="select-badges[optionA1]" class="selcls">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
                             <option value="{{ badge.id }}">{{ badge.name }}</option>
@@ -66,18 +69,19 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-2" style="margin-right: 4.5%"></div>
-                    <div class="col-md-5" style="margin-right: 4%">
-                        <textarea id="optionA2" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
-                                  style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none"></textarea>
-                        <input type="checkbox" name="options[]" value="optionA2" style="text-align: center; margin-right: 8%; margin-bottom: 5%"/>
+                    <div class="col-md-1" style="margin-right: 6%"></div>
+                    <div class="col-md-6">
+                        <textarea id="optionA2" class="options" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%"></textarea>
+                        <input type="checkbox" name="options[]" value="optionA2" style="text-align: center; margin-right: 5%; margin-bottom: 5%"/>
+                        <label style="margin-bottom: 5%;">Image Verify?</label>
                     </div>
                     <div class="col-md-2">
                         <label for="points">Points</label>
-                        <input type="number" name="point[optionA2]" min="0" max="100" value="0">
+                        <input type="number" name="point[optionA2]" min="0" max="100" value="0" style="width:20%">
                     </div>
                     <div class="col-md-1">
-                        <select name="select-badges[optionA2]">
+                        <select name="select-badges[optionA2]" class="selcls">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
                             <option value="{{ badge.id }}">{{ badge.name }}</option>
@@ -88,13 +92,13 @@
                 <div class="row addOptionsBtn" style="margin-bottom: 5%">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
-                        <button id="addOptions" name="addOptions">+</button>
+                        <button id="addOptions" name="addOptions" class="w3-button w3-circle w3-teal">+</button>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
-                        <button type="submit" name="done">Done</button>
+                        <button type="submit" name="done" class="btn btn-success" style="margin-bottom: 5%">Done</button>
                     </div>
                 </div>
             </form>
@@ -114,26 +118,27 @@
             row.className = "row";
             row.id = "option" + i;
             var column1 = document.createElement('div');
-            column1.className = "col-md-2";
-            $(column1).css({marginRight: '4.5%'});
+            column1.className = "col-md-1";
+            $(column1).css({marginRight: '6%'});
             row.appendChild(column1);
             var column2 = document.createElement('div');
-            column2.className = "col-md-5";
-            $(column2).css({marginRight: '4%'});
-            $(column2).append('<textarea id="optionA2" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid blue;resize: none;margin-right: 1%"></textarea>');
-            $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:1%;margin-bottom: 5%"/>');
+            column2.className = "col-md-6";
+            // $(column2).css({marginRight: '4%'});
+            $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;"></textarea>');
+            $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%"/>');
             $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%">Image Verify?</label>');
-            $(column2).append('<input type="button" class="deleteOption" id="option' + i + '" value="-"/>');
+            $(column2).append('<button id="option'+i+'" name="addOptions" class="w3-button w3-circle w3-teal">-</button>');
             row.appendChild(column2);
             var column3 = document.createElement('div');
             column3.className = "col-md-2";
             $(column3).append('<label for="points" style="margin-right: 2%">Points</label>');
-            $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0">');
+            $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0" style="width:20%"/>');
             row.appendChild(column3);
             var column4 = document.createElement('div');
             column4.className = "col-md-1";
             var select_container = document.createElement("select");
             select_container.name = "select-badges[optionA" + i + "]";
+            select_container.className = "selcls";
             var opt = document.createElement('option');
             opt.value = 0;
             opt.text = "Select Badge";

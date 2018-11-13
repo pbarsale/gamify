@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     {% if current_user %}
 
         <nav class="navbar navbar-inverse">
@@ -32,7 +34,7 @@
             <form class="game-type-form" action="/museum/gamify/gametypecontroller/add" method="post">
                 <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
-                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                     </div>
                     <div style="margin-bottom: 5%">
                         <button type="submit" name="add" class="btn btn-primary">Add</button>
@@ -50,7 +52,7 @@
                             {% endfor %}
                         </select>
                         <div style="margin: 10%">
-                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid blue;" required>
+                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                         </div>
                         <div style="margin-bottom: 5%">
                             <button type="submit" name="update" class="btn btn-primary">Update</button>

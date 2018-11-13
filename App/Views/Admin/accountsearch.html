@@ -4,6 +4,8 @@
 
 {% block body %}
 
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
     <style>
         .bluediv {
             height: 560px;
@@ -15,8 +17,8 @@
             text-align:center;
             margin: 0 auto;
             width: 50%;
-            color: #cccccc;
-            height: 5px;
+            border-color: #0099cc;
+            /*height: 1px;*/
         }
     </style>
 
@@ -39,21 +41,21 @@
 
     <div>
         <h2 style="text-align: center">Manage Account</h2>
-        <div style="text-align: center;margin: 2%">
+        <div style="text-align: center;margin: 2%;">
             <span><i class="fa fa-search"></i>
-            <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid blue;width: 30%;"/>
+            <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;width: 30%;"/>
             </span>
         </div>
         <div class="bluediv" id="userlist">
         {% for user in users %}
             <div>
                 <div class="row" style="margin: 1%;font-size:large">
-                    <div class="col-md-3"></div>
+                    <div class="col-md-4"></div>
                     <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
                     {% if user.isblocked %}
-                    <div class="col-md-3 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
+                    <div class="col-md-2 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
                     {% else %}
-                    <div class="col-md-3 username" align="left">{{ user.name }}</div>
+                    <div class="col-md-2 username" align="left">{{ user.name }}</div>
                     {% endif %}
                     <div class="col-md-1">
                         <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
