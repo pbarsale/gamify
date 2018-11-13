@@ -23,55 +23,61 @@
 
     {% if current_user %}
 
-    <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/admin">
-                    Hello {{ current_user.name }}
-                </a>
-            </div>
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-                <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
-                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <div>
-        <h2 style="text-align: center">Manage Account</h2>
-        <div style="text-align: center;margin: 2%;">
-            <span><i class="fa fa-search"></i>
-            <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;width: 30%;"/>
-            </span>
-        </div>
-        <div class="bluediv" id="userlist">
-        {% for user in users %}
-            <div>
-                <div class="row" style="margin: 1%;font-size:large">
-                    <div class="col-md-4"></div>
-                    <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
-                    {% if user.isblocked %}
-                    <div class="col-md-2 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
-                    {% else %}
-                    <div class="col-md-2 username" align="left">{{ user.name }}</div>
-                    {% endif %}
-                    <div class="col-md-1">
-                        <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
-                            <span><i class="fa fa-ban" style="color: red"></i></span>
-                        </a>
-                    </div>
-                    <div class="col-md-1">
-                    <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
-                        <span><i class="fa fa-edit"></i></span>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/admin">
+                        Hello {{ current_user.name }}
                     </a>
-                    </div>
                 </div>
-                <hr align="center">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+                </ul>
             </div>
-        {% endfor %}
+        </nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
         </div>
-    </div>
+        {% endfor %}
+
+        <div>
+            <h2 style="text-align: center">Manage Account</h2>
+            <div style="text-align: center;margin: 2%;">
+                <span><i class="fa fa-search"></i>
+                <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;width: 30%;"/>
+                </span>
+            </div>
+            <div class="bluediv" id="userlist">
+            {% for user in users %}
+                <div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
+                        {% if user.isblocked %}
+                        <div class="col-md-2 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
+                        {% else %}
+                        <div class="col-md-2 username" align="left">{{ user.name }}</div>
+                        {% endif %}
+                        <div class="col-md-1">
+                            <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
+                                <span><i class="fa fa-ban" style="color: red"></i></span>
+                            </a>
+                        </div>
+                        <div class="col-md-1">
+                        <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
+                            <span><i class="fa fa-edit"></i></span>
+                        </a>
+                        </div>
+                    </div>
+                    <hr align="center">
+                </div>
+            {% endfor %}
+            </div>
+        </div>
 
     {% else %}
         <a href="/museum/gamify/signup/new">Sign Up</a>

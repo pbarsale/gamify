@@ -4,6 +4,12 @@
 
 {% block body %}
 
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
     <h1>Log in</h1>
 	<form method="post" action="/museum/gamify/login/create">
 		<div><input type="text" name="email" placeholder="E-Mail" required autofocus value={{ email }}></div><br>

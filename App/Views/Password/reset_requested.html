@@ -4,17 +4,23 @@
 
 {% block body %}
 
-<nav class="navbar navbar-inverse">
-    <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
-        <div class="navbar-header" style="font-size: xx-large">
-            <span style="color: white"> Welcome! </span>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+            <div class="navbar-header" style="font-size: xx-large">
+                <span style="color: white"> Welcome! </span>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div id="wrapper">
-    <h1> Request Password Reset </h1>
-    <h3><span style="margin-left:20%">Please check your E-mail!</span></h3>
-</div>
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <div id="wrapper">
+        <h1> Request Password Reset </h1>
+        <h3><span style="margin-left:20%">Please check your E-mail!</span></h3>
+    </div>
 
 {% endblock %}
