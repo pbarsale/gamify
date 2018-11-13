@@ -22,6 +22,7 @@ class Questioncontroller extends \Core\Controller
 {
     public function newAction()
     {
+
         $badges = Badge::getAllBadges();
         $game_type_id = $_SESSION['game_type_id'];
         if ($game_type_id == 4) {

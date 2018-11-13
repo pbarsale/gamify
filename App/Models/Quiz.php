@@ -12,10 +12,8 @@ use PDO;
 class Quiz extends \Core\Model
 {
     public static function getAllGames() {
-
         if(!isset($_SESSION['user_id']) || $_SESSION['admin'])
             return;
-
         $user = User::findById($_SESSION['user_id']);
         $user->getAgeFromBirthDate();
         $agegroup = AgeGroup::getAgeGroupIdByAge($user->age);

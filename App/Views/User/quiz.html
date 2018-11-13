@@ -1,11 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Badge{% endblock %}
+{% block title %}Quiz{% endblock %}
 
 {% block body %}
 
 {% if current_user %}
-
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
             <div class="navbar-header">
@@ -22,71 +21,70 @@
         </div>
     </nav>
 <input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
-<table style="width:50%;margin-left:25%;margin-top:5%">
-    <tr>
-        <td>
-            <h3> Quiz Game </h3>
-            <button class="btn btn-primary"><a id="prev">Prev</a></button>
-            <button class="btn btn-primary"><a id="next">Next</a></button>
-        </td>
-    </tr>
-    <tr>
-    <td>
-    <br>
-        {% set count = 1 %}
-        <div class="questiondivs">
-        {% for question in questions %}
-            <div class="w3-container">
-                <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
-                <a name="qdiv{{ count }}"></a>
-                <input type="hidden" name="gameid" value={{ gameid }}>
-                <input type="hidden" name="questionid" value={{ question.id }}>
-                <input type="hidden" name="points" value={{ question.points }}>
-                <input type="hidden" name="badge_id" value={{ question.badgeid }}>
-                <input type="hidden" name="div_id" value="{{count}}">
+<div id="wrapper" style="width: 70%">
+    <h1> {{ game_name }} </h1>
+    <table style="width: 100%;position: relative;height:300px;">
+        <tr>
+            <td style="width:15%;position: relative">
+                <button class="btn btn-primary"><a id="prev">Prev</a></button>
+            </td>
+            <td style="width:70%;position: relative">
+                {% set count = 1 %}
+                <div class="questiondivs">
+                    {% for question in questions %}
+                    <div class="w3-container">
+                        <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
+                            <a name="qdiv{{ count }}"></a>
+                            <input type="hidden" name="gameid" value={{ gameid }}>
+                            <input type="hidden" name="questionid" value={{ question.id }}>
+                            <input type="hidden" name="points" value={{ question.points }}>
+                            <input type="hidden" name="badge_id" value={{ question.badgeid }}>
+                            <input type="hidden" name="div_id" value="{{count}}">
 
+                            <p> {{ count }}. {{ question.question }} </p>
+                            {% if question.answered %}
+                            <p style="color:green;"> You have earned : {{ question.userpoints }} points</p>
 
-                    <p> {{ count }}. {{ question.question }} </p>
+                            {% for opt in question.options %}
+                            {% if opt.iscorrect %}
+                            <input type="checkbox"  disabled="true" checked name="option[]" value="{{opt.id}}"/> <span style="color:green;"> {{ opt.option }} </span>
+                            {% else %}
+                            <input type="checkbox"  disabled="true" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                            {% endif %}
 
-                {% if question.answered %}
-                    <p> You have earned : {{ question.userpoints }} points</p>
+                            <br><br>
+                            {% endfor %}
 
-                    {% for opt in question.options %}
+                            {% if question.userpoints>0 %}
+                            <p style="color:green;"> Great work! </p>
+                            {% else %}
+                            <p style="color:red;"> Wrong answer! </p>
+                            {% endif %}
 
-                    {% if opt.iscorrect %}
-                    <input type="checkbox"  disabled="true" checked name="option[]" value="{{opt.id}}"/> {{ opt.option }}
-                    {% else %}
-                    <input type="checkbox"  disabled="true" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
-                    {% endif %}
+                            <p>{{ question.description }}</p>
+                            <input   style="width: 50%; margin-left: 20%"  class="btn btn-success" disabled="true" type="submit" name="submit"/>
+                            {% else %}
 
-                    <br><br>
+                            <p style="color:blueviolet;"> Unanswered question </p>
+                            {% for opt in question.options %}
+                            <input type="checkbox"  name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                            <br><br>
+                            {% endfor %}
+                            <br>
+                            <input  style="width: 50%; margin-left: 20%" class="btn btn-success" type="submit" name="submit"/>
+                            {% endif %}
+                            {% set count = count + 1 %}
+                        </form>
+                    </div>
                     {% endfor %}
-
-                    {% if question.userpoints>0 %}
-                        <p> Great work! </p>
-                    {% else %}
-                        <p> Wrong answer! </p>
-                    {% endif %}
-
-                    <p>{{ question.description }}</p>
-                    <input  class="btn btn-success" disabled="true" type="submit" name="submit"/>
-                {% else %}
-
-                    <p> Unanswered question </p>
-                    {% for opt in question.options %}
-                    <input type="checkbox"  name="option[]" value="{{opt.id}}"/> {{ opt.option }}
-                    <br><br>
-                    {% endfor %}
-                    <input  class="btn btn-success" type="submit" name="submit"/>
-                {% endif %}
-                {% set count = count + 1 %}
-                </form>
-            </div>
-        {% endfor %}
-        </div>
-    </td>
-    </tr>
-</table>
+                </div>
+            </td>
+            <td style="width:15%;position: relative">
+                <button class="btn btn-primary"><a id="next">Next</a></button>
+            </td>
+        </tr>
+    </table>
+</div>
 {% else %}
 
         <a href="/museum/gamify/signup/new">Sign Up</a>
