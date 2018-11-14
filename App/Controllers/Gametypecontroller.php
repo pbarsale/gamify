@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\Notification;
 use \Core\View;
 use \App\Models\GameType;
 
@@ -21,7 +22,8 @@ class Gametypecontroller extends \Core\Controller
     public function newAction()
     {
         $game_types = GameType::getAllGameTypes();
-        View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types));
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types, 'notifications' => $notifications));
     }
 
     public function addAction()
@@ -56,9 +58,9 @@ class Gametypecontroller extends \Core\Controller
             $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
             if($game_type) {
                 $game_type->updateGameType($_POST['game-type-update']);
-                Flash::addMessage('GameType Updated Successfully!', 'warning');
+                Flash::addMessage('GameType Updated Successfully!');
             } else {
-                Flash::addMessage('GameType Update Failed!');
+                Flash::addMessage('GameType Update Failed!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gametypecontroller/new');

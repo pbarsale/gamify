@@ -8,6 +8,31 @@ h2 {
     padding-bottom: 30px;
 }
 
+h2{
+    background: -webkit-repeating-linear-gradient(-45deg,
+    rgb(18, 83, 93) ,
+    rgb(18, 83, 93) 20px,
+    rgb(64, 111, 118) 20px,
+    rgb(64, 111, 118) 40px,
+    rgb(18, 83, 93) 40px);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+}
+h2:after{
+    content: ' ';
+    display: block;
+    width: 100%;
+    height: 2px;
+    margin-top: 10px;
+    background: -moz-linear-gradient(left, rgba(147,184,189,0) 0%, rgba(147,184,189,0.8) 20%, rgba(147,184,189,1) 53%, rgba(147,184,189,0.8) 79%, rgba(147,184,189,0) 100%);
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(147,184,189,0)), color-stop(20%,rgba(147,184,189,0.8)), color-stop(53%,rgba(147,184,189,1)), color-stop(79%,rgba(147,184,189,0.8)), color-stop(100%,rgba(147,184,189,0)));
+    background: -webkit-linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%);
+    background: -o-linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%);
+    background: -ms-linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%);
+    background: linear-gradient(left, rgba(147,184,189,0) 0%,rgba(147,184,189,0.8) 20%,rgba(147,184,189,1) 53%,rgba(147,184,189,0.8) 79%,rgba(147,184,189,0) 100%);
+}
+
+
 ::-webkit-input-placeholder  {
     color: rgb(190, 188, 188);
     font-style: italic;
@@ -42,7 +67,7 @@ input:not([type="checkbox"], [type="radio"]){
     transition: all 0.2s linear;
 }
 
-textarea {
+input, textarea {
     width: 80%;
     margin-top: 4px;
     padding: 10px 5px 10px 32px;
@@ -81,4 +106,30 @@ input[type=checkbox] {
     -moz-transform: scale(2); /* FF */
     -webkit-transform: scale(2); /* Safari and Chrome */
     -o-transform: scale(2); /* Opera */
+}
+
+.bluediv {
+    height: 560px;
+    overflow-y : auto;
+    text-align: center;
+}
+
+hr {
+    text-align:center;
+    margin: 0 auto;
+    width: 50%;
+    border-color: #0099cc;
+}
+
+.button__badge {
+    background-color: #fa3e3e;
+    border-radius: 2px;
+    color: white;
+
+    padding: 0 3px;
+    font-size: 10px;
+
+    position: absolute; /* Position the badge within the relatively positioned button */
+    top: 0;
+    right: 0;
 }
