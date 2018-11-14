@@ -6,21 +6,6 @@
 
     <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
 
-    <style>
-        .bluediv {
-            height: 560px;
-            overflow-y : auto;
-            text-align: center;
-        }
-
-        hr {
-            text-align:center;
-            margin: 0 auto;
-            width: 50%;
-            border-color: #0099cc;
-        }
-    </style>
-
     {% if current_user %}
 
         <nav class="navbar navbar-inverse">
@@ -32,7 +17,7 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
                     <li><a href="/museum/gamify/logout/admin">Logout</a></li>
                 </ul>
             </div>
@@ -52,30 +37,34 @@
                 </span>
             </div>
             <div class="bluediv" id="userlist">
-            {% for user in users %}
-                <div>
-                    <div class="row" style="margin: 1%;font-size:large">
-                        <div class="col-md-4"></div>
-                        <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
-                        {% if user.isblocked %}
-                        <div class="col-md-2 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
-                        {% else %}
-                        <div class="col-md-2 username" align="left">{{ user.name }}</div>
-                        {% endif %}
-                        <div class="col-md-1">
-                            <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
-                                <span><i class="fa fa-ban" style="color: red"></i></span>
-                            </a>
+                {% if users|length > 0 %}
+                    {% for user in users %}
+                        <div>
+                            <div class="row" style="margin: 1%;font-size:large">
+                                <div class="col-md-4"></div>
+                                <!--<div class="col-md-1"><img src="{{ user.avatar }}" width="2%" height="2%"/></div>-->
+                                {% if user.isblocked %}
+                                <div class="col-md-2 username" align="left" style="text-decoration:line-through; color: red">{{ user.name }}</div>
+                                {% else %}
+                                <div class="col-md-2 username" align="left">{{ user.name }}</div>
+                                {% endif %}
+                                <div class="col-md-1">
+                                    <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
+                                        <span><i class="fa fa-ban" style="color: red"></i></span>
+                                    </a>
+                                </div>
+                                <div class="col-md-1">
+                                <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
+                                    <span><i class="fa fa-edit"></i></span>
+                                </a>
+                                </div>
+                            </div>
+                            <hr align="center">
                         </div>
-                        <div class="col-md-1">
-                        <a href="/museum/gamify/manageaccount/change?user_id={{ user.id }}" style="display:inline-block; padding: 1%">
-                            <span><i class="fa fa-edit"></i></span>
-                        </a>
-                        </div>
-                    </div>
-                    <hr align="center">
-                </div>
-            {% endfor %}
+                    {% endfor %}
+                {% else %}
+                    <h2 style="text-align: center">No Users Registered</h2>
+                {% endif %}
             </div>
         </div>
 

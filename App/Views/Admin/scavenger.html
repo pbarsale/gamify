@@ -16,7 +16,7 @@
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-                    <li><a href="/museum/gamify/notificationcontroller/new">Notification</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
                     <li><a href="/museum/gamify/logout/admin">Logout</a></li>
                 </ul>
             </div>
@@ -39,18 +39,18 @@
                         <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
                                   style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required></textarea>
                     </div>
-                    <div class="col-md-2" style="margin-left: 6%">
-                        <label for="points">Points</label>
-                        <input type="number" id="points" name="points" min="0" max="100" value="0" style="width:20%">
-                    </div>
-                    <div class="col-md-1">
-                        <select id="select-badge" name="select-badge" class="selcls">
-                            <option value="0">Select Badge</option>
-                            {% for badge in badges %}
-                            <option value="{{ badge.id }}">{{ badge.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    <!--<div class="col-md-2" style="margin-left: 6%">-->
+                        <!--<label for="points">Points</label>-->
+                        <!--<input type="number" id="points" name="points" min="0" max="100" value="0" style="width:20%">-->
+                    <!--</div>-->
+                    <!--<div class="col-md-1">-->
+                        <!--<select id="select-badge" name="select-badge" class="selcls">-->
+                            <!--<option value="0">Select Badge</option>-->
+                            <!--{% for badge in badges %}-->
+                            <!--<option value="{{ badge.id }}">{{ badge.name }}</option>-->
+                            <!--{% endfor %}-->
+                        <!--</select>-->
+                    <!--</div>-->
                     <div id="badges" data-badges="{{ badges|json_encode }}"></div>
                 </div>
                 <div class="row">
@@ -62,7 +62,7 @@
                         <label style="margin-bottom: 5%;">Image Verify?</label>
                     </div>
                     <div class="col-md-2">
-                        <label for="points">Points</label>
+                        <label>Points</label>
                         <input type="number" name="point[optionA1]" min="0" max="100" value="0" style="width:20%">
                     </div>
                     <div class="col-md-1">
@@ -83,7 +83,7 @@
                         <label style="margin-bottom: 5%;">Image Verify?</label>
                     </div>
                     <div class="col-md-2">
-                        <label for="points">Points</label>
+                        <label>Points</label>
                         <input type="number" name="point[optionA2]" min="0" max="100" value="0" style="width:20%">
                     </div>
                     <div class="col-md-1">

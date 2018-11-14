@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Models\Notification;
 use App\Models\User;
 use \Core\View;
 /**
@@ -19,13 +20,15 @@ class Manageaccount extends \Core\Controller
     public function newAction()
     {
         $users = User::getAllUsers();
-        View::renderTemplate('Admin/accountsearch.html', array('users' => $users));
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/accountsearch.html', array('users' => $users, 'notifications' => $notifications));
     }
 
     public function userAction()
     {
         $user = User::getUserByName($_GET['user']);
-        View::renderTemplate('Admin/profile.html', array('user' => $user));
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications));
     }
 
     public function blockAction() {

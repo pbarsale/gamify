@@ -11,6 +11,7 @@ use App\Flash;
 use App\Models\AgeGroup;
 use App\Models\Badge;
 use App\Models\GameType;
+use App\Models\Notification;
 use \Core\View;
 use \App\Models\Game;
 
@@ -27,21 +28,23 @@ class Gamecontroller extends \Core\Controller
         $game_types = GameType::getAllGameTypes();
         $age_groups = AgeGroup::getAllAgeGroups();
         $badges = Badge::getAllBadges();
-        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups, 'badges' => $badges));
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups, 'badges' => $badges, 'notifications' => $notifications));
     }
 
     public function addAction()
     {
         if (isset($_POST['add'])) {
             $id = Game::addGame($_POST['game-add'], $_POST['select-game-type'], $_POST['select-age-group']);
-            if ($id) {
+            if ($id != null) {
                 $_SESSION['game_id'] = $id;
                 $_SESSION['game_type_id'] = $_POST['select-game-type'];
                 Flash::addMessage('Game Added Successfully!');
+                $this->redirect('/museum/gamify/questioncontroller/new');
             } else {
                 Flash::addMessage('Game Addition Failed!', 'warning');
+                $this->redirect('/museum/gamify/gamecontroller/new');
             }
-            $this->redirect('/museum/gamify/questioncontroller/new');
         }
     }
 

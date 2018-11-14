@@ -11,6 +11,9 @@ use PDO;
  */
 class LeaderBoard extends \Core\Model
 {
+    const COMPLETED = "completed";
+    const PENDING = "pending";
+
     public static function getLeaderBoard($users) {
         self::getAllUsersFromQuiz($users);
         self::getAllUsersFromScavengerHunt($users);
@@ -54,10 +57,11 @@ class LeaderBoard extends \Core\Model
 
     private static function getAllUsersFromScavengerHunt($users)
     {
-        $sql = "SELECT user_id, sum(points) FROM scavenger_hunt_points group by user_id";
+        $sql = "SELECT user_id, sum(points) FROM scavenger_hunt_points where status=:status group by user_id";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
+        $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -69,7 +73,10 @@ class LeaderBoard extends \Core\Model
             foreach ($users as $user) {
                 $presentUser = self::ifUserPresent($user->id, $result);
                 $user->points += $presentUser === null ? 0 : $presentUser['sum(points)'];
-                array_push($user->badges, self::getBadgesOfUserForQuiz($user->id));
+                $badges = self::getBadgesOfUserForScavengerHunt($user->id);
+                foreach($badges as $badge) {
+                    array_push($user->badges, $badge);
+                }
             }
         }
         return $users;
@@ -94,11 +101,12 @@ class LeaderBoard extends \Core\Model
 
     private static function getBadgesOfUserForScavengerHunt($user_id)
     {
-        $sql = "SELECT badge_id FROM scavenger_hunt_points where user_id=:user_id";
+        $sql = "SELECT badge_id FROM scavenger_hunt_points where user_id=:user_id and status=:status";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 

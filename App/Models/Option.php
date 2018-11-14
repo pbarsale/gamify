@@ -109,13 +109,14 @@ class Option extends \Core\Model
         $options = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($options as $option) {
-            $sql = "Select * from resource where row_id=:row_id and column_n=:column_n and table_n=:table_n and text=:text";
+            $sql = "Select * from resource where row_id=:row_id and column_n=:column_n and table_n=:table_n and text=:text and lang=:lang";
 
             $stmt = $db->prepare($sql);
             $stmt->bindValue(':row_id', $option['id'], PDO::PARAM_INT);
             $stmt->bindValue(':column_n', self::OPTION, PDO::PARAM_STR);
             $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
             $stmt->bindValue(':text', $ans, PDO::PARAM_STR);
+            $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
             $stmt->execute();
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             if($result['row_id'] === $option['id']) {
@@ -157,10 +158,12 @@ class Option extends \Core\Model
     }
 
     private static function getResourceForId($id, $db) {
-        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n";
+        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::OPTION, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -187,13 +190,14 @@ class Option extends \Core\Model
     }
 
     private static function updateOption($db, $option_id, $option) {
-        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::OPTION, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $option_id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $option, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -228,11 +232,13 @@ class Option extends \Core\Model
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if($result) {
-            $resource = self::getResourceForId($result['id'], $db);
-            foreach ($resource as $selected_resource) {
-                $result[$selected_resource['column_n']] = $selected_resource['text'];
+            foreach ($result as $selected_row) {
+                $resource = self::getResourceForId($selected_row['id'], $db);
+                foreach ($resource as $selected_resource) {
+                    $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
+                }
+                $rows[] = array_map(null, $selected_row);
             }
-            $rows[] = array_map(null, $result);
             $option = $rows;
         } else {
             $option = $result;

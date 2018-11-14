@@ -108,13 +108,14 @@ class Game extends \Core\Model
 
         $stmt->execute();
 
-        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and column_n=:column_n and table_n=:table_n';
+        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and column_n=:column_n and table_n=:table_n and lang=:lang';
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':text', $game, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -153,22 +154,25 @@ class Game extends \Core\Model
         if($db==null)
             $db = static::getDB();
 
-        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n";
+        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function getGameByName($name) {
-        $sql = "SELECT * from resource where text=:text and column_n=:column_n and table_n=:table_n";
+        $sql = "SELECT * from resource where text=:text and column_n=:column_n and table_n=:table_n and lang=:lang";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':text', $name, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetch();

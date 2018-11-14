@@ -131,10 +131,11 @@ class Question extends \Core\Model
     }
 
     private static function getResourceForId($id, $db) {
-        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n";
+        $sql = "SELECT * from resource where row_id=:row_id and table_n=:table_n and lang=:lang";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -198,29 +199,33 @@ class Question extends \Core\Model
             }
 
             Option::updateOptions($db, $id, $options);
+            return true;
         }
+        return false;
     }
 
     private static function updateQuestionResource($db, $id, $question) {
-        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::QUESTION, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $question, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
     }
 
     private static function updateDescriptionResource($db, $id, $description) {
-        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n";
+        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
 
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         return $stmt->execute();
     }

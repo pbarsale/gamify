@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\Notification;
 use \Core\View;
 use \App\Models\Badge;
 
@@ -21,7 +22,8 @@ class Badgecontroller extends \Core\Controller
     public function newAction()
     {
         $badges = Badge::getAllBadges();
-        View::renderTemplate('Admin/badge.html', array('badges' => $badges));
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/badge.html', array('badges' => $badges, 'notifications' => $notifications));
     }
 
     public function addAction()
