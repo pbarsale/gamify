@@ -75,7 +75,7 @@ class LeaderBoard extends \Core\Model
                 $user->points += $presentUser === null ? 0 : $presentUser['sum(points)'];
                 $badges = self::getBadgesOfUserForScavengerHunt($user->id);
                 foreach($badges as $badge) {
-                    array_push($user->badges, $badge);
+                    $user->badges == null ? $user->badges = $badges : array_push($user->badges, $badge);
                 }
             }
         }
