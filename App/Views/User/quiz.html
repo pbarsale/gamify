@@ -20,6 +20,12 @@
             </ul>
         </div>
     </nav>
+{% for message in flash_messages %}
+<div class="alert alert-{{ message.type }}">
+    {{ message.body }}
+</div>
+{% endfor %}
+
 <input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
 <div id="wrapper" style="width: 70%">
     <h1> {{ game_name }} </h1>
