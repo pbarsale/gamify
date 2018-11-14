@@ -114,10 +114,19 @@
                 column2.className = "col-md-6";
                 $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center; margin-right: 9%;margin-bottom: 5%"/>');
                 $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" required></textarea>');
-                $(column2).append('<button id="option'+i+'" name="addOptions" class="w3-button w3-circle w3-teal">-</button>');
+                $(column2).append('<button data-id="option'+i+'" name="deleteOptions" class="deleteOptionBtn w3-button w3-circle w3-teal">-</button>');
                 row.append(column2);
                 $(".addOptionsBtn").before(row);
                 i++;
+            });
+
+            $(document).on('click','.deleteOptionBtn',function(e){
+                e.preventDefault();
+                var divId = $(this).data("id");
+                var div = document.getElementById(divId);
+                div.parentNode.removeChild(div);
+                i--;
+                return false;
             });
         });
     </script>
