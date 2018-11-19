@@ -21,9 +21,16 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/museum/gamify/admin">
-                        Hello {{ current_user.name }}
-                    </a>
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/museum/gamify/">
+                            {% if avatar_file %}
+                            <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                            {% endif %}
+                        </a>
+                        <a class="navbar-brand" href="/museum/gamify/">
+                            {{ current_user.name }}
+                        </a>
+                    </div>
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
@@ -115,7 +122,7 @@
             </ul>
             {% endif %}
 
-            <form method="post" action="/museum/gamify/signup/create">
+            <form method="post" action="/museum/gamify/signup/create" enctype="multipart/form-data">
 
                 <label for="name" data-icon="u">Full Name</label>
                 <input type="text" id="name" name="name" placeholder="Full Name" value="{{ user.name }}" required>
@@ -125,6 +132,9 @@
 
                 <label for="birth_date" data-icon="u">Birth Date</label>
                 <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ user.birth_date }}" required>
+
+                <label for="user_avatar" data-icon="u">Avatar</label>
+                <input type="file" id="user_avatar" name="user_avatar" />
 
                 <label for="email" data-icon="e">E-Mail</label>
                 <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ user.email }}" required>

@@ -11,7 +11,7 @@ use PDO;
 
 class Scavenger  extends \Core\Model{
 
-    const FILEPATH = "/museum/Gamify/";
+    const FILEPATH = "/museum/gamify/";
     public static function calculateScore($gameid,$questionid,$optionid,$points,
                             $badge_id,$iscorrect,$schunt) {
 
@@ -48,14 +48,15 @@ class Scavenger  extends \Core\Model{
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->execute();
             return "Points updated successfully";
-        }else{
+        }
+        else{
             return "Please select valid file type (JPEG, JPG, GIF, PNG)";
         }
     }
 
-    private static function validateImage($badge_type) {
-        return preg_match('/^image\\/p?jpeg$/i', $badge_type) or
-            preg_match('/^image\\/gif$/i', $badge_type) or
-            preg_match('/^image\\/(x-)?png$/i', $badge_type);
+    private static function validateImage($answer_type) {
+        return preg_match('/^image\\/p?jpeg$/i', $answer_type) or
+            preg_match('/^image\\/gif$/i', $answer_type) or
+            preg_match('/^image\\/(x-)?png$/i', $answer_type);
     }
 }

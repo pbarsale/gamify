@@ -63,6 +63,9 @@ class View
             $twig->addGlobal('games',\App\Models\Quiz::getAllGames());
             $twig->addGlobal('QUIZ_CONST',4);
             $twig->addGlobal('SCAVENGER_HUNT_CONST',16);
+            $twig->addGlobal('avatar_file',\App\Models\User::setUserAvatar());
+            $twig->addGlobal('points',\App\Models\LeaderBoard::getPointsOfUser());
+            $twig->addGlobal('badges',\App\Models\LeaderBoard::getBadgesOfUser());
         }
         return $twig->render($template, $args);
     }
