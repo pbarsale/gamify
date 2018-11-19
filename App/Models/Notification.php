@@ -11,8 +11,8 @@ use PDO;
 class Notification extends \Core\Model
 {
     const PENDING = "pending";
-
     const COMPLETED = "completed";
+    const DENIED = "denied";
 
     public static function getAllPendingScavengerHunt()
     {
@@ -46,10 +46,9 @@ class Notification extends \Core\Model
         return $notifications;
     }
 
-    public static function approvePendingRequest($question, $option)
+    public static function approvePendingRequest($question, $option, $user_id)
     {
-        // writ user id in query
-        $sql = "UPDATE scavenger_hunt_points SET status=:status WHERE question_id=:question_id and option_id=:option_id";
+        $sql = "UPDATE scavenger_hunt_points SET status=:status WHERE question_id=:question_id and option_id=:option_id and user_id=:user_id";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -57,6 +56,24 @@ class Notification extends \Core\Model
         $stmt->bindValue(':question_id', $question, PDO::PARAM_INT);
         $stmt->bindValue(':option_id', $option, PDO::PARAM_INT);
         $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        return $stmt->execute();
+    }
+
+    public static function denyPendingRequest($question, $option, $user_id)
+    {
+        $sql = "UPDATE scavenger_hunt_points SET status=:status WHERE question_id=:question_id and option_id=:option_id and user_id=:user_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':question_id', $question, PDO::PARAM_INT);
+        $stmt->bindValue(':option_id', $option, PDO::PARAM_INT);
+        $stmt->bindValue(':status', self::DENIED, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
