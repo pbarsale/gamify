@@ -9,6 +9,7 @@ use PDO;
  *
  * PHP version 7.0
  */
+
 class LeaderBoard extends \Core\Model
 {
     const COMPLETED = "completed";
@@ -58,22 +59,23 @@ class LeaderBoard extends \Core\Model
     private static function getAllUsersFromScavengerHunt($users)
     {
         $sql = "SELECT user_id, sum(points) FROM scavenger_hunt_points where status=:status group by user_id";
-
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
-
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
-
         $stmt->execute();
-
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if($result) {
             foreach ($users as $user) {
                 $presentUser = self::ifUserPresent($user->id, $result);
+                var_dump($user);
+                $user->points = $user->points == null ?  0 : $user->points;
                 $user->points += $presentUser === null ? 0 : $presentUser['sum(points)'];
-                array_push($user->badges, self::getBadgesOfUserForScavengerHunt($user->id));
+                $badges = self::getBadgesOfUserForScavengerHunt($user->id);
+                foreach($badges as $badge) {
+                    $user->badges == null ? $user->badges = $badges : array_push($user->badges, $badge);
+                }
             }
         }
         return $users;
@@ -131,4 +133,56 @@ class LeaderBoard extends \Core\Model
         return $badges;
     }
 
+    public static function getPointsOfUser(){
+        if(isset($_SESSION['user_id']) && !$_SESSION['admin']){
+
+            $sql = "select sum(points) as points from 
+                          (SELECT q.user_id, q.points from quiz_points q where user_id=:id
+                            union all
+                            SELECT sh.user_id,sh.points from scavenger_hunt_points sh where user_id=:id and status=:status) 
+                    as points_table";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if($result){
+                return $result['points'];
+            }
+            return $result;
+        }
+    }
+
+    public static function getBadgesOfUser(){
+        if(isset($_SESSION['user_id']) && !$_SESSION['admin']){
+
+            $sql = "select badge_id, badge, count from badges inner join
+                        (select badge_id, count(*) as count from 
+                                (SELECT q.user_id, q.badge_id 
+                                from quiz_points q
+                                where user_id=:id
+                                union all
+                                SELECT sh.user_id,sh.badge_id 
+                                from scavenger_hunt_points sh
+                                where user_id=:id
+                                and status=:status) as badge_all
+                        group by badge_id) as badge_total
+                    where badges.id = badge_total.badge_id";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $_SESSION['user_id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
+        }
+    }
 }

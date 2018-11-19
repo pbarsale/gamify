@@ -121,8 +121,7 @@ class Users extends \Core\Controller
         $this->redirect($url);
     }
 
-    public function userAction(){
-        $user = User::getUserByName($_GET['user']);
-        View::renderTemplate('User/profile.html', array('user' => $user));
+    public function profileAction(){
+        View::renderTemplate('User/profile.html');
     }
 }

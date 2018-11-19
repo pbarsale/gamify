@@ -10,14 +10,20 @@
 
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
+
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/museum/gamify/">
-                        Hello {{ current_user.name }}
+                        {% if avatar_file %}
+                        <img src="{{ avatar_file }}?random=323527528432525.24234" height="30px" width="30px" alt="Avatar"/>
+                        {% endif %}
+                    </a>
+                    <a class="navbar-brand" href="/museum/gamify/">
+                        {{ current_user.name }}
                     </a>
                 </div>
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/">Home</a></li>
-                    <li><a href="/museum/gamify/users/user?user={{ current_user.name }}">Profile</a></li>
+                    <li><a href="/museum/gamify/users/profile">Profile</a></li>
                     <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
                     <li><a href="/museum/gamify/logout">Logout</a></li>
                 </ul>

@@ -15,6 +15,7 @@ use \Core\View;
 class User extends \Core\Model
 {
 
+    const FILEPATH = "/museum/gamify/";
     /**
      * Error messages
      * @var array
@@ -37,10 +38,9 @@ class User extends \Core\Model
      *
      * @return void
      */
-    public function save(){
+    public function save($avatar){
 
-        $this->validate();
-
+        $this->validate($avatar);
         if(empty($this->errors)){
 
             $isadmin = $_SESSION['admin'];
@@ -58,7 +58,6 @@ class User extends \Core\Model
             $stmt->bindValue(':birth_date',$this->birth_date,PDO::PARAM_STR);
             $stmt->bindValue(':isadmin',$isadmin,PDO::PARAM_BOOL);
             return $stmt->execute();
-
         }
         return false; 
     }
@@ -70,7 +69,7 @@ class User extends \Core\Model
      * @return void
      */
     
-    public function validate(){
+    public function validate($avatar){
         if (empty($this->name) || empty($this->email) || empty($this->password) || empty($this->confirmPwd) || empty($this->birth_date)) {
             $this->errors[] = 'Empty fields not allowed';
         }
@@ -103,12 +102,25 @@ class User extends \Core\Model
             $this->errors[] = 'Password needs at least one number';
         }
 
+        if($avatar){
+            $avatar_type = $avatar['type'];
+            if(!($this->validateImage($avatar_type))) {
+                $this->errors[] = 'Avatar should be of file type - JPEG, PNG, GIF';
+            }
+        }
+
         $dob = new DateTime($this->birth_date);
         $now = new DateTime();
-        if($now->diff($dob)->y < 1){
+
+        if($now<$dob){
+            $this->errors[] = 'Birth date cannot be future date';
+        }else if($now->diff($dob)->y < 1){
             $this->errors[] = 'Should be 1 year old or above';
+        }else if($now->diff($dob)->y >199){
+            $this->errors[] = 'Age seems to be quite old, please check again';
         }
     }
+
 
     /**
     * Validate password values, required for reset password
@@ -439,13 +451,96 @@ class User extends \Core\Model
     public static function blockUser($user_id, $block)
     {
         $sql = "UPDATE users SET isblocked=:isblocked where id=:id";
-
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
         $stmt->bindValue(':isblocked', !$block, PDO::PARAM_BOOL);
-
         return $stmt->execute();
     }
 
+    public  function validateImage($avatar_type) {
+        return preg_match('/^image\\/p?jpeg$/i', $avatar_type) or
+            preg_match('/^image\\/gif$/i', $avatar_type) or
+            preg_match('/^image\\/(x-)?png$/i', $avatar_type);
+    }
+
+    public static function uploadAvatar($email, $avatar){
+
+        $user = self::findByEmail($email);
+        $avatar_tmp = $avatar['tmp_name'];
+        $filepath = "images/" . $user->id."_avatar.jpg";
+
+        if(move_uploaded_file($avatar_tmp, $filepath)){
+            $sql = "UPDATE users SET avatar=:avatar where id=:id";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':id', $user->id, PDO::PARAM_INT);
+            $stmt->bindValue(':avatar',self::FILEPATH.$filepath, PDO::PARAM_STR);
+            return $stmt->execute();
+        }else{
+            return false;
+        }
+    }
+
+    public static function setUserAvatar(){
+        if(isset($_SESSION['user_id'])){
+            return self::getuserAvatarById($_SESSION['user_id']);
+        }
+        return null;
+    }
+
+    public static function getuserAvatarById($id){
+
+        $sql = "SELECT * from users where id=:id";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->execute();
+
+        $user = $stmt->fetch();
+        return $user->avatar;
+    }
+
+
+    public function validateProfilePage($avatar){
+
+        if (empty($this->name)){
+            $this->errors[] = 'Empty Name not allowed';
+        }
+
+        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)){
+            $this->errors[] = 'First and Last name should contain only alphabets';
+        }
+
+        if($avatar){
+            $avatar_type = $avatar['type'];
+            if(!($this->validateImage($avatar_type))) {
+                $this->errors[] = 'Avatar should be of file type - JPEG, PNG, GIF';
+            }
+        }
+    }
+
+    public function updateProfilePage($avatar)
+    {
+        $this->validateProfilePage($avatar);
+        if (empty($this->errors)) {
+            if($avatar){
+                if(!user::uploadAvatar($this->email,$avatar)){
+                    $this->errors[] = 'Problem uploading the avatar, please try different avatar';
+                }
+            }
+
+            $sql = "UPDATE users SET name=:name, member_id=:member_id where id=:id";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindValue(':member_id', $this->member_id, PDO::PARAM_STR);
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            return $stmt->execute();
+        }
+        return false;
+    }
 }

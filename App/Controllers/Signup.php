@@ -18,8 +18,7 @@ class Signup extends \Core\Controller
      *
      * @return void
      */
-    public function newAction()
-    {
+    public function newAction(){
         View::renderTemplate('Signup/new.html');
     }
 
@@ -30,19 +29,25 @@ class Signup extends \Core\Controller
      */
      public function createAction()
     {
-    	//var_dump($_POST); 
-        $user = new User($_POST);
+        if($_FILES['user_avatar']['size']!=0)
+            $avatar =  $_FILES['user_avatar'];
+        else
+            $avatar = null;
 
-        if($user->save()){
-            Flash::addMessage('Registered Successfully, Please login!');
+        $user = new User($_POST);
+        if($user->save($avatar)){
+            if(($avatar && user::uploadAvatar($user->email,$avatar)) || !$avatar){
+                Flash::addMessage('Registered Successfully, Please login!');
+            }else{
+                Flash::addMessage('Registered Successfully, Please login! Uploaded Avatar file not allowed. Please try uploading Avatar later through Profile page');
+            }
+
             if($_SESSION['admin'])
                 $this->redirect('/museum/gamify/admin');
             else
                 $this->redirect('/museum/gamify');
 
-
         }else{
-
             if($_SESSION['admin'])
                 View::renderTemplate('Admin/index.html', array(
                 'user' => $user));
@@ -61,5 +66,21 @@ class Signup extends \Core\Controller
      public function successAction()
     {
         View::renderTemplate('Signup/success.html');
+    }
+
+    public function updateAction()
+    {
+        if ($_FILES['user_avatar']['size'] != 0)
+            $avatar = $_FILES['user_avatar'];
+        else
+            $avatar = null;
+
+        $user = new User($_POST);
+        if($user->updateProfilePage($avatar) && (empty($user->errors))){
+            Flash::addMessage('Updated Successfully');
+            $this->redirect('/museum/gamify/users/profile');
+        }
+        View::renderTemplate('User/profile.html', array(
+            'user' => $user));
     }
 }
