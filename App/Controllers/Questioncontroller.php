@@ -78,7 +78,7 @@ class Questioncontroller extends \Core\Controller
     public function updateAction()
     {
         if (isset($_POST['update'])) {
-            if(Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], $_POST['description'])) {
+            if(Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], isset($_POST['description']) ? $_POST['description'] : null)) {
                 Flash::addMessage('Question Updated Successfully!');
                 $this->redirect('/museum/gamify/questioncontroller/edit');
             } else {
