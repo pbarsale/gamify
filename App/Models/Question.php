@@ -309,12 +309,14 @@ class Question extends \Core\Model
             $data['userbadge'] = $result->badge_id;
             $data['status'] = $result->status;
             $data['image'] = $result->image;
+            $data['badge_img'] = self::getBadgePath($result->badge_id);
         }else{
             $data['answered'] = false;
             $data['userpoints'] = 0;
             $data['userbadge'] = null;
             $data['status'] = null;
             $data['image'] = null;
+            $data['badge_img'] = null;
         }
         return $data;
     }
@@ -361,4 +363,21 @@ class Question extends \Core\Model
         return $data;
     }
 
+    public static function getBadgePath($badge_id){
+
+        if($badge_id){
+            $sql = "SELECT badge FROM badges WHERE id=:id";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':id', $badge_id, PDO::PARAM_INT);
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+            $result = $stmt->fetch();
+
+            if($result){
+                return $result->badge;
+            }
+        }
+        return null;
+    }
 }

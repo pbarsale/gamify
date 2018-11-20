@@ -78,10 +78,9 @@ class Users extends \Core\Controller
                 $questions[$counter]['options'][$opt]['userbadge'] = $optionScore['userbadge'];
                 $questions[$counter]['options'][$opt]['status'] = $optionScore['status'];
                 $questions[$counter]['options'][$opt]['image'] = $optionScore['image'];
+                $questions[$counter]['options'][$opt]['badge_img'] = $optionScore['badge_img'];
             }
         }
-        //var_dump($questions);
-        //var_dump($questions[0]['options']);
         View::renderTemplate('User/scavenger.html',array('questions' => $questions,'gameid' => $gameid,'game_name' => $game_name));
     }
 
