@@ -411,11 +411,12 @@ class User extends \Core\Model
     }
 
     public static function getAllUsersByAgeGroup($currUserAgeGroup) {
-        $sql = "SELECT * FROM users where isblocked=:isblocked and isadmin=0";
+        $sql = "SELECT * FROM users where isblocked=:isblocked and isadmin=:isadmin";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':isblocked', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':isadmin', false, PDO::PARAM_BOOL);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -428,7 +429,7 @@ class User extends \Core\Model
         foreach ($users as $user) {
             $user->getAgeFromBirthDate();
             $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
-            if(self::isAgeWithinRange($userAgeGroup, $currUserAgeGroup)) {
+            if($userAgeGroup and self::isAgeWithinRange($userAgeGroup, $currUserAgeGroup)) {
                 array_push($usersByAge, $user);
             }
         }

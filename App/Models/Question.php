@@ -33,8 +33,9 @@ class Question extends \Core\Model
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->execute();
 
-        if($stmt->execute()) {
+        if($stmt->rowcount() > 0) {
 
             $id = self::getLatestQuestionID($db);
             self::addQuestionResource($db, $id, $question);
@@ -81,8 +82,8 @@ class Question extends \Core\Model
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $question, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function addDescriptionResource($db, $id, $description) {
@@ -95,8 +96,8 @@ class Question extends \Core\Model
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getAllQuestions() {
@@ -150,8 +151,8 @@ class Question extends \Core\Model
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()),PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
-
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getQuestionById($id) {
@@ -190,8 +191,8 @@ class Question extends \Core\Model
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $id, PDO::PARAM_INT);
-
-        if($stmt->execute()) {
+        $stmt->execute();
+        if($stmt->rowcount() > 0) {
 
             self::updateQuestionResource($db, $id, $question);
             if($description) {
@@ -215,19 +216,32 @@ class Question extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function updateDescriptionResource($db, $id, $description) {
-        $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
+        $sql = "SELECT * FROM resource WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
 
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+
+        $stmt->execute();
+        if($stmt->rowcount() > 0) {
+            $sql = "UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
+        } else {
+            $sql = "INSERT INTO resource(table_n, column_n, row_id, text, lang) values(:table_n, :column_n, :row_id, :text, :lang)";
+        }
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
         $stmt->bindValue(':column_n', self::DESCRIPTION, PDO::PARAM_STR);
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getAllQuestionsByGameId($game_id) {
