@@ -17,7 +17,7 @@ class Scavenger  extends \Core\Model{
 
         $answer_tmp = $schunt['tmp_name'];
         $answer_type = $schunt['type'];
-        $filepath = "images/" . $_SESSION['user_id']."_".$gameid."_".$questionid."_".$optionid;
+        $filepath = "images/" . $_SESSION['user_id']."_".$gameid."_".$questionid."_".$optionid.".jpg";
 
         if(self::validateImage($answer_type) and
                 move_uploaded_file($answer_tmp, $filepath)){
