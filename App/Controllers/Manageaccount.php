@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Models\LeaderBoard;
 use App\Models\Notification;
 use App\Models\User;
 use \Core\View;
@@ -37,11 +38,17 @@ class Manageaccount extends \Core\Controller
     }
 
     public function editAction() {
-
+        $user = User::findById($_GET['user']);
+        $points = LeaderBoard::getPointsOfUserForAdmin($user);
+        $user->points = $points ? $points : 0;
+        $badges = LeaderBoard::getBadgesOfUserForAdmin($user);
+        $user->badges = $badges ? $badges : null;
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications));
     }
 
-    public function changeAction() {
-        $_GET['user_id'];
+    public function updateAction() {
+
     }
 
 }

@@ -47,6 +47,49 @@ class LeaderBoard extends \Core\Model
         return $users;
     }
 
+    public static function getPointsOfUserForAdmin($user) {
+        $sql = "select sum(points) as points from 
+                          (SELECT q.user_id, q.points from quiz_points q where user_id=:id
+                            union all
+                            SELECT sh.user_id,sh.points from scavenger_hunt_points sh where user_id=:id and status=:status) 
+                    as points_table";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $user->id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['points'];
+    }
+
+    public static function getBadgesOfUserForAdmin($user){
+        $sql = "select badge_id, badge, count from badges inner join
+                    (select badge_id, count(*) as count from 
+                            (SELECT q.user_id, q.badge_id 
+                            from quiz_points q
+                            where user_id=:id
+                            union all
+                            SELECT sh.user_id,sh.badge_id 
+                            from scavenger_hunt_points sh
+                            where user_id=:id
+                            and status=:status) as badge_all
+                    group by badge_id) as badge_total
+                where badges.id = badge_total.badge_id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
+        $stmt->bindValue(':id', $user->id, PDO::PARAM_INT);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
+
     public static function ifUserPresent($id, $users) {
         foreach ($users as $user) {
             if($user['user_id'] === $id) {

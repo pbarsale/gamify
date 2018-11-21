@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Badge{% endblock %}
 
 {% block body %}
 
@@ -57,11 +57,12 @@
                 <div id="Update" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Badge</label>
-                        <select name="select-badge-update" class="selcls">
+                        <select name="select-badge-update" class="selcls" id="select-badge-update">
                             {% for badge in badges %}
-                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
+                        <img id="badge-image-update" width="10%" height="10%" style="margin-left: 3%">
                     </div>
                     <div style="margin: 10%">
                         <input type="file" name="badge-update" required class="btn btn-primary"/>
@@ -76,11 +77,12 @@
                 <div id="Delete" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Badge</label>
-                        <select name="select-badge-delete" class="selcls">
+                        <select name="select-badge-delete" class="selcls" id="select-badge-delete">
                             {% for badge in badges %}
-                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
+                        <img id="badge-image-delete" width="10%" height="10%" style="margin-left: 3%">
                     </div>
                     <div style="margin-bottom: 5%">
                         <button type="submit" name="delete" class="btn btn-primary">Delete</button>
@@ -110,6 +112,19 @@
         }
 
         document.getElementById("defaultOpen").click();
+
+        $(document).ready(function () {
+            $("#select-badge-update").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                $("#badge-image-update").attr("src", src);
+            }).trigger("change");
+
+            $("#select-badge-delete").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                $("#badge-image-delete").attr("src", src);
+            }).trigger("change");
+
+        });
     </script>
 
 {% endblock %}

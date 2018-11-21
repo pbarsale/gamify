@@ -4,7 +4,9 @@
 
 {% block body %}
 
-    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+<link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
 
     <nav class="navbar navbar-inverse">
         <div class="container-fluid">
@@ -28,16 +30,62 @@
     {% endfor %}
 
     <div>
-        <h2>Account</h2>
-        <div>
-            {{ user.name }}
+        <h2 style="text-align: center">{{ user.name }}</h2>
+        <div class="bluediv" id="userlist">
+            <form class="game-type-form" action="/museum/gamify/manageaccount/update" method="post" enctype="multipart/form-data">
+                <div align="left">
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Email ID: </label></div>
+                        <div class="col-md-2">{{ user.email }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Birth Date: </label></div>
+                        <div class="col-md-2">{{ user.birth_date }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Member ID: </label></div>
+                        <div class="col-md-2">{{ user.member_id }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Current Points: </label></div>
+                        <div class="col-md-2"><label>{{ user.points }}</label></div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Add Points: </label></div>
+                        <div class="col-md-2"><input type="number" name="points" min="0" max="100"/></div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Earned Badges: </label></div>
+                        <div class="col-md-6">
+                        {% for badge in user.badges %}
+                        {% if badge.badge %}
+                        <img src="{{ badge.badge }}" width="4%" height="4%"/>
+                        {% endif %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Add Badge: </label></div>
+                        <div class="col-md-2"><input type="file" name="badge" class="btn btn-primary"/></div>
+                    </div>
+                    <div class="row" style="margin: 3%;font-size:large">
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2"><button type="submit" name="update" class="btn btn-primary">Update</button></div>
+                    </div>
+                </div>
+            </form>
         </div>
-        <div hidden id="user_id">{{ user.id }}</div>
-        <form action="" method="post">
-
-        </form>
-        <form action="" method="post">
-
-        </form>
     </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
 {% endblock %}
