@@ -31,9 +31,19 @@
 
     <div>
         <h2 style="text-align: center">{{ user.name }}</h2>
+        <div style="float: left; margin-left: 15%">
+            <label> Earned Scores: {{ user.points }}  </label>
+        </div>
+
+        <div style="float: right; margin-right: 10%">
+            <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Earned Badges</button>
+        </div>
+        <br><br>
         <div class="bluediv" id="userlist">
-            <form class="game-type-form" action="/museum/gamify/manageaccount/update" method="post" enctype="multipart/form-data">
+            <form class="game-type-form" action="/museum/gamify/manageaccount/update" method="post">
                 <div align="left">
+                    <input hidden name="existing-points" value="{{ user.points }}">
+                    <input hidden name="user_id" value="{{ user.id }}"/>
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-4"></div>
                         <div class="col-md-2"><label>Email ID: </label></div>
@@ -51,29 +61,21 @@
                     </div>
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-4"></div>
-                        <div class="col-md-2"><label>Current Points: </label></div>
-                        <div class="col-md-2"><label>{{ user.points }}</label></div>
-                    </div>
-                    <div class="row" style="margin: 1%;font-size:large">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-2"><label>Add Points: </label></div>
-                        <div class="col-md-2"><input type="number" name="points" min="0" max="100"/></div>
-                    </div>
-                    <div class="row" style="margin: 1%;font-size:large">
-                        <div class="col-md-4"></div>
-                        <div class="col-md-2"><label>Earned Badges: </label></div>
-                        <div class="col-md-6">
-                        {% for badge in user.badges %}
-                        {% if badge.badge %}
-                        <img src="{{ badge.badge }}" width="4%" height="4%"/>
-                        {% endif %}
-                        {% endfor %}
-                        </div>
+                        <div class="col-md-2"><label>Add/Deduct Points: </label></div>
+                        <div class="col-md-2"><input type="number" name="points" min="-100" max="100"/></div>
                     </div>
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-4"></div>
                         <div class="col-md-2"><label>Add Badge: </label></div>
-                        <div class="col-md-2"><input type="file" name="badge" class="btn btn-primary"/></div>
+                        <div class="col-md-2">
+                            <select id="select-badge" name="select-badge" class="selcls">
+                                <option value="0">Select Badge</option>
+                                {% for badge in badges %}
+                                <option value="{{ badge.id }}">{{ badge.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <!--<input type="file" name="badge" class="btn btn-primary"/>-->
+                        </div>
                     </div>
                     <div class="row" style="margin: 3%;font-size:large">
                         <div class="col-md-5"></div>
@@ -83,6 +85,56 @@
             </form>
         </div>
     </div>
+
+    <div class="container">
+        <!-- Trigger the modal with the badge button -->
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h2 class="modal-title" style="align-self: center"> Earned Badges</h2>
+                    </div>
+                    <div class="modal-body">
+                        <table style="width: 100%; text-align: center">
+
+                            {% if user.badges %}
+                            <thead >
+                            <th style="text-align: center">
+                                Badge
+                            </th>
+                            <th style="text-align: center">
+                                Total Earned
+                            </th>
+                            </thead>
+                            {% for badge in user.badges %}
+                            <tr>
+                                <td style="width: 50%">
+                                    <img src="{{ badge.badge }}" height="25px" width="25px">
+                                </td>
+                                <td style="width: 50%">
+                                    {{ badge.count }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <label> Sorry! you have no badges earned this time. </label>
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 
     {% else %}
         <a href="/museum/gamify/signup/new">Sign Up</a>

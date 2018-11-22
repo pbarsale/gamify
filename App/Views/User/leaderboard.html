@@ -49,9 +49,11 @@
                         <div class="col-md-1 points" align="left">{{ user.points }}</div>
                         <div class="col-md-6 badges" align="left">
                             {% for badge in user.badges %}
-                            {% if badge.badge %}
-                            <img src="{{ badge.badge }}" width="4%" height="4%"/>
-                            {% endif %}
+                                {% if badge.badge %}
+                                    {% for i in 1..badge.count %}
+                                        <img src="{{ badge.badge }}" width="4%" height="4%"/>
+                                    {% endfor %}
+                                {% endif %}
                             {% endfor %}
                         </div>
                     </div>

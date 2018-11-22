@@ -543,4 +543,62 @@ class User extends \Core\Model
         }
         return false;
     }
+
+    public static function updatePoints($points, $user_id)
+    {
+        $sql = "SELECT * from user_points where user_id=:user_id and isdeleted=:isdeleted";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+
+        $stmt->execute();
+
+        if($stmt->rowcount() > 0) {
+            $result = $stmt->fetch();
+            $sql = "UPDATE user_points SET points=:points, date_updated=:date_updated, user_updated=:user_updated, isdeleted=:isdeleted WHERE :user_id=:user_id";
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':points', $result->points + $points, PDO::PARAM_INT);
+            $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+            $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            return $stmt->execute();
+        } else {
+
+            $sql = "INSERT INTO user_points(user_id, points, date_created, user_created, date_updated, user_updated, isdeleted) 
+                VALUES(:user_id, :points, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+            $stmt->bindValue(':points', $points, PDO::PARAM_INT);
+            $stmt->bindValue(':date_created', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+            $stmt->bindValue(':user_created', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+            $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            return $stmt->execute();
+        }
+    }
+
+    public static function addBadges($badge, $user_id)
+    {
+        $sql = "INSERT INTO user_badges(user_id, badge_id, date_created, user_created, date_updated, user_updated, isdeleted)
+                VALUES(:user_id, :badge_id, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+        $stmt->bindValue(':badge_id', $badge, PDO::PARAM_INT);
+        $stmt->bindValue(':date_created', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+        $stmt->bindValue(':user_created', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+        $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        return $stmt->execute();
+    }
+
 }

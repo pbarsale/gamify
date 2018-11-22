@@ -7,6 +7,8 @@
  */
 namespace App\Controllers;
 
+use App\Flash;
+use App\Models\Badge;
 use App\Models\LeaderBoard;
 use App\Models\Notification;
 use App\Models\User;
@@ -39,16 +41,26 @@ class Manageaccount extends \Core\Controller
 
     public function editAction() {
         $user = User::findById($_GET['user']);
-        $points = LeaderBoard::getPointsOfUserForAdmin($user);
+        $points = LeaderBoard::getPointsOfUser($user);
         $user->points = $points ? $points : 0;
-        $badges = LeaderBoard::getBadgesOfUserForAdmin($user);
+        $badges = LeaderBoard::getBadgesOfUser($user);
         $user->badges = $badges ? $badges : null;
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications));
+        $allBadges = Badge::getAllBadges();
+        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications, 'badges' => $allBadges));
     }
 
     public function updateAction() {
-
+        if($_POST['existing-points'] + $_POST['points'] <= 0) {
+            Flash::addMessage('Points are low to be updated!', 'warning');
+            $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
+        }
+        User::updatePoints($_POST['points'], $_POST['user_id']);
+        if($_POST['select-badge'] !== 0) {
+            User::addBadges($_POST['select-badge'], $_POST['user_id']);
+        }
+        Flash::addMessage('Points and Badges Updated Successfully!');
+        $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
     }
 
 }
