@@ -438,10 +438,17 @@ class User extends \Core\Model
 
     public static function getAllUsersByUserAge($id) {
         $user = self::findById($id);
-        $user->getAgeFromBirthDate();
-        $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
-        $users = self::getAllUsersByAgeGroup($userAgeGroup);
-        return $users;
+        if($user) {
+            $user->getAgeFromBirthDate();
+            $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
+            if($userAgeGroup) {
+                $users = self::getAllUsersByAgeGroup($userAgeGroup);
+                if($users) {
+                    return $users;
+                }
+            }
+        }
+        return $user;
     }
 
     public static function isAgeWithinRange($userAge, $ageGroup) {
@@ -455,7 +462,8 @@ class User extends \Core\Model
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':id', $user_id, PDO::PARAM_INT);
         $stmt->bindValue(':isblocked', !$block, PDO::PARAM_BOOL);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public  function validateImage($avatar_type) {
@@ -566,7 +574,8 @@ class User extends \Core\Model
             $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-            return $stmt->execute();
+            $stmt->execute();
+            return $stmt->rowcount() > 0;
         } else {
 
             $sql = "INSERT INTO user_points(user_id, points, date_created, user_created, date_updated, user_updated, isdeleted) 
@@ -580,7 +589,8 @@ class User extends \Core\Model
             $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-            return $stmt->execute();
+            $stmt->execute();
+            return $stmt->rowcount() > 0;
         }
     }
 
@@ -598,7 +608,8 @@ class User extends \Core\Model
         $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
 }

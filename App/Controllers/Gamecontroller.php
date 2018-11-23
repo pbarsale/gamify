@@ -24,6 +24,7 @@ class Gamecontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $games = Game::getAllGames();
         $game_types = GameType::getAllGameTypes();
         $age_groups = AgeGroup::getAllAgeGroups();
@@ -34,22 +35,24 @@ class Gamecontroller extends \Core\Controller
 
     public function addAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['add'])) {
             $id = Game::addGame($_POST['game-add'], $_POST['select-game-type'], $_POST['select-age-group']);
-            if ($id != null) {
+            if ($id) {
                 $_SESSION['game_id'] = $id;
                 $_SESSION['game_type_id'] = $_POST['select-game-type'];
                 Flash::addMessage('Game Added Successfully!');
                 $this->redirect('/museum/gamify/questioncontroller/new');
             } else {
                 Flash::addMessage('Game Addition Failed!', 'warning');
-                $this->redirect('/museum/gamify/gamecontroller/new');
             }
         }
+        $this->redirect('/museum/gamify/gamecontroller/new');
     }
 
     public function updateAction()
     {
+        $this->throwToLoginPage();
         if(isset($_POST['update'])) {
             $game = Game::getGameById($_POST['select-game-update']);
             if($game) {
@@ -58,13 +61,14 @@ class Gamecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Game Update Failed!', 'warning');
                 }
-                $this->redirect('/museum/gamify/gamecontroller/new');
             }
         }
+        $this->redirect('/museum/gamify/gamecontroller/new');
     }
 
     public function deleteAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['delete'])) {
             $game = Game::getGameById($_POST['select-game-delete']);
             if($game) {
@@ -73,19 +77,28 @@ class Gamecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Game Deletion Failed!', 'warning');
                 }
-                $this->redirect('/museum/gamify/gamecontroller/new');
             }
         }
+        $this->redirect('/museum/gamify/gamecontroller/new');
     }
 
     public function editAction()
     {
+        $this->throwToLoginPage();
         if(isset($_POST['edit'])) {
             $game = Game::getGameById($_POST['select-game-edit']);
             $_SESSION['game_id'] = $game->id;
             if($game) {
                 $this->redirect('/museum/gamify/questioncontroller/edit');
             }
+        }
+        $this->redirect('/museum/gamify/gamecontroller/new');
+    }
+
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
         }
     }
 

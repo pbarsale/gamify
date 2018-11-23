@@ -36,7 +36,9 @@ class GameType extends \Core\Model
 
                 $id = self::getLatestID($db);
 
-                return self::insertGameTypeInResource($db, $id, $game_type);
+                if($id) {
+                    return self::insertGameTypeInResource($db, $id, $game_type);
+                }
 
             } else {
                 Flash::addMessage('Query execution failed', 'warning');
@@ -57,7 +59,8 @@ class GameType extends \Core\Model
         $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
         $stmt->bindValue(':text', $game_type, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function getLatestID($db) {
@@ -82,7 +85,8 @@ class GameType extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public function updateGameType($game_type)
@@ -96,16 +100,20 @@ class GameType extends \Core\Model
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         $stmt->execute();
+        if($stmt->rowcount() > 0) {
 
-        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n';
+            $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and table_n=:table_n and column_n=:column_n';
 
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':text', $game_type, PDO::PARAM_STR);
-        $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
-        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':text', $game_type, PDO::PARAM_STR);
+            $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+            $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
 
-        return $stmt->execute();
+            $stmt->execute();
+            return $stmt->rowcount() > 0;
+        }
+        return false;
     }
 
     public static function getAllGameTypes()

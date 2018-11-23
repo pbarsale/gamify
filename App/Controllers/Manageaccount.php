@@ -22,6 +22,7 @@ class Manageaccount extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $users = User::getAllUsers();
         $notifications = Notification::getAllPendingScavengerHunt();
         View::renderTemplate('Admin/accountsearch.html', array('users' => $users, 'notifications' => $notifications));
@@ -29,17 +30,20 @@ class Manageaccount extends \Core\Controller
 
     public function userAction()
     {
+        $this->throwToLoginPage();
         $user = User::getUserByName($_GET['user']);
         $notifications = Notification::getAllPendingScavengerHunt();
         View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications));
     }
 
     public function blockAction() {
+        $this->throwToLoginPage();
         User::blockUser($_GET['user_id'], $_GET['block']);
         $this->redirect('/museum/gamify/manageaccount/new');
     }
 
     public function editAction() {
+        $this->throwToLoginPage();
         $user = User::findById($_GET['user']);
         $points = LeaderBoard::getPointsOfUser($user);
         $user->points = $points ? $points : 0;
@@ -51,16 +55,31 @@ class Manageaccount extends \Core\Controller
     }
 
     public function updateAction() {
-        if($_POST['existing-points'] + $_POST['points'] <= 0) {
-            Flash::addMessage('Points are low to be updated!', 'warning');
-            $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
+        $this->throwToLoginPage();
+        if(isset($_POST['update'])) {
+            if ($_POST['existing-points'] + $_POST['points'] <= 0) {
+                Flash::addMessage('Points are low to be updated!', 'warning');
+                $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
+            }
+            $flag = false;
+            if(!empty($_POST['points'])) {
+                $flag = User::updatePoints($_POST['points'], $_POST['user_id']);
+            }
+            if ($_POST['select-badge'] !== 0) {
+                $flag = User::addBadges($_POST['select-badge'], $_POST['user_id']);
+            }
+            if($flag) {
+                Flash::addMessage('Points and Badges Updated Successfully!');
+            }
         }
-        User::updatePoints($_POST['points'], $_POST['user_id']);
-        if($_POST['select-badge'] !== 0) {
-            User::addBadges($_POST['select-badge'], $_POST['user_id']);
-        }
-        Flash::addMessage('Points and Badges Updated Successfully!');
         $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
+    }
+
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
+        }
     }
 
 }

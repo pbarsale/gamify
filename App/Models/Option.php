@@ -31,8 +31,13 @@ class Option extends \Core\Model
             $stmt->execute();
 
             $option_id = self::getLatestOptionID($db);
-            self::addOption($db, $option_id, $value);
+            if($option_id) {
+                if(!self::addOption($db, $option_id, $value)) {
+                    return false;
+                }
+            }
         }
+        return true;
     }
 
     private static function getLatestOptionID($db) {
@@ -58,6 +63,7 @@ class Option extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function updateAnswer($db, $id, $options, $answer) {
@@ -69,8 +75,12 @@ class Option extends \Core\Model
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
                 $stmt->bindValue(':iscorrect', true, PDO::PARAM_BOOL);
                 $stmt->execute();
+                if($stmt->rowcount() <= 0) {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public static function updatePoints($db, $id, $options, $points) {
@@ -82,8 +92,12 @@ class Option extends \Core\Model
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
                 $stmt->bindValue(':points', $value, PDO::PARAM_BOOL);
                 $stmt->execute();
+                if($stmt->rowcount() <= 0) {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     public static function updateBadges($db, $id, $options, $badges) {
@@ -95,8 +109,12 @@ class Option extends \Core\Model
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
                 $stmt->bindValue(':badge_id', $value == 0 ? null : $value, PDO::PARAM_BOOL);
                 $stmt->execute();
+                if($stmt->rowcount() <= 0) {
+                    return false;
+                }
             }
         }
+        return true;
     }
 
     private static function getOptionByName($db, $id, $ans) {
@@ -183,10 +201,13 @@ class Option extends \Core\Model
 
             $stmt->execute();
             if($option['option'] !== $newOptions['optionA'.$i]) {
-                self::updateOption($db, $option['id'], $newOptions['optionA' . $i]);
+                if(!self::updateOption($db, $option['id'], $newOptions['optionA' . $i])) {
+                    return false;
+                }
             }
             $i++;
         }
+        return true;
     }
 
     private static function updateOption($db, $option_id, $option) {
@@ -200,6 +221,7 @@ class Option extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getCorrectOptions($questionid) {

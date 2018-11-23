@@ -21,6 +21,7 @@ class Gametypecontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $game_types = GameType::getAllGameTypes();
         $notifications = Notification::getAllPendingScavengerHunt();
         View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types, 'notifications' => $notifications));
@@ -28,6 +29,7 @@ class Gametypecontroller extends \Core\Controller
 
     public function addAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['add'])) {
             if(GameType::addGameType($_POST['game-type-add'])) {
                 Flash::addMessage('GameType Added Successfully!');
@@ -40,6 +42,7 @@ class Gametypecontroller extends \Core\Controller
 
     public function deleteAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['delete'])) {
             $game_type = GameType::getGameTypeById($_POST['select-game-type-delete']);
             if($game_type) {
@@ -54,6 +57,7 @@ class Gametypecontroller extends \Core\Controller
 
     public function updateAction()
     {
+        $this->throwToLoginPage();
         if(isset($_POST['update'])) {
             $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
             if($game_type) {
@@ -64,6 +68,13 @@ class Gametypecontroller extends \Core\Controller
             }
         }
         $this->redirect('/museum/gamify/gametypecontroller/new');
+    }
+
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
+        }
     }
 
 }

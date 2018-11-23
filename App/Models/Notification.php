@@ -60,7 +60,8 @@ class Notification extends \Core\Model
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function denyPendingRequest($question, $option, $user_id)
@@ -77,6 +78,7 @@ class Notification extends \Core\Model
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 }

@@ -24,6 +24,7 @@ class Questioncontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $badges = Badge::getAllBadges();
         $notifications = Notification::getAllPendingScavengerHunt();
         $game_type_id = $_SESSION['game_type_id'];
@@ -36,6 +37,7 @@ class Questioncontroller extends \Core\Controller
 
     public function addAction()
     {
+        $this->throwToLoginPage();
         if(isset($_POST['game_type_id']) and $_POST['game_type_id'] == 4) {
             if(!isset($_POST['options'])) {
                 Flash::addMessage('Please select correct options', 'warning');
@@ -58,6 +60,7 @@ class Questioncontroller extends \Core\Controller
 
     public function editAction()
     {
+        $this->throwToLoginPage();
         $questions = Question::getAllQuestionsByGameId($_SESSION['game_id']);
         $notifications = Notification::getAllPendingScavengerHunt();
         $_SESSION['game_type_id'] = Game::getGameType($_SESSION['game_id']);
@@ -66,6 +69,7 @@ class Questioncontroller extends \Core\Controller
 
     public function modifyAction()
     {
+        $this->throwToLoginPage();
         $notifications = Notification::getAllPendingScavengerHunt();
         if (isset($_GET['question'])) {
             $question = Question::getQuestionById(intval($_GET['question']));
@@ -77,6 +81,7 @@ class Questioncontroller extends \Core\Controller
 
     public function updateAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['update'])) {
             if(Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], isset($_POST['description']) ? $_POST['description'] : null)) {
                 Flash::addMessage('Question Updated Successfully!');
@@ -85,6 +90,13 @@ class Questioncontroller extends \Core\Controller
                 Flash::addMessage('Question Update Failed!', 'warning');
                 $this->redirect('/museum/gamify/questioncontroller/update');
             }
+        }
+    }
+
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
         }
     }
 

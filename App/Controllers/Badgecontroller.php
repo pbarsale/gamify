@@ -21,6 +21,7 @@ class Badgecontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $badges = Badge::getAllBadges();
         $notifications = Notification::getAllPendingScavengerHunt();
         View::renderTemplate('Admin/badge.html', array('badges' => $badges, 'notifications' => $notifications));
@@ -28,18 +29,20 @@ class Badgecontroller extends \Core\Controller
 
     public function addAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['add'])) {
             if(Badge::addBadge($_POST['badge-name'], $_FILES['badge-add'],$_POST['description'])) {
                 Flash::addMessage('Badge Added Successfully!');
             } else {
                 Flash::addMessage('Badge Addition Failed!', 'warning');
             }
-            $this->redirect('/museum/gamify/badgecontroller/new');
         }
+        $this->redirect('/museum/gamify/badgecontroller/new');
     }
 
     public function updateAction()
     {
+        $this->throwToLoginPage();
         if(isset($_POST['update'])) {
             $badge = Badge::getBadgeById($_POST['select-badge-update']);
             if($badge) {
@@ -48,13 +51,16 @@ class Badgecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Badge Update Failed!', 'warning');
                 }
-                $this->redirect('/museum/gamify/badgecontroller/new');
+            } else {
+                Flash::addMessage('Badge Not Found!', 'warning');
             }
         }
+        $this->redirect('/museum/gamify/badgecontroller/new');
     }
 
     public function deleteAction()
     {
+        $this->throwToLoginPage();
         if (isset($_POST['delete'])) {
             $badge = Badge::getBadgeById($_POST['select-badge-delete']);
             if($badge) {
@@ -63,8 +69,17 @@ class Badgecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Badge Deletion Failed!', 'warning');
                 }
+            } else {
+                Flash::addMessage('Badge Not Found!', 'warning');
             }
-            $this->redirect('/museum/gamify/badgecontroller/new');
+        }
+        $this->redirect('/museum/gamify/badgecontroller/new');
+    }
+
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
         }
     }
 

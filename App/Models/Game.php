@@ -33,16 +33,19 @@ class Game extends \Core\Model
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
             $stmt->bindValue(':game_type_id', $game_type_obj->id, PDO::PARAM_INT);
             $stmt->bindValue(':age_group_id', $age_group_obj->id, PDO::PARAM_INT);
-//            $stmt->bindValue(':badge_id', $selected_badge == 0 ? null : $selected_badge, PDO::PARAM_INT);
+            $stmt->execute();
 
-            if ($stmt->execute()) {
+            if ($stmt->rowcount() > 0) {
 
                 $id = self::getLatestID($db);
 
-                self::insertGameInResource($db, $id, $game);
-
-                return $id;
-
+                if($id) {
+                    if(self::insertGameInResource($db, $id, $game)) {
+                        return $id;
+                    } else {
+                        Flash::addMessage('Game Addition failed', 'warning');
+                    }
+                }
             } else {
                 Flash::addMessage('Query execution failed', 'warning');
             }
@@ -64,6 +67,7 @@ class Game extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function getLatestID($db) {
@@ -93,11 +97,11 @@ class Game extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public function updateGame($game) {
-        var_dump($game);
         $sql = 'UPDATE games SET date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $db = static::getDB();
@@ -107,17 +111,21 @@ class Game extends \Core\Model
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         $stmt->execute();
+        if($stmt->rowcount() > 0) {
 
-        $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and column_n=:column_n and table_n=:table_n and lang=:lang';
+            $sql = 'UPDATE resource SET text=:text WHERE row_id=:row_id and column_n=:column_n and table_n=:table_n and lang=:lang';
 
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':text', $game, PDO::PARAM_STR);
-        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
-        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
-        $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
-        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':text', $game, PDO::PARAM_STR);
+            $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+            $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+            $stmt->bindValue(':row_id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-        return $stmt->execute();
+            $stmt->execute();
+            return $stmt->rowcount() > 0;
+        }
+        return false;
     }
 
     public static function getAllGames() {

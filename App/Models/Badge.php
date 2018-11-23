@@ -40,16 +40,17 @@ class Badge extends \Core\Model
             $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
             $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->execute();
 
-            if ($stmt->execute()) {
+            if ($stmt->rowcount() > 0) {
 
                 $id = self::getLatestID($db);
 
-                self::insertBadgeInResource($db, $id, $badge_name);
-
-                self::insertDescriptionInResource($db, $id, $description);
-                return true;
-
+                if($id) {
+                    if(self::insertBadgeInResource($db, $id, $badge_name)) {
+                        return self::insertDescriptionInResource($db, $id, $description);
+                    }
+                }
             } else {
                 Flash::addMessage('Query execution failed', 'warning');
             }
@@ -70,7 +71,8 @@ class Badge extends \Core\Model
         $stmt->bindValue(':text', $badge_name, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function insertDescriptionInResource($db, $id, $description) {
@@ -84,7 +86,8 @@ class Badge extends \Core\Model
         $stmt->bindValue(':text', $description, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     private static function getLatestID($db) {
@@ -108,7 +111,8 @@ class Badge extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public function updateBadge($uploaded_file) {
@@ -128,7 +132,8 @@ class Badge extends \Core\Model
 
         if (self::validateImage($badge_type) and
             move_uploaded_file($badge_tmp, $filepath)) {
-            return $stmt->execute();
+            $stmt->execute();
+            return $stmt->rowcount() > 0;
         } else {
             Flash::addMessage('Badge File Exists!');
         }

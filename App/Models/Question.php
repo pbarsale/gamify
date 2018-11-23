@@ -38,23 +38,32 @@ class Question extends \Core\Model
         if($stmt->rowcount() > 0) {
 
             $id = self::getLatestQuestionID($db);
-            self::addQuestionResource($db, $id, $question);
-            if($description) {
-                self::addDescriptionResource($db, $id, $description);
-            }
+            if($id) {
+                if(self::addQuestionResource($db, $id, $question)) {
+                    if ($description) {
+                        self::addDescriptionResource($db, $id, $description);
+                    }
 
-            Option::addOptions($db, $id, $options);
-
-            if($answer) {
-                Option::updateAnswer($db, $id, $options, $answer);
+                    if(Option::addOptions($db, $id, $options)) {
+                        if ($answer) {
+                            if(!Option::updateAnswer($db, $id, $options, $answer)) {
+                                return false;
+                            }
+                        }
+                        if ($option_points) {
+                            if(!Option::updatePoints($db, $id, $options, $option_points)) {
+                                return false;
+                            }
+                        }
+                        if ($option_badges) {
+                            if(!Option::updateBadges($db, $id, $options, $option_badges)) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }
+                }
             }
-            if($option_points) {
-                Option::updatePoints($db, $id, $options, $option_points);
-            }
-            if($option_badges) {
-                Option::updateBadges($db, $id, $options, $option_badges);
-            }
-            return true;
         } else {
             Flash::addMessage('Query execution failed', 'warning');
         }
@@ -194,13 +203,15 @@ class Question extends \Core\Model
         $stmt->execute();
         if($stmt->rowcount() > 0) {
 
-            self::updateQuestionResource($db, $id, $question);
-            if($description) {
-                self::updateDescriptionResource($db, $id, $description);
+            if(self::updateQuestionResource($db, $id, $question)) {
+                if ($description) {
+                    self::updateDescriptionResource($db, $id, $description);
+                }
+                if(!Option::updateOptions($db, $id, $options)) {
+                    return false;
+                }
+                return true;
             }
-
-            Option::updateOptions($db, $id, $options);
-            return true;
         }
         return false;
     }

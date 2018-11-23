@@ -21,9 +21,16 @@ class Leaderboardcontroller extends \Core\Controller
 {
     public function newAction()
     {
+        $this->throwToLoginPage();
         $users = User::getAllUsersByUserAge($_SESSION['user_id']);
         $leaderBoardUsers = LeaderBoard::getLeaderBoard($users);
         View::renderTemplate('User/leaderboard.html', array('users' => $leaderBoardUsers));
     }
 
+    private function throwToLoginPage()
+    {
+        if (isset($_SESSION['admin'])) {
+            $this->redirect('/museum/gamify/admin/new');
+        }
+    }
 }
