@@ -45,6 +45,8 @@ class Game extends \Core\Model
                     } else {
                         Flash::addMessage('Game Addition failed', 'warning');
                     }
+                } else {
+                    Flash::addMessage('Game Not Found', 'warning');
                 }
             } else {
                 Flash::addMessage('Query execution failed', 'warning');

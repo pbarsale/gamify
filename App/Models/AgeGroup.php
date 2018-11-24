@@ -25,7 +25,8 @@ class AgeGroup extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
 
-        return $stmt->execute();
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getAllAgeGroups() {

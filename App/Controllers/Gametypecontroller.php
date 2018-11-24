@@ -46,10 +46,13 @@ class Gametypecontroller extends \Core\Controller
         if (isset($_POST['delete'])) {
             $game_type = GameType::getGameTypeById($_POST['select-game-type-delete']);
             if($game_type) {
-                $game_type->deleteGameType();
-                Flash::addMessage('GameType Deleted Successfully!');
+                if ($game_type->deleteGameType()) {
+                    Flash::addMessage('GameType Deleted Successfully!');
+                } else {
+                    Flash::addMessage('GameType Deletion Failed!', 'warning');
+                }
             } else {
-                Flash::addMessage('GameType Deletion Failed!', 'warning');
+                Flash::addMessage('GameType Not Found!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gametypecontroller/new');
@@ -61,10 +64,13 @@ class Gametypecontroller extends \Core\Controller
         if(isset($_POST['update'])) {
             $game_type = GameType::getGameTypeById($_POST['select-game-type-update']);
             if($game_type) {
-                $game_type->updateGameType($_POST['game-type-update']);
-                Flash::addMessage('GameType Updated Successfully!');
+                if ($game_type->updateGameType($_POST['game-type-update'])) {
+                    Flash::addMessage('GameType Updated Successfully!');
+                } else {
+                    Flash::addMessage('GameType Update Failed!', 'warning');
+                }
             } else {
-                Flash::addMessage('GameType Update Failed!', 'warning');
+                Flash::addMessage('GameType Not Found!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gametypecontroller/new');

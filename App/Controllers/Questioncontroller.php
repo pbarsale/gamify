@@ -75,8 +75,11 @@ class Questioncontroller extends \Core\Controller
             $question = Question::getQuestionById(intval($_GET['question']));
             if ($question) {
                 View::renderTemplate('Admin/editquestion.html', array('question' => $question, 'game_type_id' => $_SESSION['game_type_id'], 'notifications' => $notifications));
+            } else {
+                Flash::addMessage('Question Not Found!', 'warning');
             }
         }
+        $this->redirect('/museum/gamify/questioncontroller/edit');
     }
 
     public function updateAction()
@@ -85,12 +88,12 @@ class Questioncontroller extends \Core\Controller
         if (isset($_POST['update'])) {
             if(Question::updateQuestion(intval($_POST['id']), $_POST['question'], $_POST['option'], isset($_POST['description']) ? $_POST['description'] : null)) {
                 Flash::addMessage('Question Updated Successfully!');
-                $this->redirect('/museum/gamify/questioncontroller/edit');
             } else {
                 Flash::addMessage('Question Update Failed!', 'warning');
                 $this->redirect('/museum/gamify/questioncontroller/update');
             }
         }
+        $this->redirect('/museum/gamify/questioncontroller/edit');
     }
 
     private function throwToLoginPage()

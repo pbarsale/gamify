@@ -23,7 +23,10 @@ class Leaderboardcontroller extends \Core\Controller
     {
         $this->throwToLoginPage();
         $users = User::getAllUsersByUserAge($_SESSION['user_id']);
-        $leaderBoardUsers = LeaderBoard::getLeaderBoard($users);
+        $leaderBoardUsers = array();
+        if($users) {
+            $leaderBoardUsers = LeaderBoard::getLeaderBoard($users);
+        }
         View::renderTemplate('User/leaderboard.html', array('users' => $leaderBoardUsers));
     }
 

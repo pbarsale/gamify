@@ -38,6 +38,8 @@ class GameType extends \Core\Model
 
                 if($id) {
                     return self::insertGameTypeInResource($db, $id, $game_type);
+                } else {
+                    Flash::addMessage('Game Type Not Found', 'warning');
                 }
 
             } else {

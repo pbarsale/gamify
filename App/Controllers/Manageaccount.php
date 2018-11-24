@@ -28,27 +28,27 @@ class Manageaccount extends \Core\Controller
         View::renderTemplate('Admin/accountsearch.html', array('users' => $users, 'notifications' => $notifications));
     }
 
-    public function userAction()
-    {
-        $this->throwToLoginPage();
-        $user = User::getUserByName($_GET['user']);
-        $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications));
-    }
-
     public function blockAction() {
         $this->throwToLoginPage();
-        User::blockUser($_GET['user_id'], $_GET['block']);
+        if(isset($_GET['user_id']) and isset($_GET['block'])) {
+            User::blockUser($_GET['user_id'], $_GET['block']);
+        }
         $this->redirect('/museum/gamify/manageaccount/new');
     }
 
     public function editAction() {
         $this->throwToLoginPage();
-        $user = User::findById($_GET['user']);
-        $points = LeaderBoard::getPointsOfUser($user);
-        $user->points = $points ? $points : 0;
-        $badges = LeaderBoard::getBadgesOfUser($user);
-        $user->badges = $badges ? $badges : null;
+        if(isset($_GET['user'])) {
+            $user = User::findById($_GET['user']);
+            if ($user) {
+                $points = LeaderBoard::getPointsOfUser($user);
+                $user->points = $points ? $points : 0;
+                $badges = LeaderBoard::getBadgesOfUser($user);
+                $user->badges = $badges ? $badges : null;
+            } else {
+                Flash::addMessage('User Not Found!', 'warning');
+            }
+        }
         $notifications = Notification::getAllPendingScavengerHunt();
         $allBadges = Badge::getAllBadges();
         View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications, 'badges' => $allBadges));
@@ -69,7 +69,7 @@ class Manageaccount extends \Core\Controller
                 $flag = User::addBadges($_POST['select-badge'], $_POST['user_id']);
             }
             if($flag) {
-                Flash::addMessage('Points and Badges Updated Successfully!');
+                Flash::addMessage('Points and/or Badges Updated Successfully!');
             }
         }
         $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);

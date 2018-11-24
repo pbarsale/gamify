@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Flash;
 use App\Models\Notification;
 use \Core\View;
 /**
@@ -27,14 +28,26 @@ class Notificationcontroller extends \Core\Controller
     public function approveAction()
     {
         $this->throwToLoginPage();
-        Notification::approvePendingRequest($_GET['question'], $_GET['option'], $_GET['user']);
+        if(isset($_GET['question']) and isset($_GET['option']) and isset($_GET['user'])) {
+            if (Notification::approvePendingRequest($_GET['question'], $_GET['option'], $_GET['user'])) {
+                Flash::addMessage('User Request Approved!');
+            } else {
+                Flash::addMessage('User Request could not be Approved!', 'warning');
+            }
+        }
         $this->redirect('/museum/gamify/notificationcontroller/new');
     }
 
     public function denyAction()
     {
         $this->throwToLoginPage();
-        Notification::denyPendingRequest($_GET['question'], $_GET['option'], $_GET['user']);
+        if(isset($_GET['question']) and isset($_GET['option']) and isset($_GET['user'])) {
+            if (Notification::denyPendingRequest($_GET['question'], $_GET['option'], $_GET['user'])) {
+                Flash::addMessage('User Request Denied!');
+            } else {
+                Flash::addMessage('User Request could not be Denied!', 'warning');
+            }
+        }
         $this->redirect('/museum/gamify/notificationcontroller/new');
     }
 

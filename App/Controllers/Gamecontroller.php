@@ -61,6 +61,8 @@ class Gamecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Game Update Failed!', 'warning');
                 }
+            } else {
+                Flash::addMessage('Game Not Found!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gamecontroller/new');
@@ -77,6 +79,8 @@ class Gamecontroller extends \Core\Controller
                 } else {
                     Flash::addMessage('Game Deletion Failed!', 'warning');
                 }
+            } else {
+                Flash::addMessage('Game Not Found!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gamecontroller/new');
@@ -87,9 +91,11 @@ class Gamecontroller extends \Core\Controller
         $this->throwToLoginPage();
         if(isset($_POST['edit'])) {
             $game = Game::getGameById($_POST['select-game-edit']);
-            $_SESSION['game_id'] = $game->id;
             if($game) {
+                $_SESSION['game_id'] = $game->id;
                 $this->redirect('/museum/gamify/questioncontroller/edit');
+            } else {
+                Flash::addMessage('Game Not Found!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gamecontroller/new');

@@ -54,7 +54,11 @@ class Badge extends \Core\Model
                             return self::insertDescriptionInResource($db, $id, $description);
                         }
                         return true;
+                    } else {
+                        Flash::addMessage('Badge Addition Failed!', 'warning');
                     }
+                } else {
+                    Flash::addMessage('Badge Not Found!', 'warning');
                 }
             } else {
                 Flash::addMessage('Query execution failed', 'warning');

@@ -61,11 +61,17 @@ class Question extends \Core\Model
                             }
                         }
                         return true;
+                    } else {
+                        Flash::addMessage('Option Addition failed!', 'warning');
                     }
+                } else {
+                    Flash::addMessage('Question Addition Failed!', 'warning');
                 }
+            } else {
+                Flash::addMessage('Question Not Found!', 'warning');
             }
         } else {
-            Flash::addMessage('Query execution failed', 'warning');
+            Flash::addMessage('Query execution failed!', 'warning');
         }
         return false;
     }
@@ -214,6 +220,8 @@ class Question extends \Core\Model
                     return false;
                 }
                 return true;
+            } else {
+                Flash::addMessage('Question update failed!', 'warning');
             }
         }
         return false;
