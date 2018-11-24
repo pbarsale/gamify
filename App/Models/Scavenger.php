@@ -12,8 +12,12 @@ use PDO;
 class Scavenger  extends \Core\Model{
 
     const FILEPATH = "/museum/gamify/";
-    public static function calculateScore($gameid,$questionid,$optionid,$points,
-                            $badge_id,$iscorrect,$schunt) {
+    const PENDING = 'pending';
+
+    const COMPLETED = 'completed';
+
+    public static function calculateScore($gameid, $questionid, $optionid, $points,
+                                          $badge_id, $iscorrect, $schunt) {
 
         $answer_tmp = $schunt['tmp_name'];
         $answer_type = $schunt['type'];
@@ -37,9 +41,9 @@ class Scavenger  extends \Core\Model{
             $stmt->bindValue(':badge_id', $badge_id, PDO::PARAM_INT);
 
             if($iscorrect)
-                $stmt->bindValue(':status', 'pending', PDO::PARAM_INT);
+                $stmt->bindValue(':status', self::PENDING, PDO::PARAM_STR);
             else
-                $stmt->bindValue(':status', 'completed', PDO::PARAM_INT);
+                $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
 
             $stmt->bindValue(':image', self::FILEPATH . $filepath, PDO::PARAM_STR);
 

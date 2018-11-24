@@ -17,6 +17,8 @@ class Question extends \Core\Model
     const LANGUAGE = "english";
     const DESCRIPTION = "description";
 
+    const COMPLETED = "completed";
+
     public static function addQuestion($question, $options, $points, $answer, $description, $badge, $option_badges, $option_points)
     {
         $sql = "Insert into questions(game_id, points, badge_id, date_created, user_created, date_updated, user_updated, isdeleted)
@@ -380,7 +382,7 @@ class Question extends \Core\Model
 
             $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
             $stmt->bindValue(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-            $stmt->bindValue(':status', "completed", PDO::PARAM_STR);
+            $stmt->bindValue(':status', self::COMPLETED, PDO::PARAM_STR);
 
             $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
             $stmt->execute();

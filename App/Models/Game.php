@@ -211,8 +211,8 @@ class Game extends \Core\Model
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-        $stmt->bindValue(':game_type_id', $gameTypeID, PDO::PARAM_STR);
-        $stmt->bindValue(':age_group_id', $ageGroupID, PDO::PARAM_STR);
+        $stmt->bindValue(':game_type_id', $gameTypeID, PDO::PARAM_INT);
+        $stmt->bindValue(':age_group_id', $ageGroupID, PDO::PARAM_INT);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
