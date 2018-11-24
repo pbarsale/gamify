@@ -77,14 +77,20 @@ class Game extends \Core\Model
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
-        $id = $result['MAX(id)'];
-        return $id;
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
     }
 
     public static function getGameType($game_id)
     {
         $game = self::getGameById($game_id);
-        return $game->game_type_id;
+        if($game) {
+            return $game->game_type_id;
+        }
+        return null;
     }
 
     public function deleteGame() {

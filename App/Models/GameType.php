@@ -70,8 +70,11 @@ class GameType extends \Core\Model
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
-        $id = $result['MAX(id)'];
-        return $id;
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
     }
 
     public function deleteGameType()

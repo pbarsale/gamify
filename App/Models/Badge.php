@@ -28,6 +28,8 @@ class Badge extends \Core\Model
         if(!$badge_obj and
             self::validateImage($badge_type) and
             move_uploaded_file($badge_tmp, $filepath)) {
+            chmod($filepath, 0777);
+
             $sql = "Insert into badges(badge, date_created, user_created, date_updated, user_updated, isdeleted)
                             values(:badge, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
 
@@ -48,7 +50,10 @@ class Badge extends \Core\Model
 
                 if($id) {
                     if(self::insertBadgeInResource($db, $id, $badge_name)) {
-                        return self::insertDescriptionInResource($db, $id, $description);
+                        if($description) {
+                            return self::insertDescriptionInResource($db, $id, $description);
+                        }
+                        return true;
                     }
                 }
             } else {
@@ -97,8 +102,11 @@ class Badge extends \Core\Model
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
-        $id = $result['MAX(id)'];
-        return $id;
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
     }
 
     public function deleteBadge() {
@@ -130,8 +138,8 @@ class Badge extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        if (self::validateImage($badge_type) and
-            move_uploaded_file($badge_tmp, $filepath)) {
+        if (self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
+            chmod($filepath, 0777);
             $stmt->execute();
             return $stmt->rowcount() > 0;
         } else {

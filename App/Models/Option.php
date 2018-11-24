@@ -47,8 +47,11 @@ class Option extends \Core\Model
         $stmt->execute();
         $stmt->setFetchMode(PDO::FETCH_ASSOC);
         $result = $stmt->fetch();
-        $id = $result['MAX(id)'];
-        return $id;
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
     }
 
     private static function addOption($db, $option_id, $option) {
@@ -69,7 +72,7 @@ class Option extends \Core\Model
     public static function updateAnswer($db, $id, $options, $answer) {
         foreach($answer as $ans) {
             $option_id = self::getOptionByName($db, $id, $options[$ans]);
-            if($option_id !== -1) {
+            if($option_id) {
                 $sql = "UPDATE options SET iscorrect=:iscorrect WHERE id=:id";
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
@@ -86,7 +89,7 @@ class Option extends \Core\Model
     public static function updatePoints($db, $id, $options, $points) {
         foreach($points as $key => $value) {
             $option_id = self::getOptionByName($db, $id, $options[$key]);
-            if($option_id !== -1) {
+            if($option_id) {
                 $sql = "UPDATE options SET points=:points WHERE id=:id";
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
@@ -103,7 +106,7 @@ class Option extends \Core\Model
     public static function updateBadges($db, $id, $options, $badges) {
         foreach($badges as $key => $value) {
             $option_id = self::getOptionByName($db, $id, $options[$key]);
-            if($option_id !== -1) {
+            if($option_id) {
                 $sql = "UPDATE options SET badge_id=:badge_id WHERE id=:id";
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
@@ -141,7 +144,7 @@ class Option extends \Core\Model
                 return $option['id'];
             }
         }
-        return -1;
+        return null;
     }
 
     public static function getAllOptions($id)
@@ -230,7 +233,7 @@ class Option extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':question_id', $questionid, PDO::PARAM_INT);
-        $stmt->bindValue(':iscorrect', 1, PDO::PARAM_INT);
+        $stmt->bindValue(':iscorrect', true, PDO::PARAM_BOOL);
         
         $stmt->execute();
 
