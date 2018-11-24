@@ -19,6 +19,7 @@
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
                     <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
                     <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+                    <li style="position:absolute; top:0; right:0;"><img src="/museum/gamify/images/buffalo-museum-white.png" width="20%" height="20%" style="margin:2%;"/></li>
                 </ul>
             </div>
         </nav>
@@ -103,7 +104,7 @@
             </form>
 
             <form class="game-form" action="/museum/gamify/gamecontroller/edit" method="post">
-                <div id="Edit Question" class="tabcontent">
+                <div id="Edit Questions" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game</label>
                         <select name="select-game-edit" class="selcls" title="Select Game to edit questions in game">
