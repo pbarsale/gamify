@@ -38,8 +38,8 @@
 
         <div style="text-align: center">
             <h2>Leaderboard</h2>
-            <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%">By Points</label>
-            <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%">By Badges</label>
+            <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%" title="Sort by Points">By Points</label>
+            <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%" title="Sort by Badges">By Badges</label>
             <div class="bluediv">
                 {% for user in users %}
                 <div>

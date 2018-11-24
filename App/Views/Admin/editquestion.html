@@ -39,7 +39,7 @@
                     <div class="col-md-6">
                         <label for="question" style="font-size: x-large; margin-right: 5%">Q</label>
                         <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none">{{ q.question }}</textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter question to be updated">{{ q.question }}</textarea>
                     </div>
                 </div>
                 {% set i = 1 %}
@@ -48,7 +48,7 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-6" id="option{{ i }}">
                     <textarea id="optionA{{ i }}" class="options" name="option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
-                              style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none">{{ o.option }}</textarea>
+                              style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none" title="Enter option to be updated">{{ o.option }}</textarea>
                 </div>
                     </div>
                 {% set i = i + 1 %}
@@ -58,14 +58,14 @@
                         <div class="col-md-3" style="margin-right: 2%"></div>
                         <div class="col-md-6">
                             <textarea id="description" name="description" placeholder="Enter Information for the question" rows="2"
-                                      cols="50" style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none">{{ q.description }}</textarea>
+                                      cols="50" style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter description to be updated">{{ q.description }}</textarea>
                         </div>
                     </div>
                 {% endif %}
                     <div class="row" style="margin-bottom: 2%">
                         <div class="col-md-3"></div>
                         <div class="col-md-6">
-                            <button type="submit" name="update" class="btn btn-primary">Update</button>
+                            <button type="submit" name="update" class="btn btn-primary" title="Update question">Update</button>
                         </div>
                     </div>
                 {% endfor %}

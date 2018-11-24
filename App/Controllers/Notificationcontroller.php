@@ -40,7 +40,7 @@ class Notificationcontroller extends \Core\Controller
 
     private function throwToLoginPage()
     {
-        if (isset($_SESSION['admin'])) {
+        if (!isset($_SESSION['admin'])) {
             $this->redirect('/museum/gamify/admin/new');
         }
     }

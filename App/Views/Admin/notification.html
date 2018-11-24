@@ -40,12 +40,12 @@
                             <div class="col-md-3" align="left">{{ notification.option }}</div>
                             <div class="col-md-1"><img src="{{ notification.image }}" width="5%" height="5%"/></div>
                             <div class="col-md-1">
-                                <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" style="display:inline-block; padding: 1%;">
+                                <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" title="Approve Request" style="display:inline-block; padding: 1%;">
                                     <span><i class="fa fa-check"></i></span>
                                 </a>
                             </div>
                             <div class="col-md-1">
-                                <a href="/museum/gamify/notificationcontroller/deny?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" style="display:inline-block; padding: 1%;">
+                                <a href="/museum/gamify/notificationcontroller/deny?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" title="Deny Request" style="display:inline-block; padding: 1%;">
                                     <span><i class="fa fa-times"></i></span>
                                 </a>
                             </div>

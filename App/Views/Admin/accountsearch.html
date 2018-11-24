@@ -33,7 +33,7 @@
             <h2 style="text-align: center">Manage Account</h2>
             <div style="text-align: center;margin: 2%;">
                 <span><i class="fa fa-search"></i>
-                <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;width: 30%;"/>
+                <input type="search" id="search" onkeyup="search()" placeholder="Search" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;width: 30%;" title="Search by user name"/>
                 </span>
             </div>
             <div class="bluediv" id="userlist">
@@ -49,12 +49,12 @@
                                 <div class="col-md-2 username" align="left">{{ user.name }}</div>
                                 {% endif %}
                                 <div class="col-md-1">
-                                    <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;">
+                                    <a href="/museum/gamify/manageaccount/block?user_id={{ user.id }}&block={{ user.isblocked }}" style="display:inline-block; padding: 1%;" title="Block User">
                                         <span><i class="fa fa-ban" style="color: red"></i></span>
                                     </a>
                                 </div>
                                 <div class="col-md-1">
-                                <a href="/museum/gamify/manageaccount/edit?user={{ user.id }}" style="display:inline-block; padding: 1%">
+                                <a href="/museum/gamify/manageaccount/edit?user={{ user.id }}" style="display:inline-block; padding: 1%" title="Change Points and Badge of user">
                                     <span><i class="fa fa-edit"></i></span>
                                 </a>
                                 </div>

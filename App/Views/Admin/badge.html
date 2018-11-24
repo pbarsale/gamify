@@ -39,16 +39,16 @@
             <form class="badge-form" action="/museum/gamify/badgecontroller/add" method="post" enctype="multipart/form-data">
                 <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
-                        <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
+                        <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter badge name">
                     </div>
                     <div style="margin: 10%">
-                        <input type="file" name="badge-add" required class="btn btn-primary"/>
+                        <input type="file" name="badge-add" required class="btn btn-primary" title="Select badge file"/>
                     </div>
                     <div style="margin: 10%">
-                        <input type="text" id="description" name="description" placeholder="Enter Description (optional)" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;"/>
+                        <input type="text" id="description" name="description" placeholder="Enter Description (optional)" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" title="Enter description for the badge"/>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="add" class="btn btn-primary">Add</button>
+                        <button type="submit" name="add" class="btn btn-primary" title="Add Badge">Add</button>
                     </div>
                 </div>
             </form>
@@ -57,7 +57,7 @@
                 <div id="Update" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Badge</label>
-                        <select name="select-badge-update" class="selcls" id="select-badge-update">
+                        <select name="select-badge-update" class="selcls" id="select-badge-update" title="Select badge to be updated">
                             {% for badge in badges %}
                             <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
@@ -65,10 +65,10 @@
                         <img id="badge-image-update" width="10%" height="10%" style="margin-left: 3%">
                     </div>
                     <div style="margin: 10%">
-                        <input type="file" name="badge-update" required class="btn btn-primary"/>
+                        <input type="file" name="badge-update" required class="btn btn-primary" title="Select badge file to update"/>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="update" class="btn btn-primary">Update</button>
+                        <button type="submit" name="update" class="btn btn-primary" title="Update badge">Update</button>
                     </div>
                 </div>
             </form>
@@ -77,7 +77,7 @@
                 <div id="Delete" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Badge</label>
-                        <select name="select-badge-delete" class="selcls" id="select-badge-delete">
+                        <select name="select-badge-delete" class="selcls" id="select-badge-delete" title="Select badge to be deleted">
                             {% for badge in badges %}
                             <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
@@ -85,7 +85,7 @@
                         <img id="badge-image-delete" width="10%" height="10%" style="margin-left: 3%">
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="delete" class="btn btn-primary">Delete</button>
+                        <button type="submit" name="delete" class="btn btn-primary" title="Delete badge">Delete</button>
                     </div>
                 </div>
             </form>

@@ -93,7 +93,7 @@ class Option extends \Core\Model
                 $sql = "UPDATE options SET points=:points WHERE id=:id";
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
-                $stmt->bindValue(':points', $value, PDO::PARAM_BOOL);
+                $stmt->bindValue(':points', $value, PDO::PARAM_INT);
                 $stmt->execute();
                 if($stmt->rowcount() <= 0) {
                     return false;
@@ -110,7 +110,7 @@ class Option extends \Core\Model
                 $sql = "UPDATE options SET badge_id=:badge_id WHERE id=:id";
                 $stmt = $db->prepare($sql);
                 $stmt->bindValue(':id', $option_id, PDO::PARAM_INT);
-                $stmt->bindValue(':badge_id', $value == 0 ? null : $value, PDO::PARAM_BOOL);
+                $stmt->bindValue(':badge_id', $value == 0 ? null : $value, PDO::PARAM_INT);
                 $stmt->execute();
                 if($stmt->rowcount() <= 0) {
                     return false;

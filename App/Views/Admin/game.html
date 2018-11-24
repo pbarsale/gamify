@@ -35,14 +35,14 @@
                 <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
                 <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
                 <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
-                <button class="tablinks" onclick="openTab(event, 'Edit Question')">Edit Question</button>
+                <button class="tablinks" onclick="openTab(event, 'Edit Questions')">Edit Questions</button>
             </div>
 
             <form class="game-form" action="/museum/gamify/gamecontroller/add" method="post">
                 <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game Type</label>
-                        <select name="select-game-type" class="selcls">
+                        <select name="select-game-type" class="selcls" title="Select Game Type to add Game">
                             {% for game_type in game_types %}
                             <option value="{{ game_type.id }}">{{ game_type.name }}</option>
                             {% endfor %}
@@ -50,27 +50,18 @@
                     </div>
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Age Group</label>
-                        <select name="select-age-group" class="selcls">
+                        <select name="select-age-group" class="selcls" title="Select Age Group of the Game">
                             {% for age_group in age_groups %}
                             <option value="{{ age_group.id }}">{{ age_group.min }} - {{ age_group.max }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <!--<div style="margin: 10%">-->
-                        <!--<label style="margin-right: 5%; ">Select Badge</label>-->
-                        <!--<select name="select-badge" class="selcls">-->
-                            <!--<option value="0">Select Badge</option>-->
-                            <!--{% for badge in badges %}-->
-                            <!--<option value="{{ badge.id }}">{{ badge.name }}</option>-->
-                            <!--{% endfor %}-->
-                        <!--</select>-->
-                    <!--</div>-->
                     <div style="margin: 10%">
-                        <input type="text" name="game-add" placeholder="Enter Game"
+                        <input type="text" name="game-add" placeholder="Enter Game" title="Enter Game"
                                style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="add" class="btn btn-primary">Add</button>
+                        <button type="submit" name="add" class="btn btn-primary" title="Add Game">Add</button>
                     </div>
                 </div>
             </form>
@@ -79,18 +70,18 @@
                 <div id="Update" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game</label>
-                        <select name="select-game-update" class="selcls">
+                        <select name="select-game-update" class="selcls" title="Select game to be updated">
                             {% for game in games %}
                             <option value="{{ game.id }}">{{ game.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div style="margin: 10%">
-                        <input type="text" name="game-update" placeholder="Enter New Game"
+                        <input type="text" name="game-update" placeholder="Enter New Game" title="Enter new Game to update"
                                style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="update" class="btn btn-primary">Update</button>
+                        <button type="submit" name="update" class="btn btn-primary" title="Update Game">Update</button>
                     </div>
                 </div>
             </form>
@@ -99,14 +90,14 @@
                 <div id="Delete" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game</label>
-                        <select name="select-game-delete" class="selcls">
+                        <select name="select-game-delete" class="selcls" title="Select Game to be deleted">
                             {% for game in games %}
                             <option value="{{ game.id }}">{{ game.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="delete" class="btn btn-primary">Delete</button>
+                        <button type="submit" name="delete" class="btn btn-primary" title="Delete Game">Delete</button>
                     </div>
                 </div>
             </form>
@@ -115,14 +106,14 @@
                 <div id="Edit Question" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game</label>
-                        <select name="select-game-edit" class="selcls">
+                        <select name="select-game-edit" class="selcls" title="Select Game to edit questions in game">
                             {% for game in games %}
                             <option value="{{ game.id }}">{{ game.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="edit" class="btn btn-primary">Edit Question</button>
+                        <button type="submit" name="edit" class="btn btn-primary" title="Edit Questions">Edit Questions</button>
                     </div>
                 </div>
             </form>

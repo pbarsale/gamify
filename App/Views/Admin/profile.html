@@ -62,24 +62,23 @@
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-4"></div>
                         <div class="col-md-2"><label>Add/Deduct Points: </label></div>
-                        <div class="col-md-2"><input type="number" name="points" min="-100" max="100"/></div>
+                        <div class="col-md-2"><input type="number" name="points" min="-100" max="100" title="Enter Points to add or deduct"/></div>
                     </div>
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-4"></div>
                         <div class="col-md-2"><label>Add Badge: </label></div>
                         <div class="col-md-2">
-                            <select id="select-badge" name="select-badge" class="selcls">
+                            <select id="select-badge" name="select-badge" class="selcls" title="Select Badge to give to the user">
                                 <option value="0">Select Badge</option>
                                 {% for badge in badges %}
                                 <option value="{{ badge.id }}">{{ badge.name }}</option>
                                 {% endfor %}
                             </select>
-                            <!--<input type="file" name="badge" class="btn btn-primary"/>-->
                         </div>
                     </div>
                     <div class="row" style="margin: 3%;font-size:large">
                         <div class="col-md-5"></div>
-                        <div class="col-md-2"><button type="submit" name="update" class="btn btn-primary">Update</button></div>
+                        <div class="col-md-2"><button type="submit" name="update" class="btn btn-primary" title="Update Points and Badge">Update</button></div>
                     </div>
                 </div>
             </form>
@@ -95,7 +94,7 @@
                 <!-- Modal content-->
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" title="Close the pop up">&times;</button>
                         <h2 class="modal-title" style="align-self: center"> Earned Badges</h2>
                     </div>
                     <div class="modal-body">
@@ -126,7 +125,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" title="Close the pop up">Close</button>
                     </div>
                 </div>
 

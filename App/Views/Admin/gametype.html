@@ -40,10 +40,10 @@
             <form class="game-type-form" action="/museum/gamify/gametypecontroller/add" method="post">
                 <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
-                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
+                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter Game Type to be added">
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="add" class="btn btn-primary">Add</button>
+                        <button type="submit" name="add" class="btn btn-primary" title="Add Game Type">Add</button>
                     </div>
                 </div>
             </form>
@@ -52,16 +52,16 @@
                 <div id="Update" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game Type</label>
-                        <select name="select-game-type-update" class="selcls">
+                        <select name="select-game-type-update" class="selcls" title="Select the Game Type to update">
                             {% for game_type in game_types %}
                             <option value="{{ game_type.id }}">{{ game_type.name }}</option>
                             {% endfor %}
                         </select>
                         <div style="margin: 10%">
-                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required>
+                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter New Game Type to be updated">
                         </div>
                         <div style="margin-bottom: 5%">
-                            <button type="submit" name="update" class="btn btn-primary">Update</button>
+                            <button type="submit" name="update" class="btn btn-primary" title="Update Game Type">Update</button>
                         </div>
                     </div>
                 </div>
@@ -71,14 +71,14 @@
                 <div id="Delete" class="tabcontent">
                     <div style="margin: 10%">
                         <label style="margin-right: 5%; ">Select Game Type</label>
-                        <select name="select-game-type-delete" class="selcls">
+                        <select name="select-game-type-delete" class="selcls" title="Select game type to delete">
                             {% for game_type in game_types %}
                             <option value="{{ game_type.id }}">{{ game_type.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div style="margin-bottom: 5%">
-                        <button type="submit" name="delete" class="btn btn-primary">Delete</button>
+                        <button type="submit" name="delete" class="btn btn-primary" title="Delete Game Type">Delete</button>
                     </div>
                 </div>
             </form>
