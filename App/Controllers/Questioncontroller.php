@@ -38,12 +38,6 @@ class Questioncontroller extends \Core\Controller
     public function addAction()
     {
         $this->throwToLoginPage();
-        if(isset($_POST['game_type_id']) and $_POST['game_type_id'] == 4) {
-            if(!isset($_POST['options'])) {
-                Flash::addMessage('Please select correct options', 'warning');
-                $this->redirect('/museum/gamify/questioncontroller/new');
-            }
-        }
         if (isset($_POST['add']) or isset($_POST['done'])) {
             if(Question::addQuestion($_POST['question'], $_POST['option'], isset($_POST['points']) ? $_POST['points'] : null , isset($_POST['options']) ? $_POST['options'] : null, isset($_POST['description']) ? $_POST['description'] : null, isset($_POST['select-badge']) ? $_POST['select-badge'] : null , isset($_POST['select-badges']) ? $_POST['select-badges'] : null, isset($_POST['point']) ? $_POST['point'] : null)) {
                 Flash::addMessage('Question Added Successfully!');

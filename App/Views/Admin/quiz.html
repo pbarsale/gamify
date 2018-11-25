@@ -32,8 +32,11 @@
 
         <div>
             <h2 style="text-align: center; margin-bottom: 3%">Quiz Question</h2>
-            <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
+            <form id="question-form" class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
                 <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
+                <div class="alert alert-warning" id="error-msg" hidden>
+                    Correct Answer Not Selected!
+                </div>
                 <div class="row" style="margin-bottom: 1%">
                     <div class="col-md-2"></div>
                     <div class="col-md-6">
@@ -86,10 +89,10 @@
                 <div class="row" style="margin-top: 3%">
                     <div class="col-md-5"></div>
                     <div class="col-md-5">
-                        <button type="submit" name="done" class="btn btn-success" style="margin-bottom: 5%" title="Submit when completed with adding question">Done</button>
+                        <button type="submit" id="done" name="done" class="btn btn-success" style="margin-bottom: 5%" title="Submit when completed with adding question">Done</button>
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" name="add" class="btn btn-primary" style="margin-bottom: 5%" title="Add next question to the game">Next</button>
+                        <button type="submit" id="add" name="add" class="btn btn-primary" style="margin-bottom: 5%" title="Add next question to the game">Next</button>
                     </div>
                 </div>
             </form>
@@ -128,6 +131,31 @@
                 div.parentNode.removeChild(div);
                 return false;
             });
+
+            $(document).on('click','#add',function(e, from){
+                if(from == null) {
+                    e.preventDefault();
+                    if ($("#question-form input:checkbox:checked").length > 0) {
+                        $(this).trigger('click', 'fine');
+                    } else {
+                        $("#error-msg").show();
+                        return false;
+                    }
+                }
+            });
+
+            $("#done").click(function (e, from) {
+                if(from == null) {
+                    e.preventDefault();
+                    if ($("#question-form input:checkbox:checked").length > 0) {
+                        $(this).trigger('click', 'fine');
+                    } else {
+                        $("#error-msg").show();
+                        return false;
+                    }
+                }
+            });
+
         });
     </script>
 
