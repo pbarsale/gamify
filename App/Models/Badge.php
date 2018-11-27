@@ -157,9 +157,9 @@ class Badge extends \Core\Model
         $sql = 'UPDATE badges SET badge = :badge, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $badge_tmp = $uploaded_file['tmp_name'];
-        $badge = $uploaded_file['name'];
         $badge_type = $uploaded_file['type'];
-        $filepath = "images/" . $badge;
+        $file_type = self::getFileType($badge_type);
+        $filepath = "images/badge_" . $this->id . "." . $file_type;
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
