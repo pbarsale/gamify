@@ -20,10 +20,12 @@ class Badge extends \Core\Model
     public static function addBadge($badge_name, $uploaded_file, $description) {
         $badge_obj = self::getBadgeByName($badge_name);
 
+        $last_id = self::getLatestBadgeID();
+
         $badge_tmp = $uploaded_file['tmp_name'];
-        $badge = $uploaded_file['name'];
         $badge_type = $uploaded_file['type'];
-        $filepath = "images/" . $badge;
+        $file_type = self::getFileType($badge_type);
+        $filepath = "images/badge_" . ($last_id + 1) . "." . $file_type;
 
         if(!$badge_obj and
             self::validateImage($badge_type) and
@@ -69,6 +71,21 @@ class Badge extends \Core\Model
         return false;
     }
 
+    private static function getLatestBadgeID() {
+        $sql = "SELECT MAX(id) from badges";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
+    }
+
     private static function insertBadgeInResource($db, $id, $badge_name) {
         $sql = "Insert into resource(table_n, column_n, row_id, text, lang)
                             values(:table_n, :column_n, :row_id, :text, :lang)";
@@ -111,6 +128,15 @@ class Badge extends \Core\Model
             return $id;
         }
         return null;
+    }
+
+    private static function getFileType($badge_type)
+    {
+        $i = strlen($badge_type) - 1;
+        while($badge_type[$i] !== '/') {
+            $i--;
+        }
+        return substr($badge_type, $i + 1);
     }
 
     public function deleteBadge() {
