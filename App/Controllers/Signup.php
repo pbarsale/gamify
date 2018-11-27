@@ -29,7 +29,7 @@ class Signup extends \Core\Controller
      */
      public function createAction()
     {
-        if($_FILES['user_avatar']['size']!=0)
+        if(isset($_FILES['user_avatar']) && $_FILES['user_avatar']['size']!=0)
             $avatar =  $_FILES['user_avatar'];
         else
             $avatar = null;
@@ -42,13 +42,13 @@ class Signup extends \Core\Controller
                 Flash::addMessage('Registered Successfully, Please login! Uploaded Avatar file not allowed. Please try uploading Avatar later through Profile page');
             }
 
-            if($_SESSION['admin'])
+            if(isset($_SESSION['admin']) && $_SESSION['admin'])
                 $this->redirect('/museum/gamify/admin');
             else
                 $this->redirect('/museum/gamify');
 
         }else{
-            if($_SESSION['admin'])
+            if(isset($_SESSION['admin']) && $_SESSION['admin'])
                 View::renderTemplate('Admin/index.html', array(
                 'user' => $user));
             else
@@ -70,7 +70,7 @@ class Signup extends \Core\Controller
 
     public function updateAction()
     {
-        if ($_FILES['user_avatar']['size'] != 0)
+        if (isset($_FILES['user_avatar']) && $_FILES['user_avatar']['size'] != 0)
             $avatar = $_FILES['user_avatar'];
         else
             $avatar = null;

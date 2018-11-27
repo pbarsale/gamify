@@ -19,10 +19,15 @@ class Users extends \Core\Controller
     */
     public function quizAction()
     {
+        if(!(isset($_SESSION['user_id']) && isset($this->route_params['token']))){
+            $url = '/museum/gamify/';
+            $this->redirect($url);
+        }
+
         $gameid = $this->route_params['token'];
         $game = Game::getGameById($gameid);
 
-        if($game->game_type_id==$this->QUIZ_CONST){
+        if($game && $game->game_type_id==$this->QUIZ_CONST){
             $div_id = 0;
             $game_name = "Quiz";
             if(ISSET($_SESSION['div_id']))
@@ -42,8 +47,7 @@ class Users extends \Core\Controller
             View::renderTemplate('User/quiz.html',array('questions' => $questions,'gameid' => $gameid,
                 'div_id' => $div_id,'game_name' => $game_name));
         }
-
-        else if($game->game_type_id==$this->SCAVENGER_HUNT_CONST){
+        else if($game && $game->game_type_id==$this->SCAVENGER_HUNT_CONST){
             $this->scavengerAction();
         }
     }
@@ -54,6 +58,11 @@ class Users extends \Core\Controller
      * @return void
      */
     public function scavengerAction(){
+
+        if(!(isset($_SESSION['user_id']) && isset($this->route_params['token']))){
+            $url = '/museum/gamify/';
+            $this->redirect($url);
+        }
 
         $gameid = $this->route_params['token'];
         $game_name = "Scavenger Hunt";
