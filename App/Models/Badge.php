@@ -20,10 +20,12 @@ class Badge extends \Core\Model
     public static function addBadge($badge_name, $uploaded_file, $description) {
         $badge_obj = self::getBadgeByName($badge_name);
 
+        $last_id = self::getLatestBadgeID();
+
         $badge_tmp = $uploaded_file['tmp_name'];
-        $badge = $uploaded_file['name'];
         $badge_type = $uploaded_file['type'];
-        $filepath = "images/" . $badge;
+        $file_type = self::getFileType($badge_type);
+        $filepath = "images/badge_" . ($last_id + 1) . "." . $file_type;
 
         if(!$badge_obj and
             self::validateImage($badge_type) and
@@ -67,6 +69,21 @@ class Badge extends \Core\Model
             Flash::addMessage('Badge Already Exists!', 'warning');
         }
         return false;
+    }
+
+    private static function getLatestBadgeID() {
+        $sql = "SELECT MAX(id) from badges";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch();
+        if($result) {
+            $id = $result['MAX(id)'];
+            return $id;
+        }
+        return null;
     }
 
     private static function insertBadgeInResource($db, $id, $badge_name) {
@@ -113,6 +130,15 @@ class Badge extends \Core\Model
         return null;
     }
 
+    private static function getFileType($badge_type)
+    {
+        $i = strlen($badge_type) - 1;
+        while($badge_type[$i] !== '/') {
+            $i--;
+        }
+        return substr($badge_type, $i + 1);
+    }
+
     public function deleteBadge() {
         $sql = 'UPDATE badges SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
@@ -131,9 +157,9 @@ class Badge extends \Core\Model
         $sql = 'UPDATE badges SET badge = :badge, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $badge_tmp = $uploaded_file['tmp_name'];
-        $badge = $uploaded_file['name'];
         $badge_type = $uploaded_file['type'];
-        $filepath = "images/" . $badge;
+        $file_type = self::getFileType($badge_type);
+        $filepath = "images/badge_" . $this->id . "." . $file_type;
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
