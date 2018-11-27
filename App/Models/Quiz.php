@@ -33,7 +33,7 @@ class Quiz extends \Core\Model
         $badge_obtained = null;
 
         $correctoptions = Option::getCorrectOptions($questionid);
-        if(count(array_diff($option, $correctoptions[0]))==0 &&
+        if($correctoptions && count(array_diff($option, $correctoptions[0]))==0 &&
             count(array_diff($correctoptions[0], $option))==0){
             $points_obtained = $points;
             if($badge_id!=0)
