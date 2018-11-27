@@ -71,9 +71,9 @@ class Questioncontroller extends \Core\Controller
                 View::renderTemplate('Admin/editquestion.html', array('question' => $question, 'game_type_id' => $_SESSION['game_type_id'], 'notifications' => $notifications));
             } else {
                 Flash::addMessage('Question Not Found!', 'warning');
+                $this->redirect('/museum/gamify/questioncontroller/edit');
             }
         }
-        $this->redirect('/museum/gamify/questioncontroller/edit');
     }
 
     public function updateAction()

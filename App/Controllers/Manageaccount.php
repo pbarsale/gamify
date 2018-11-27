@@ -57,7 +57,7 @@ class Manageaccount extends \Core\Controller
     public function updateAction() {
         $this->throwToLoginPage();
         if(isset($_POST['update'])) {
-            if (!empty($_POST['points']) && $_POST['existing-points'] + $_POST['points'] <= 0) {
+            if (!empty($_POST['points']) && $_POST['existing-points'] + $_POST['points'] < 0) {
                 Flash::addMessage('Points are low to be updated!', 'warning');
                 $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
             }

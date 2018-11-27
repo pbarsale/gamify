@@ -48,19 +48,13 @@ class Question extends \Core\Model
 
                     if(Option::addOptions($db, $id, $options)) {
                         if ($answer) {
-                            if(!Option::updateAnswer($db, $id, $options, $answer)) {
-                                return false;
-                            }
+                            Option::updateAnswer($db, $id, $options, $answer);
                         }
                         if ($option_points) {
-                            if(!Option::updatePoints($db, $id, $options, $option_points)) {
-                                return false;
-                            }
+                            Option::updatePoints($db, $id, $options, $option_points);
                         }
                         if ($option_badges) {
-                            if(!Option::updateBadges($db, $id, $options, $option_badges)) {
-                                return false;
-                            }
+                            Option::updateBadges($db, $id, $options, $option_badges);
                         }
                         return true;
                     } else {
@@ -214,17 +208,10 @@ class Question extends \Core\Model
         $stmt->execute();
         if($stmt->rowcount() > 0) {
 
-            if(self::updateQuestionResource($db, $id, $question)) {
-                if ($description) {
-                    self::updateDescriptionResource($db, $id, $description);
-                }
-                if(!Option::updateOptions($db, $id, $options)) {
-                    return false;
-                }
-                return true;
-            } else {
-                Flash::addMessage('Question update failed!', 'warning');
-            }
+            self::updateQuestionResource($db, $id, $question);
+            self::updateDescriptionResource($db, $id, $description);
+            Option::updateOptions($db, $id, $options);
+            return true;
         }
         return false;
     }
@@ -240,6 +227,7 @@ class Question extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
+        var_dump($stmt->rowcount() > 0);
         return $stmt->rowcount() > 0;
     }
 

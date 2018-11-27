@@ -31,7 +31,7 @@ class Badgecontroller extends \Core\Controller
     {
         $this->throwToLoginPage();
         if (isset($_POST['add'])) {
-            if(Badge::addBadge($_POST['badge-name'], $_FILES['badge-add'], isset($_POST['description'])) ? $_POST['description'] : null) {
+            if(Badge::addBadge($_POST['badge-name'], $_FILES['badge-add'], $_POST['description'])) {
                 Flash::addMessage('Badge Added Successfully!');
             } else {
                 Flash::addMessage('Badge Addition Failed!', 'warning');
