@@ -1,0 +1,8 @@
+[22-Nov-2018 17:05:54 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/gamecontr...')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[22-Nov-2018 17:07:31 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/gamecontr...')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130

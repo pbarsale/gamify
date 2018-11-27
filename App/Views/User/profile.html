@@ -63,31 +63,33 @@
 
             <form method="post" action="/museum/gamify/signup/update" enctype="multipart/form-data">
 
-                <input type="hidden" name="id" value="{{ current_user.id }}">
-                <input type="hidden" name="email" value="{{ current_user.email }}">
+                <div>
 
-                <label for="email" data-icon="e">E-Mail</label>
-                <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ current_user.email }}" disabled required>
+                    <input type="hidden" name="id" value="{{ current_user.id }}">
+                    <input type="hidden" name="email" value="{{ current_user.email }}">
 
-                <label for="birth_date" data-icon="u">Birth Date</label>
-                <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ current_user.birth_date }}" disabled required>
+                    <label for="email" data-icon="e">E-Mail</label>
+                    <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ current_user.email }}" disabled required>
 
-                <label for="name" data-icon="u">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Full Name" value="{{ current_user.name }}" required>
+                    <label for="birth_date" data-icon="u">Birth Date</label>
+                    <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ current_user.birth_date }}" disabled required>
 
-                <label for="member_id" data-icon="u">Member-ID</label>
-                <input type="text" id="member_id" name="member_id" placeholder="Member ID" value="{{ current_user.member_id }}">
+                    <label for="name" data-icon="u">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Full Name" value="{{ current_user.name }}" required>
 
-                <label for="user_avatar" data-icon="u">Avatar</label>
-                <input type="file" id="user_avatar" name="user_avatar" />
+                    <label for="member_id" data-icon="u">Member-ID</label>
+                    <input type="text" id="member_id" name="member_id" placeholder="Member ID" value="{{ current_user.member_id }}">
 
-                <br>
-                <label><a href="/museum/gamify/password/forgot"> Change Password </a></label>
+                    <label for="user_avatar" data-icon="u">Avatar</label>
+                    <input type="file" id="user_avatar" name="user_avatar" />
 
-                <p class="signin button">
-                    <input type="submit" value="Update changes"/>
-                </p>
+                    <br>
+                    <label><a href="/museum/gamify/password/forgot"> Change Password </a></label>
 
+                    <p class="signin button">
+                        <input type="submit" value="Update changes"/>
+                    </p>
+                </div>
             </form>
         </div>
     </div>
