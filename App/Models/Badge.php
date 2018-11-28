@@ -15,7 +15,7 @@ class Badge extends \Core\Model
     const DESCRIPTION = "description";
     const LANGUAGE = "english";
     const NAME = "name";
-    const FILEPATH = "/museum/Gamify/";
+    const FILEPATH = "/museum/gamify/";
 
     public static function addBadge($badge_name, $uploaded_file, $description) {
         $badge_obj = self::getBadgeByName($badge_name);
@@ -27,10 +27,8 @@ class Badge extends \Core\Model
         $file_type = self::getFileType($badge_type);
         $filepath = "images/badge_" . ($last_id + 1) . "." . $file_type;
 
-        if(!$badge_obj and
-            self::validateImage($badge_type) and
-            move_uploaded_file($badge_tmp, $filepath)) {
-            chmod($filepath, 0777);
+        if(!$badge_obj and self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
+//            chmod($filepath, 0777);
 
             $sql = "Insert into badges(badge, date_created, user_created, date_updated, user_updated, isdeleted)
                             values(:badge, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
@@ -153,7 +151,9 @@ class Badge extends \Core\Model
         return $stmt->rowcount() > 0;
     }
 
-    public function updateBadge($uploaded_file) {
+    public function updateBadge($uploaded_file, $badge_name) {
+        $badge_obj = self::getBadgeByName($badge_name);
+
         $sql = 'UPDATE badges SET badge = :badge, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
         $badge_tmp = $uploaded_file['tmp_name'];
@@ -168,12 +168,13 @@ class Badge extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        if (self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
-            chmod($filepath, 0777);
+        if (!$badge_obj and self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
+//            chmod($filepath, 0777);
             $stmt->execute();
-            return $stmt->rowcount() > 0;
+            self::updateResourceBadge($this->id, $db, $badge_name);
+            return true;
         } else {
-            Flash::addMessage('Badge File Exists!');
+            Flash::addMessage('Badge Already Exists!', 'warning');
         }
         return false;
     }
@@ -217,6 +218,17 @@ class Badge extends \Core\Model
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private static function updateResourceBadge($id, $db, $badge_name) {
+        $sql = "UPDATE resource SET text=:text where row_id=:row_id and table_n=:table_n and column_n=:column_n and lang=:lang";
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':text', $badge_name, PDO::PARAM_INT);
+        $stmt->bindValue(':row_id', $id, PDO::PARAM_INT);
+        $stmt->bindValue(':table_n', self::TABLE_NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
+        $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
+        $stmt->execute();
     }
 
     public static function getBadgeByName($name) {

@@ -42,13 +42,15 @@
             <input type="radio" id="point" name="filter" onclick="changePoints()" checked style="margin-right: 1%"><label for="point" style="margin-right: 2%" title="Sort by Points">By Points</label>
             <input type="radio" id="badge" name= "filter" onclick="changeBadges()" style="margin-right: 1%"><label for="badge" style="margin-right: 2%" title="Sort by Badges">By Badges</label>
             <div class="bluediv">
+                {% set j = 1 %}
                 {% for user in users %}
                 <div>
                     <div class="row" style="margin: 1%;font-size:large">
                         <div class="col-md-3"></div>
+                        <div class="col-md-1">{{ j }}</div>
                         <div class="col-md-2" align="left">{{ user.name }}</div>
                         <div class="col-md-1 points" align="left">{{ user.points }}</div>
-                        <div class="col-md-6 badges" align="left">
+                        <div class="col-md-5 badges" align="left">
                             {% for badge in user.badges %}
                                 {% if badge.badge %}
                                     {% for i in 1..badge.count %}
@@ -58,7 +60,8 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <hr align="center"/>
+                    <hr align="center" width="70%"/>
+                    {% set j = j + 1 %}
                 </div>
                 {% endfor %}
             </div>
@@ -78,7 +81,6 @@
                     var pointsRow2 = row2.getElementsByClassName('points')[0].innerHTML;
                     return pointsRow2 - pointsRow1;
                 });
-                console.log(rows);
             }
         }
         function changeBadges() {
@@ -89,7 +91,6 @@
                     var badgesRow2 = row2.getElementsByTagName('img');
                     return badgesRow2.length - badgesRow1.length;
                 });
-                console.log(rows);
             }
         }
     </script>

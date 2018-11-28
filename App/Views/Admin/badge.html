@@ -40,7 +40,7 @@
             <form class="badge-form" action="/museum/gamify/badgecontroller/add" method="post" enctype="multipart/form-data">
                 <div id="Add" class="tabcontent">
                     <div style="margin: 10%">
-                        <input type="text" id="badge-name" name="badge-name" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter badge name">
+                        <input type="text" id="badge-name-add" name="badge-name-add" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter badge name">
                     </div>
                     <div style="margin: 10%">
                         <input type="file" name="badge-add" required class="btn btn-primary" title="Select badge file"/>
@@ -66,6 +66,9 @@
                         <img id="badge-image-update" width="10%" height="10%" style="margin-left: 3%">
                     </div>
                     <div style="margin: 10%">
+                        <input type="text" id="badge-name-update" name="badge-name-update" placeholder="Enter Badge Name" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter badge name">
+                    </div>
+                    <div style="margin: 10%">
                         <input type="file" name="badge-update" required class="btn btn-primary" title="Select badge file to update"/>
                     </div>
                     <div style="margin-bottom: 5%">
@@ -74,22 +77,52 @@
                 </div>
             </form>
 
-            <form class="badge-form" action="/museum/gamify/badgecontroller/delete" method="post" enctype="multipart/form-data">
-                <div id="Delete" class="tabcontent">
-                    <div style="margin: 10%">
-                        <label style="margin-right: 5%; ">Select Badge</label>
-                        <select name="select-badge-delete" class="selcls" id="select-badge-delete" title="Select badge to be deleted">
-                            {% for badge in badges %}
-                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <img id="badge-image-delete" width="10%" height="10%" style="margin-left: 3%">
-                    </div>
-                    <div style="margin-bottom: 5%">
-                        <button type="submit" name="delete" class="btn btn-primary" title="Delete badge">Delete</button>
-                    </div>
+            <div id="Delete" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Badge</label>
+                    <select class="selcls" id="select-badge-delete" title="Select badge to be deleted">
+                        {% for badge in badges %}
+                        <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <img id="badge-image-delete" width="10%" height="10%" style="margin-left: 3%">
                 </div>
-            </form>
+                <div style="margin-bottom: 5%">
+                    <button type="button" class="btn btn-primary" title="Delete badge" data-toggle="modal" data-target="#myModal">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Trigger the modal with the badge button -->
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <form class="badge-form" action="/museum/gamify/badgecontroller/delete" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h2 class="modal-title" style="align-self: center">Confirmation</h2>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete the badge?
+                            <div id="badge_delete">
+                                <input id="badge_id" name="select-badge-delete" hidden/>
+                                <label id="badge_name"></label>
+                                <img id="badge_image" width="10%" height="10%" style="margin-left: 3%"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" name="delete" class="btn btn-success">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
 
     {% else %}
@@ -123,9 +156,15 @@
             $("#select-badge-delete").change(function (e) {
                 var src = $(this).children("option:selected").data("badge");
                 $("#badge-image-delete").attr("src", src);
+                var badge_id = $(this).children("option:selected").val();
+                var badge_name = $(this).children("option:selected").text();
+                $("#badge_image").attr("src", src);
+                $("#badge_name").text(badge_name);
+                $("#badge_id").val(badge_id);
             }).trigger("change");
 
         });
+
     </script>
 
 {% endblock %}

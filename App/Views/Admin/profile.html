@@ -72,9 +72,10 @@
                             <select id="select-badge" name="select-badge" class="selcls" title="Select Badge to give to the user">
                                 <option value="0">Select Badge</option>
                                 {% for badge in badges %}
-                                <option value="{{ badge.id }}">{{ badge.name }}</option>
+                                <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                                 {% endfor %}
                             </select>
+                            <img id="badge-image" width="15%" height="15%" style="margin-left: 3%">
                         </div>
                     </div>
                     <div class="row" style="margin: 3%;font-size:large">
@@ -141,4 +142,13 @@
         <a href="/museum/gamify/signup/new">Sign Up</a>
         <a href="/museum/gamify/login">Log In</a>
     {% endif %}
+
+    <script>
+        $(document).ready(function () {
+            $("#select-badge").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                $("#badge-image").attr("src", src);
+            });
+        });
+    </script>
 {% endblock %}

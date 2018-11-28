@@ -54,13 +54,14 @@
                         <label>Points</label>
                         <input type="number" name="point[optionA1]" min="0" max="100" value="0" style="width:20%" title="Add points to the option">
                     </div>
-                    <div class="col-md-1">
-                        <select name="select-badges[optionA1]" class="selcls" title="Add badge to the option">
+                    <div class="col-md-2">
+                        <select id="select-badges[optionA1]" name="select-badges[optionA1]" class="selcls" title="Add badge to the option">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
                             <option value="{{ badge.id }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
+                        <img id="badge-image[optionA1]" width="15%" height="15%" style="margin-left: 3%">
                     </div>
                 </div>
                 <div class="row">
@@ -75,13 +76,14 @@
                         <label>Points</label>
                         <input type="number" name="point[optionA2]" min="0" max="100" value="0" style="width:20%" title="Add points to the option">
                     </div>
-                    <div class="col-md-1">
-                        <select name="select-badges[optionA2]" class="selcls" title="Add badge to the option">
+                    <div class="col-md-2">
+                        <select id="select-badges[optionA2]" name="select-badges[optionA2]" class="selcls" title="Add badge to the option">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
                             <option value="{{ badge.id }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
+                        <img id="badge-image[optionA2]" width="15%" height="15%" style="margin-left: 3%">
                     </div>
                 </div>
                 <div class="row addOptionsBtn" style="margin-bottom: 5%">
@@ -129,8 +131,9 @@
                 $(column3).append('<input type="number" name="point[optionA' + i + ']" min="0" max="100" value="0" style="width:20%" title="Add points to the option"/>');
                 row.appendChild(column3);
                 var column4 = document.createElement('div');
-                column4.className = "col-md-1";
+                column4.className = "col-md-2";
                 var select_container = document.createElement("select");
+                select_container.id = "select-badges[optionA" + i + "]";
                 select_container.name = "select-badges[optionA" + i + "]";
                 select_container.className = "selcls";
                 select_container.title = "Add badge to the option";
@@ -146,6 +149,7 @@
                     select_container.appendChild(opt);
                 }
                 column4.appendChild(select_container);
+                $(column4).append('<img id="badge-image[optionA' + i + ']" width="15%" height="15%" style="margin-left: 3%">');
                 row.appendChild(column4);
                 $(".addOptionsBtn").before(row);
                 i++;

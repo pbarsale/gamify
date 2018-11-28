@@ -566,7 +566,7 @@ class User extends \Core\Model
 
         if($stmt->rowcount() > 0) {
             $result = $stmt->fetch();
-            $sql = "UPDATE user_points SET points=:points, date_updated=:date_updated, user_updated=:user_updated, isdeleted=:isdeleted WHERE :user_id=:user_id";
+            $sql = "UPDATE user_points SET points=:points, date_updated=:date_updated, user_updated=:user_updated, isdeleted=:isdeleted WHERE user_id=:user_id";
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
