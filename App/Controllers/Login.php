@@ -19,7 +19,8 @@ class Login extends \Core\Controller
      *
      * @return void
      */
-    public function newAction(){
+
+	public function newAction(){
         //View::renderTemplate('Login/new.html');
         View::renderTemplate('Home/index.html');
     }
