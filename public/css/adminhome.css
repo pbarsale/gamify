@@ -1,4 +1,4 @@
-h2 {
+h2, p {
     font-size: 48px;
     color: rgb(6, 106, 117);
     padding: 2px 0 10px 0;
@@ -16,7 +16,7 @@ h2 {
     -webkit-background-clip: text;
 }
 
-h2:after{
+h2:after, p:after{
     content: ' ';
     display: block;
     width: 100%;

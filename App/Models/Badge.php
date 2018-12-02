@@ -20,20 +20,24 @@ class Badge extends \Core\Model
     public static function addBadge($badge_name, $uploaded_file, $description) {
         $badge_obj = self::getBadgeByName($badge_name);
 
-        $last_id = self::getLatestBadgeID();
+        $db = static::getDB();
+
+        $last_id = self::getLatestBadgeID($db);
 
         $badge_tmp = $uploaded_file['tmp_name'];
         $badge_type = $uploaded_file['type'];
         $file_type = self::getFileType($badge_type);
         $filepath = "images/badge_" . ($last_id + 1) . "." . $file_type;
 
-        if(!$badge_obj and self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
-//            chmod($filepath, 0777);
+        $image_validated = self::validateImage($badge_type);
+        $file_uploaded = move_uploaded_file($badge_tmp, $filepath);
+        chmod($filepath, 0777);
+
+        if(!$badge_obj and $image_validated and $file_uploaded) {
 
             $sql = "Insert into badges(badge, date_created, user_created, date_updated, user_updated, isdeleted)
                             values(:badge, :date_created, :user_created, :date_updated, :user_updated, :isdeleted)";
 
-            $db = static::getDB();
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue(':badge', self::FILEPATH . $filepath, PDO::PARAM_STR);
@@ -46,12 +50,15 @@ class Badge extends \Core\Model
 
             if ($stmt->rowcount() > 0) {
 
-                $id = self::getLatestID($db);
+                $id = self::getLatestBadgeID($db);
 
                 if($id) {
                     if(self::insertBadgeInResource($db, $id, $badge_name)) {
                         if($description) {
-                            return self::insertDescriptionInResource($db, $id, $description);
+                            if(!self::insertDescriptionInResource($db, $id, $description)) {
+                                Flash::addMessage('Badge Description Addition Failed!', 'warning');
+                                return false;
+                            }
                         }
                         return true;
                     } else {
@@ -63,25 +70,15 @@ class Badge extends \Core\Model
             } else {
                 Flash::addMessage('Query execution failed', 'warning');
             }
-        } else {
-            Flash::addMessage('Badge Already Exists!', 'warning');
+        }
+        if($badge_obj) {
+            Flash::addMessage('Badge Name Already Exists!', 'warning');
+        } else if(!$image_validated) {
+            Flash::addMessage('Please upload .png, .jpg or .gif file!', 'warning');
+        } else if(!$file_uploaded) {
+            Flash::addMessage('File upload failed!', 'warning');
         }
         return false;
-    }
-
-    private static function getLatestBadgeID() {
-        $sql = "SELECT MAX(id) from badges";
-
-        $db = static::getDB();
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $stmt->setFetchMode(PDO::FETCH_ASSOC);
-        $result = $stmt->fetch();
-        if($result) {
-            $id = $result['MAX(id)'];
-            return $id;
-        }
-        return null;
     }
 
     private static function insertBadgeInResource($db, $id, $badge_name) {
@@ -114,7 +111,7 @@ class Badge extends \Core\Model
         return $stmt->rowcount() > 0;
     }
 
-    private static function getLatestID($db) {
+    private static function getLatestBadgeID($db) {
         $sql = "SELECT MAX(id) from badges";
 
         $stmt = $db->prepare($sql);
@@ -125,7 +122,7 @@ class Badge extends \Core\Model
             $id = $result['MAX(id)'];
             return $id;
         }
-        return null;
+        return 0;
     }
 
     private static function getFileType($badge_type)
@@ -168,13 +165,20 @@ class Badge extends \Core\Model
         $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        if (!$badge_obj and self::validateImage($badge_type) and move_uploaded_file($badge_tmp, $filepath)) {
+        $image_validated = self::validateImage($badge_type);
+        $file_uploaded = move_uploaded_file($badge_tmp, $filepath);
 //            chmod($filepath, 0777);
+        if (!$badge_obj and $image_validated and $file_uploaded) {
             $stmt->execute();
             self::updateResourceBadge($this->id, $db, $badge_name);
             return true;
-        } else {
-            Flash::addMessage('Badge Already Exists!', 'warning');
+        }
+        if(!$badge_obj) {
+            Flash::addMessage('Badge Name Already Exists!', 'warning');
+        } else if(!$image_validated) {
+            Flash::addMessage('Please upload .png, .jpg or .gif file!', 'warning');
+        } else if(!$file_uploaded) {
+            Flash::addMessage('File upload failed!', 'warning');
         }
         return false;
     }
@@ -229,6 +233,7 @@ class Badge extends \Core\Model
         $stmt->bindValue(':column_n', self::NAME, PDO::PARAM_STR);
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
         $stmt->execute();
+        return $stmt->rowcount() > 0;
     }
 
     public static function getBadgeByName($name) {

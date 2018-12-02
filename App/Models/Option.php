@@ -53,7 +53,7 @@ class Option extends \Core\Model
             $id = $result['MAX(id)'];
             return $id;
         }
-        return null;
+        return 0;
     }
 
     private static function addOption($db, $option_id, $option) {
