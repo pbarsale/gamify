@@ -83,7 +83,7 @@ class Question extends \Core\Model
             $id = $result['MAX(id)'];
             return $id;
         }
-        return null;
+        return 0;
     }
 
     private static function addQuestionResource($db, $id, $question) {
@@ -227,7 +227,6 @@ class Question extends \Core\Model
         $stmt->bindValue(':lang', self::LANGUAGE, PDO::PARAM_STR);
 
         $stmt->execute();
-        var_dump($stmt->rowcount() > 0);
         return $stmt->rowcount() > 0;
     }
 

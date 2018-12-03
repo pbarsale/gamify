@@ -34,7 +34,7 @@ class GameType extends \Core\Model
 
             if ($stmt->execute()) {
 
-                $id = self::getLatestID($db);
+                $id = self::getLatestGameTypeID($db);
 
                 if($id) {
                     return self::insertGameTypeInResource($db, $id, $game_type);
@@ -65,7 +65,7 @@ class GameType extends \Core\Model
         return $stmt->rowcount() > 0;
     }
 
-    private static function getLatestID($db) {
+    private static function getLatestGameTypeID($db) {
         $sql = "SELECT MAX(id) from game_types";
 
         $stmt = $db->prepare($sql);
@@ -76,7 +76,7 @@ class GameType extends \Core\Model
             $id = $result['MAX(id)'];
             return $id;
         }
-        return null;
+        return 0;
     }
 
     public function deleteGameType()

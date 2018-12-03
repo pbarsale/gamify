@@ -8,6 +8,7 @@
 
 namespace App\Controllers;
 
+use App\Models\AgeGroup;
 use App\Models\GameType;
 use App\Models\LeaderBoard;
 use App\Models\User;
@@ -22,12 +23,16 @@ class Leaderboardcontroller extends \Core\Controller
     public function newAction()
     {
         $this->throwToLoginPage();
-        $users = User::getAllUsersByUserAge($_SESSION['user_id']);
-        $leaderBoardUsers = array();
-        if($users) {
-            $leaderBoardUsers = LeaderBoard::getLeaderBoard($users);
+        if(isset($_SESSION['user_id'])) {
+            $user = User::findById($_SESSION['user_id']);
+            if ($user) {
+                $user->getAgeFromBirthDate();
+                $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
+                $users = User::getAllUsersByUserAge($userAgeGroup);
+                $leaderBoardUsers = $users ? LeaderBoard::getLeaderBoard($users) : array();
+                View::renderTemplate('User/leaderboard.html', array('users' => $leaderBoardUsers, 'ageGroup' => $userAgeGroup));
+            }
         }
-        View::renderTemplate('User/leaderboard.html', array('users' => $leaderBoardUsers));
     }
 
     private function throwToLoginPage()

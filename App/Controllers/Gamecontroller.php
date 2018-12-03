@@ -43,8 +43,6 @@ class Gamecontroller extends \Core\Controller
                 $_SESSION['game_type_id'] = $_POST['select-game-type'];
                 Flash::addMessage('Game Added Successfully!');
                 $this->redirect('/museum/gamify/questioncontroller/new');
-            } else {
-                Flash::addMessage('Game Addition Failed!', 'warning');
             }
         }
         $this->redirect('/museum/gamify/gamecontroller/new');

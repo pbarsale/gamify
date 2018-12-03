@@ -55,10 +55,10 @@
                         <input type="number" name="point[optionA1]" min="0" max="100" value="0" style="width:20%" title="Add points to the option">
                     </div>
                     <div class="col-md-2">
-                        <select id="select-badges[optionA1]" name="select-badges[optionA1]" class="selcls" title="Add badge to the option">
+                        <select data-option="optionA1" name="select-badges[optionA1]" class="selcls" title="Add badge to the option">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
-                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
                         <img id="badge-image[optionA1]" width="15%" height="15%" style="margin-left: 3%">
@@ -77,10 +77,10 @@
                         <input type="number" name="point[optionA2]" min="0" max="100" value="0" style="width:20%" title="Add points to the option">
                     </div>
                     <div class="col-md-2">
-                        <select id="select-badges[optionA2]" name="select-badges[optionA2]" class="selcls" title="Add badge to the option">
+                        <select data-option="optionA2" name="select-badges[optionA2]" class="selcls" title="Add badge to the option">
                             <option value="0">Select Badge</option>
                             {% for badge in badges %}
-                            <option value="{{ badge.id }}">{{ badge.name }}</option>
+                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
                             {% endfor %}
                         </select>
                         <img id="badge-image[optionA2]" width="15%" height="15%" style="margin-left: 3%">
@@ -133,10 +133,10 @@
                 var column4 = document.createElement('div');
                 column4.className = "col-md-2";
                 var select_container = document.createElement("select");
-                select_container.id = "select-badges[optionA" + i + "]";
                 select_container.name = "select-badges[optionA" + i + "]";
                 select_container.className = "selcls";
                 select_container.title = "Add badge to the option";
+                $(select_container).data("option", "optionA" + i);
                 var opt = document.createElement('option');
                 opt.value = 0;
                 opt.text = "Select Badge";
@@ -146,6 +146,7 @@
                     opt = document.createElement('option');
                     opt.value = badges[j].id;
                     opt.text = badges[j].name;
+                    $(opt).data("badge", badges[j].badge);
                     select_container.appendChild(opt);
                 }
                 column4.appendChild(select_container);
@@ -161,6 +162,18 @@
                 var div = document.getElementById(divId);
                 div.parentNode.removeChild(div);
                 return false;
+            });
+
+            $(document).on('change', '.selcls', function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                var optionNum = $(this).data("option");
+                var badgeImg = document.getElementById("badge-image[" + optionNum + "]");
+                if($(this).children("option:selected").val() !== '0') {
+                    badgeImg.style.display='';
+                    badgeImg.setAttribute("src", src);
+                } else {
+                    badgeImg.style.display='none';
+                }
             });
         });
     </script>

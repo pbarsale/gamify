@@ -39,7 +39,7 @@ class Game extends \Core\Model
 
             if ($stmt->rowcount() > 0) {
 
-                $id = self::getLatestID($db);
+                $id = self::getLatestGameID($db);
 
                 if($id) {
                     if(self::insertGameInResource($db, $id, $game)) {
@@ -74,7 +74,7 @@ class Game extends \Core\Model
         return $stmt->rowcount() > 0;
     }
 
-    private static function getLatestID($db) {
+    private static function getLatestGameID($db) {
         $sql = "SELECT MAX(id) from games";
 
         $stmt = $db->prepare($sql);
@@ -85,7 +85,7 @@ class Game extends \Core\Model
             $id = $result['MAX(id)'];
             return $id;
         }
-        return null;
+        return 0;
     }
 
     public static function getGameType($game_id)

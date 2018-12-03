@@ -7,6 +7,7 @@ use \Datetime;
 use \App\Token;
 use \App\Mail;
 use \Core\View;
+
 /**
  * Example user model
  *
@@ -27,8 +28,9 @@ class User extends \Core\Model
      * @param array $data Initial Property Value
      * @return void
      */
-    public function __construct($data =array()){
-        foreach($data as $key => $value){
+    public function __construct($data = array())
+    {
+        foreach ($data as $key => $value) {
             $this->$key = $value;
         };
     }
@@ -38,10 +40,11 @@ class User extends \Core\Model
      *
      * @return void
      */
-    public function save($avatar){
+    public function save($avatar)
+    {
 
         $this->validate($avatar);
-        if(empty($this->errors)){
+        if (empty($this->errors)) {
 
             $isadmin = $_SESSION['admin'];
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
@@ -51,60 +54,61 @@ class User extends \Core\Model
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
-            $stmt->bindValue(':name',$this->name,PDO::PARAM_STR);
-            $stmt->bindValue(':member_id',$this->member_id,PDO::PARAM_STR);
-            $stmt->bindValue(':email',$this->email,PDO::PARAM_STR);
-            $stmt->bindValue(':password',$password_hash,PDO::PARAM_STR);
-            $stmt->bindValue(':birth_date',$this->birth_date,PDO::PARAM_STR);
-            $stmt->bindValue(':isadmin',$isadmin,PDO::PARAM_BOOL);
+            $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
+            $stmt->bindValue(':member_id', $this->member_id, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
+            $stmt->bindValue(':password', $password_hash, PDO::PARAM_STR);
+            $stmt->bindValue(':birth_date', $this->birth_date, PDO::PARAM_STR);
+            $stmt->bindValue(':isadmin', $isadmin, PDO::PARAM_BOOL);
             return $stmt->execute();
         }
-        return false; 
+        return false;
     }
 
 
     /**
-    * Validate current property values, adding validation error messages to the errors array property
+     * Validate current property values, adding validation error messages to the errors array property
      *
      * @return void
      */
-    
-    public function validate($avatar){
+
+    public function validate($avatar)
+    {
         if (empty($this->name) || empty($this->email) || empty($this->password) || empty($this->confirmPwd) || empty($this->birth_date)) {
             $this->errors[] = 'Empty fields not allowed';
         }
-        
-        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)){
+
+        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)) {
             $this->errors[] = 'First and Last name should contain only alphabets';
         }
-        
-        if(!filter_var($this->email,FILTER_VALIDATE_EMAIL)){
+
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
             $this->errors[] = 'Invalid email';
         }
 
-        if($this->emailExists($this->email)){
+        if ($this->emailExists($this->email)) {
             $this->errors[] = 'E-mail already exists';
         }
 
-        if($this->password != $this->confirmPwd){
+        if ($this->password != $this->confirmPwd) {
             $this->errors[] = 'Password must match confirmation';
         }
 
-        if(strlen($this->password) < 6){
+        if (strlen($this->password) < 6) {
             $this->errors[] = 'Password enter at least 6 characters for the password';
         }
 
-        if(!preg_match("/.*[a-z]+.*/i", $this->password)){
+        if (!preg_match("/.*[a-z]+.*/i", $this->password)) {
             $this->errors[] = 'Password needs at least one letter';
         }
 
-        if(!preg_match("/.*\d+.*/i", $this->password)){
+        if (!preg_match("/.*\d+.*/i", $this->password)) {
             $this->errors[] = 'Password needs at least one number';
         }
 
-        if($avatar){
+        if ($avatar) {
             $avatar_type = $avatar['type'];
-            if(!($this->validateImage($avatar_type))) {
+            if (!($this->validateImage($avatar_type))) {
                 $this->errors[] = 'Avatar should be of file type - JPEG, PNG, GIF';
             }
         }
@@ -112,73 +116,76 @@ class User extends \Core\Model
         $dob = new DateTime($this->birth_date);
         $now = new DateTime();
 
-        if($now<$dob){
+        if ($now < $dob) {
             $this->errors[] = 'Birth date cannot be future date';
-        }else if($now->diff($dob)->y < 1){
+        } else if ($now->diff($dob)->y < 1) {
             $this->errors[] = 'Should be 1 year old or above';
-        }else if($now->diff($dob)->y >199){
+        } else if ($now->diff($dob)->y > 199) {
             $this->errors[] = 'Age seems to be quite old, please check again';
         }
     }
 
 
     /**
-    * Validate password values, required for reset password
+     * Validate password values, required for reset password
      *
      * @return void
      */
-    
-    public function validatePassword(){
+
+    public function validatePassword()
+    {
         if (empty($this->password) || empty($this->confirmPwd)) {
             $this->errors[] = 'Empty fields not allowed';
         }
-        
-        if($this->password != $this->confirmPwd){
+
+        if ($this->password != $this->confirmPwd) {
             $this->errors[] = 'Password must match confirmation';
         }
 
-        if(strlen($this->password) < 6){
+        if (strlen($this->password) < 6) {
             $this->errors[] = 'Password enter at least 6 characters for the password';
         }
 
-        if(!preg_match("/.*[a-z]+.*/i", $this->password)){
+        if (!preg_match("/.*[a-z]+.*/i", $this->password)) {
             $this->errors[] = 'Password needs at least one letter';
         }
 
-        if(!preg_match("/.*\d+.*/i", $this->password)){
+        if (!preg_match("/.*\d+.*/i", $this->password)) {
             $this->errors[] = 'Password needs at least one number';
         }
     }
 
     /**
-    * See if a user record already exists with same email.
+     * See if a user record already exists with same email.
      *
      * @param $email - email to search
      * @return boolean - true if record exists, or else return false
      */
 
 
-    public static function emailExists($email){
+    public static function emailExists($email)
+    {
         return static::findByEmail($email) !== false;
     }
 
 
     /**
-    * Find a user model by email address
+     * Find a user model by email address
      *
      * @param $email - email to search for
      * @return user object if found, otherwise false
      */
 
 
-    public static function findByEmail($email){
+    public static function findByEmail($email)
+    {
 
         $sql = "SELECT * from users where email=:email";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':email',$email,PDO::PARAM_STR); 
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
 
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         $stmt->execute();
         return $stmt->fetch();
@@ -193,14 +200,15 @@ class User extends \Core\Model
      */
 
 
-    public static function findById($id){
+    public static function findById($id)
+    {
 
         $sql = "SELECT * from users where id=:id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':id',$id,PDO::PARAM_INT); 
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
 
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         $stmt->execute();
         return $stmt->fetch();
@@ -215,12 +223,13 @@ class User extends \Core\Model
      */
 
 
-    public static function authenticate($email,$password){
+    public static function authenticate($email, $password)
+    {
 
         $user = static::findByEmail($email);
-        if($user){
-            if(password_verify($password,$user->password)){
-                if($user->isadmin==$_SESSION['admin'])
+        if ($user) {
+            if (password_verify($password, $user->password)) {
+                if ($user->isadmin == $_SESSION['admin'])
                     return $user;
             }
         }
@@ -234,14 +243,15 @@ class User extends \Core\Model
      */
 
 
-    public function rememberLogin(){
+    public function rememberLogin()
+    {
 
         $token = new Token();
         $hashed_token = $token->getHash();
 
         $this->remember_token = $token->getValue();
 
-        $this->expiry_timestamp = time() + 60*60*24*30; // 30 days from now.
+        $this->expiry_timestamp = time() + 60 * 60 * 24 * 30; // 30 days from now.
 
         $sql = "Insert into remembered_logins(token_hash,user_id,expires_at)
                             values(:token_hash,:user_id,:expires_at)";
@@ -249,9 +259,9 @@ class User extends \Core\Model
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
-        $stmt->bindValue(':token_hash',$hashed_token,PDO::PARAM_STR);
-        $stmt->bindValue(':user_id',$this->id,PDO::PARAM_INT);
-        $stmt->bindValue(':expires_at',date('Y-m-d H:i:s',$this->expiry_timestamp),PDO::PARAM_STR);
+        $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
+        $stmt->bindValue(':user_id', $this->id, PDO::PARAM_INT);
+        $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $this->expiry_timestamp), PDO::PARAM_STR);
 
         return $stmt->execute();
     }
@@ -263,11 +273,12 @@ class User extends \Core\Model
      */
 
 
-    public static function sendPasswordReset($email){
+    public static function sendPasswordReset($email)
+    {
         $user = static::findByEmail($email);
 
-        if($user){
-            if($user->startPasswordReset()){
+        if ($user) {
+            if ($user->startPasswordReset()) {
                 $user->sendPasswordResetEmail();
             }
         }
@@ -277,12 +288,13 @@ class User extends \Core\Model
      * Start the password reset process by generating a new token and expiry
      * @return void
      */
-    protected function startPasswordReset(){
+    protected function startPasswordReset()
+    {
         $token = new Token();
         $hashed_token = $token->getHash();
         $this->reset_token = $token->getValue();
 
-        $expiry_timestamp = time() + 60*60*2; // 2 hours from now.
+        $expiry_timestamp = time() + 60 * 60 * 2; // 2 hours from now.
 
         $sql = 'UPDATE users 
                 SET password_reset_hash = :token_hash,
@@ -291,9 +303,9 @@ class User extends \Core\Model
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindValue(':token_hash',$hashed_token,PDO::PARAM_STR);
-        $stmt->bindValue(':expires_at',date('Y-m-d H:i:s',$expiry_timestamp),PDO::PARAM_STR);
-        $stmt->bindValue(':id',$this->id,PDO::PARAM_INT);
+        $stmt->bindValue(':token_hash', $hashed_token, PDO::PARAM_STR);
+        $stmt->bindValue(':expires_at', date('Y-m-d H:i:s', $expiry_timestamp), PDO::PARAM_STR);
+        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
         return $stmt->execute();
     }
@@ -302,14 +314,15 @@ class User extends \Core\Model
      * Send password reset email to the user
      * @return void
      */
-    protected function sendPasswordResetEmail(){
-        
-        $url = 'http://'.$_SERVER['HTTP_HOST'].'/museum/gamify/password/reset/'.$this->reset_token;
+    protected function sendPasswordResetEmail()
+    {
 
-        $text = View::getTemplate('Password/reset_email.txt',array('url' => $url));
-        $html = View::getTemplate('Password/reset_email.html',array('url' => $url));
-        
-        Mail::send($this->email,'Password reset request',$text,$html);
+        $url = 'http://' . $_SERVER['HTTP_HOST'] . '/museum/gamify/password/reset/' . $this->reset_token;
+
+        $text = View::getTemplate('Password/reset_email.txt', array('url' => $url));
+        $html = View::getTemplate('Password/reset_email.html', array('url' => $url));
+
+        Mail::send($this->email, 'Password reset request', $text, $html);
     }
 
     /**
@@ -317,7 +330,8 @@ class User extends \Core\Model
      * @param string $token password reset sent to user
      * @return mixed. User model if found and has not expired, otherwise null
      */
-    public static function findByPasswordReset($token){
+    public static function findByPasswordReset($token)
+    {
 
         $token = new Token($token);
         $hashed_token = $token->getHash();
@@ -325,33 +339,34 @@ class User extends \Core\Model
         $sql = "SELECT * from users where password_reset_hash=:token_hash";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':token_hash',$hashed_token,PDO::PARAM_STR); 
+        $stmt->bindParam(':token_hash', $hashed_token, PDO::PARAM_STR);
 
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         $stmt->execute();
         $user = $stmt->fetch();
 
-        if($user){
+        if ($user) {
             // check password reset token has not expired
-            if(strtotime($user->password_reset_expiry)>time()){
+            if (strtotime($user->password_reset_expiry) > time()) {
                 return $user;
             }
         }
     }
 
 
-    /** 
+    /**
      * Reset Password
      * @param string password - The new password
      * @return boolean
      */
-    public function resetPassword($password,$confirmPwd){
+    public function resetPassword($password, $confirmPwd)
+    {
         $this->password = $password;
         $this->confirmPwd = $confirmPwd;
         $this->validatePassword();
 
-        if(empty($this->errors)){
+        if (empty($this->errors)) {
             $password_hash = password_hash($this->password, PASSWORD_DEFAULT);
 
             $sql = 'UPDATE users
@@ -362,14 +377,15 @@ class User extends \Core\Model
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
-            $stmt->bindValue(':id',$this->id,PDO::PARAM_INT);
-            $stmt->bindValue(':password_hash',$password_hash,PDO::PARAM_STR);
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
             return $stmt->execute();
         }
         return false;
     }
 
-    public static function getAllUsers() {
+    public static function getAllUsers()
+    {
         $sql = "SELECT * FROM users";
 
         $db = static::getDB();
@@ -382,13 +398,14 @@ class User extends \Core\Model
         return $stmt->fetchAll();
     }
 
-    public static function getUserByName($name) {
+    public static function getUserByName($name)
+    {
         $sql = "SELECT * from users where name=:name";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
         $stmt->bindParam(':name', $name, PDO::PARAM_STR);
 
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         $stmt->execute();
         return $stmt->fetch();
@@ -401,7 +418,8 @@ class User extends \Core\Model
      */
 
 
-    public function getAgeFromBirthDate(){
+    public function getAgeFromBirthDate()
+    {
 
         $dobObject = new DateTime($this->birth_date);
         $nowObject = new DateTime();
@@ -410,7 +428,8 @@ class User extends \Core\Model
         return;
     }
 
-    public static function getAllUsersByAgeGroup($currUserAgeGroup) {
+    public static function getAllUsersByAgeGroup($currUserAgeGroup)
+    {
         $sql = "SELECT * FROM users where isblocked=:isblocked and isadmin=:isadmin";
 
         $db = static::getDB();
@@ -429,29 +448,23 @@ class User extends \Core\Model
         foreach ($users as $user) {
             $user->getAgeFromBirthDate();
             $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
-            if($userAgeGroup and self::isAgeWithinRange($userAgeGroup, $currUserAgeGroup)) {
+            if ($userAgeGroup and self::isAgeWithinRange($userAgeGroup, $currUserAgeGroup)) {
                 array_push($usersByAge, $user);
             }
         }
         return $usersByAge;
     }
 
-    public static function getAllUsersByUserAge($id) {
-        $user = self::findById($id);
-        if($user) {
-            $user->getAgeFromBirthDate();
-            $userAgeGroup = AgeGroup::getAgeGroupIdByAge($user->age);
-            if($userAgeGroup) {
-                $users = self::getAllUsersByAgeGroup($userAgeGroup);
-                if($users) {
-                    return $users;
-                }
-            }
+    public static function getAllUsersByUserAge($userAgeGroup)
+    {
+        if ($userAgeGroup) {
+            $users = self::getAllUsersByAgeGroup($userAgeGroup);
+            return $users ? $users : array();
         }
-        return $user;
     }
 
-    public static function isAgeWithinRange($userAge, $ageGroup) {
+    public static function isAgeWithinRange($userAge, $ageGroup)
+    {
         return ($userAge->min === $ageGroup->min and $userAge->max === $ageGroup->max);
     }
 
@@ -466,45 +479,49 @@ class User extends \Core\Model
         return $stmt->rowcount() > 0;
     }
 
-    public  function validateImage($avatar_type) {
+    public function validateImage($avatar_type)
+    {
         return preg_match('/^image\\/p?jpeg$/i', $avatar_type) or
             preg_match('/^image\\/gif$/i', $avatar_type) or
             preg_match('/^image\\/(x-)?png$/i', $avatar_type);
     }
 
-    public static function uploadAvatar($email, $avatar){
+    public static function uploadAvatar($email, $avatar)
+    {
 
         $user = self::findByEmail($email);
         $avatar_tmp = $avatar['tmp_name'];
-        $filepath = "images/" . $user->id."_avatar.jpg";
+        $filepath = "images/" . $user->id . "_avatar.jpg";
 
-        if(move_uploaded_file($avatar_tmp, $filepath)){
+        if (move_uploaded_file($avatar_tmp, $filepath)) {
             $sql = "UPDATE users SET avatar=:avatar where id=:id";
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue(':id', $user->id, PDO::PARAM_INT);
-            $stmt->bindValue(':avatar',self::FILEPATH.$filepath, PDO::PARAM_STR);
+            $stmt->bindValue(':avatar', self::FILEPATH . $filepath, PDO::PARAM_STR);
             return $stmt->execute();
-        }else{
+        } else {
             return false;
         }
     }
 
-    public static function setUserAvatar(){
-        if(isset($_SESSION['user_id'])){
+    public static function setUserAvatar()
+    {
+        if (isset($_SESSION['user_id'])) {
             return self::getuserAvatarById($_SESSION['user_id']);
         }
         return null;
     }
 
-    public static function getuserAvatarById($id){
+    public static function getuserAvatarById($id)
+    {
 
         $sql = "SELECT * from users where id=:id";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
-        $stmt->bindParam(':id',$id,PDO::PARAM_STR);
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->bindParam(':id', $id, PDO::PARAM_STR);
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
         $stmt->execute();
 
         $user = $stmt->fetch();
@@ -512,19 +529,20 @@ class User extends \Core\Model
     }
 
 
-    public function validateProfilePage($avatar){
+    public function validateProfilePage($avatar)
+    {
 
-        if (empty($this->name)){
+        if (empty($this->name)) {
             $this->errors[] = 'Empty Name not allowed';
         }
 
-        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)){
+        if (!preg_match("/^[a-zA-Z ]*$/", $this->name)) {
             $this->errors[] = 'First and Last name should contain only alphabets';
         }
 
-        if($avatar){
+        if ($avatar) {
             $avatar_type = $avatar['type'];
-            if(!($this->validateImage($avatar_type))) {
+            if (!($this->validateImage($avatar_type))) {
                 $this->errors[] = 'Avatar should be of file type - JPEG, PNG, GIF';
             }
         }
@@ -534,8 +552,8 @@ class User extends \Core\Model
     {
         $this->validateProfilePage($avatar);
         if (empty($this->errors)) {
-            if($avatar){
-                if(!user::uploadAvatar($this->email,$avatar)){
+            if ($avatar) {
+                if (!user::uploadAvatar($this->email, $avatar)) {
                     $this->errors[] = 'Problem uploading the avatar, please try different avatar';
                 }
             }
@@ -560,11 +578,11 @@ class User extends \Core\Model
 
         $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
-        $stmt->setFetchMode(PDO::FETCH_CLASS,get_called_class());
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
         $stmt->execute();
 
-        if($stmt->rowcount() > 0) {
+        if ($stmt->rowcount() > 0) {
             $result = $stmt->fetch();
             $sql = "UPDATE user_points SET points=:points, date_updated=:date_updated, user_updated=:user_updated, isdeleted=:isdeleted WHERE user_id=:user_id";
             $stmt = $db->prepare($sql);

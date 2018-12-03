@@ -61,16 +61,13 @@ class Manageaccount extends \Core\Controller
                 Flash::addMessage('Points are low to be updated!', 'warning');
                 $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
             }
-            $flag = false;
             if(!empty($_POST['points'])) {
-                $flag = User::updatePoints($_POST['points'], $_POST['user_id']);
+                User::updatePoints($_POST['points'], $_POST['user_id']);
             }
             if ($_POST['select-badge'] != 0) {
-                $flag = User::addBadges($_POST['select-badge'], $_POST['user_id']);
+                User::addBadges($_POST['select-badge'], $_POST['user_id']);
             }
-            if($flag) {
-                Flash::addMessage('Points and/or Badges Updated Successfully!');
-            }
+            Flash::addMessage('Points and/or Badges Updated Successfully!');
         }
         $this->redirect('/museum/gamify/manageaccount/edit?user=' . $_POST['user_id']);
     }
