@@ -30,27 +30,31 @@
         </div>
         {% endfor %}
 
-        <table style="width:50%;margin-left:25%;margin-top:5%">
-            <tr>
-                {% for key,game in games %}
-
-                {% if game[0]['game_type_id'] in [QUIZ_CONST,SCAVENGER_HUNT_CONST] %}
-
-                    <td valign="top" style="width:50%;padding:20px;">
+        <table style="width:80%;margin-left:10%;margin-top:5%">
+                <tr>
+                    {% for key,game in games %}
+                    {% if game[0]['game_type_id'] in [QUIZ_CONST,SCAVENGER_HUNT_CONST] %}
+                    <td  style="width:40%;padding:5%;">
                         <header class="w3-container w3-blue">
                             <h3>{{ key }}</h3>
                         </header>
-                        <div class="w3-card-4" style="background-color:white;height: 300px;overflow-y: scroll">
+                        <div class="w3-card-4" style="background-color:white;height:300px;overflow-y: scroll">
                             {% for item in game %}
                             <div class="w3-container">
-                                <p> <a href="/museum/gamify/users/quiz/{{item.id}}">{{ item.name }}</a></p>
+                                <p> <a href="/museum/gamify/users/quiz/{{item.id}}">{{ item.name }}</a>
+                                <span style="float: right"> {{ item.points }}
+                                {% for badge in item.badges %}
+                                    <img src="{{ badge.badge }}" height="30px" width="30px" alt="Badges"/>
+                                {% endfor %}
+                                </span>
+                                </p>
                             </div>
                             {% endfor %}
                         </div>
                     </td>
                 {% endif %}
                 {% endfor %}
-            </tr>
+                </tr>
         </table>
     {% else %}
 

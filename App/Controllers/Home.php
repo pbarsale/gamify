@@ -20,6 +20,7 @@ class Home extends \Core\Controller
      */
     public function indexAction()
     {
+        $_SESSION['admin'] = false;
     	// Every view should have the logged in user data
         //\App\Mail::send('pbarsale@buffalo.edu','Hello','Hi Pratibha','<h1>Hi Pratibha<h1>');
         View::renderTemplate('Home/index.html');

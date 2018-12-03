@@ -24,6 +24,9 @@ class Quiz extends \Core\Model
                 $games[$selected_row['name']] = Game::getAllGamesForGameType($selected_row['id'],$agegroup->id);
             }
         }
+        if($games){
+            $games = Game::getGamePointsAndBadges($games);
+        }
         return $games;
     }
 
