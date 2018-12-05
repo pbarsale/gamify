@@ -9,6 +9,7 @@ namespace App\Controllers;
 
 use App\Flash;
 use App\Models\Badge;
+use App\Models\Game;
 use App\Models\LeaderBoard;
 use App\Models\Notification;
 use App\Models\User;
@@ -25,7 +26,8 @@ class Manageaccount extends \Core\Controller
         $this->throwToLoginPage();
         $users = User::getAllUsers();
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/accountsearch.html', array('users' => $users, 'notifications' => $notifications));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/accountsearch.html', array('users' => $users, 'notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
 
     public function blockAction() {
@@ -51,7 +53,8 @@ class Manageaccount extends \Core\Controller
         }
         $notifications = Notification::getAllPendingScavengerHunt();
         $allBadges = Badge::getAllBadges();
-        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications, 'badges' => $allBadges));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/profile.html', array('user' => $user, 'notifications' => $notifications, 'badges' => $allBadges, 'pendingGames' => $pendingGames));
     }
 
     public function updateAction() {

@@ -20,8 +20,8 @@ class Game extends \Core\Model
         $game_type_obj = GameType::getGameTypeById($selected_game_type);
         $age_group_obj = AgeGroup::getAgeGroupById($selected_age_group);
         if(!$game_obj and $game_type_obj and $age_group_obj) {
-            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id)
-                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id)";
+            $sql = "Insert into games(date_created, user_created, date_updated, user_updated, isdeleted, game_type_id, age_group_id, ispublish)
+                            values(:date_created, :user_created, :date_updated, :user_updated, :isdeleted, :game_type_id, :age_group_id, :ispublish)";
 
             $db = static::getDB();
             $stmt = $db->prepare($sql);
@@ -33,6 +33,7 @@ class Game extends \Core\Model
             $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
             $stmt->bindValue(':game_type_id', $game_type_obj->id, PDO::PARAM_INT);
             $stmt->bindValue(':age_group_id', $age_group_obj->id, PDO::PARAM_INT);
+            $stmt->bindValue(':ispublish', false, PDO::PARAM_BOOL);
             $stmt->execute();
 
             if ($stmt->rowcount() > 0) {
@@ -95,6 +96,52 @@ class Game extends \Core\Model
         return null;
     }
 
+    public static function getAllPendingGames()
+    {
+        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted and ispublish=:ispublish";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':ispublish', false, PDO::PARAM_BOOL);
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if($result) {
+            foreach ($result as $selected_row) {
+                $resource = self::getResourceForId($selected_row['id'], $db);
+                foreach ($resource as $selected_resource) {
+                    $selected_row[$selected_resource['column_n']] = $selected_resource['text'];
+                }
+                $rows[] = array_map(null, $selected_row);
+            }
+            $games = $rows;
+        } else {
+            $games = $result;
+        }
+        return $games;
+    }
+
+    public static function approvePendingGame($game)
+    {
+        $sql = 'UPDATE games SET date_updated = :date_updated, user_updated = :user_updated, ispublish=:ispublish WHERE id=:id';
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+        $stmt->bindValue(':ispublish', true, PDO::PARAM_BOOL);
+        $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()),PDO::PARAM_STR);
+        $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':id', $game, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->rowcount() > 0;
+    }
+
     public function deleteGame() {
         $sql = 'UPDATE games SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 
@@ -137,12 +184,13 @@ class Game extends \Core\Model
     }
 
     public static function getAllGames() {
-        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted";
+        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted and ispublish=:ispublish";
 
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':ispublish', true, PDO::PARAM_BOOL);
 
         $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
 
@@ -206,11 +254,12 @@ class Game extends \Core\Model
 
     public static function getAllGamesForGameType($gameTypeID,$ageGroupID) {
 
-        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted and game_type_id=:game_type_id and age_group_id=:age_group_id";
+        $sql = "SELECT * FROM games WHERE isdeleted=:isdeleted and game_type_id=:game_type_id and age_group_id=:age_group_id and ispublish=:ispublish";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
 
         $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+        $stmt->bindValue(':ispublish', true, PDO::PARAM_BOOL);
         $stmt->bindValue(':game_type_id', $gameTypeID, PDO::PARAM_INT);
         $stmt->bindValue(':age_group_id', $ageGroupID, PDO::PARAM_INT);
 

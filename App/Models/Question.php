@@ -156,6 +156,62 @@ class Question extends \Core\Model
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getPreviousQuestion($game_id, $question_id)
+    {
+        $questionsByGameId = self::getAllQuestionsByGameId($game_id);
+        if(count($questionsByGameId) >= 1) {
+            if(!$question_id) {
+                return $questionsByGameId[count($questionsByGameId) - 1];
+            }
+            for($i = 0; $i < count($questionsByGameId); $i++) {
+                if($question_id and $questionsByGameId[$i]["id"] == $question_id) {
+                    if($i - 1 >= 0) {
+                        return $questionsByGameId[$i - 1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static function getNextQuestion($game_id, $question_id)
+    {
+        $questionsByGameId = self::getAllQuestionsByGameId($game_id);
+        if(count($questionsByGameId) >= 1) {
+            for($i = 0; $i < count($questionsByGameId); $i++) {
+                if($question_id and $questionsByGameId[$i]["id"] == $question_id) {
+                    if($i + 1 < count($questionsByGameId)) {
+                        return $questionsByGameId[$i + 1];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static function updatePrevQuestion($question_id, $question, $options, $prev_options, $points, $answer, $description, $badge, $option_badges, $option_points)
+    {
+        $sql = "UPDATE questions SET points=:points, badge_id=:badge_id, date_updated=:date_updated, user_updated=:user_updated WHERE id=:id";
+
+        $db = static::getDB();
+        $stmt = $db->prepare($sql);
+
+        $stmt->bindValue(':points', $points, PDO::PARAM_INT);
+        $stmt->bindValue(':badge_id', $badge == 0 ? null : $badge, PDO::PARAM_INT);
+        $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+        $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->bindValue(':id', $question_id, PDO::PARAM_INT);
+        $stmt->execute();
+        if($stmt->rowcount() > 0) {
+
+            self::updateQuestionResource($db, $question_id, $question);
+            self::updateDescriptionResource($db, $question_id, $description);
+            Option::updatePOptions($db, $question_id, $options, $prev_options, $answer);
+            return true;
+        }
+        return false;
+    }
+
     public function deleteQuestion() {
         $sql = 'UPDATE questions SET isdeleted = :isdeleted, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
 

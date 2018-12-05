@@ -29,9 +29,32 @@ class Gamecontroller extends \Core\Controller
         $game_types = GameType::getAllGameTypes();
         $age_groups = AgeGroup::getAllAgeGroups();
         $badges = Badge::getAllBadges();
+        $pendingGames = Game::getAllPendingGames();
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups, 'badges' => $badges, 'notifications' => $notifications));
+        View::renderTemplate('Admin/game.html', array('games' => $games, 'game_types' => $game_types, 'age_groups' => $age_groups, 'badges' => $badges, 'notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
+
+    public function pendingAction()
+    {
+        $this->throwToLoginPage();
+        $pendingGames = Game::getAllPendingGames();
+        $notifications = Notification::getAllPendingScavengerHunt();
+        View::renderTemplate('Admin/pendinggame.html', array('notifications' => $notifications, 'pendingGames' => $pendingGames));
+    }
+
+    public function approveAction()
+    {
+        $this->throwToLoginPage();
+        if(isset($_GET['game'])) {
+            if (Game::approvePendingGame($_GET['game'])) {
+                Flash::addMessage('Game Published!');
+            } else {
+                Flash::addMessage('Game could not be Published!', 'warning');
+            }
+        }
+        $this->redirect('/museum/gamify/gamecontroller/pending');
+    }
+
 
     public function addAction()
     {

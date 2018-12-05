@@ -18,6 +18,7 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/museum/gamify/admin">Home</a></li>
                     <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                    <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
                     <li><a href="/museum/gamify/logout/admin">Logout</a></li>
                     <li style="position:absolute; top:0; right:0;"><img src="/museum/gamify/images/buffalo-museum-white.png" width="20%" height="20%" style="margin:2%;"/></li>
                 </ul>
@@ -36,7 +37,6 @@
                 <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
                 <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
                 <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
-                <button class="tablinks" onclick="openTab(event, 'Edit Questions')">Edit Questions</button>
             </div>
 
             <form class="game-form" action="/museum/gamify/gamecontroller/add" method="post">
@@ -100,22 +100,6 @@
                     <button type="button" class="btn btn-primary" title="Delete Game" data-toggle="modal" data-target="#myModal">Delete</button>
                 </div>
             </div>
-
-            <form class="game-form" action="/museum/gamify/gamecontroller/edit" method="post">
-                <div id="Edit Questions" class="tabcontent">
-                    <div style="margin: 10%">
-                        <label style="margin-right: 5%; ">Select Game</label>
-                        <select name="select-game-edit" class="selcls" title="Select Game to edit questions in game">
-                            {% for game in games %}
-                            <option value="{{ game.id }}">{{ game.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div style="margin-bottom: 5%">
-                        <button type="submit" name="edit" class="btn btn-primary" title="Edit Questions">Edit Questions</button>
-                    </div>
-                </div>
-            </form>
         </div>
 
         <div class="container">
