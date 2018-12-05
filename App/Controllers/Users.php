@@ -107,7 +107,7 @@ class Users extends \Core\Controller
             $this->redirect($url);
         }
         Quiz::calculatePoints(intval($_POST['questionid']),intval($_POST['points']),intval($_POST['badge_id']),$_POST['option']);
-        Flash::addMessage('Points Updated Successful');
+        //Flash::addMessage('Points Updated Successful');
         $url = '/museum/gamify/users/quiz/'.$_POST['gameid'];
         $_SESSION['div_id'] = $_POST['div_id'];
         $this->redirect($url);
@@ -124,7 +124,9 @@ class Users extends \Core\Controller
                                     intval($_POST['points']),intval($_POST['badge_id']),$_POST['iscorrect'],
                                     $_FILES['schunt']);
 
-        Flash::addMessage($message);
+        if($message!="success")
+            Flash::addMessage($message);
+
         $url = '/museum/gamify/users/quiz/'.$_POST['gameid'];
         $this->redirect($url);
     }

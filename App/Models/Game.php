@@ -14,6 +14,8 @@ class Game extends \Core\Model
     const NAME = "name";
     const TABLE_NAME = "games";
     const LANGUAGE = "english";
+    const QUIZ_CONST = 4;
+    const SCAVENGER_HUNT_CONST = 16;
 
     public static function addGame($game, $selected_game_type, $selected_age_group) {
         $game_obj = self::getGameByName($game);
@@ -282,4 +284,139 @@ class Game extends \Core\Model
         return $games;
     }
 
+    public static function getGamePointsAndBadges($games){
+
+        foreach ($games as $key => $value){
+            $index=0;
+            foreach($value as $game){
+
+                if($game['game_type_id']==static::QUIZ_CONST){
+                    $game = static::getGamePointsQuiz($game);
+                    $game = static::getGameBadgesQuiz($game);
+                }
+                else if($game['game_type_id']==static::SCAVENGER_HUNT_CONST){
+                    $game = static::getGamePointsScavenger($game);
+                    $game = static::getGameBadgesScavenger($game);
+                }
+                $value[$index] = $game;
+                $index++;
+            }
+            $games[$key] = $value;
+        }
+        return $games;
+    }
+
+    public static function getGamePointsQuiz($game){
+
+        try{
+            $sql = "SELECT sum(points) as points FROM questions WHERE isdeleted=:isdeleted and game_id=:game_id";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':game_id', $game['id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($result[0]['points'])
+                $game['points'] = (int)$result[0]['points'];
+            else
+                $game['points'] = 0;
+            return $game;
+        }
+        catch (Exception $msg){
+            $game['points'] = 0;
+            return $game;
+        }
+    }
+
+    public static function getGameBadgesQuiz($game){
+        try{
+            $sql = "SELECT q.badge_id,b.badge
+                    FROM questions q inner join badges b
+                    ON q.badge_id=b.id and b.isdeleted=:isdeleted
+                    WHERE q.isdeleted=:isdeleted and q.game_id=:game_id";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':game_id', $game['id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $game['badges'] = $result;
+
+            return $game;
+        }
+        catch (Exception $msg){
+            $game['points'] = 0;
+            return $game;
+        }
+    }
+
+    public static function getGamePointsScavenger($game){
+
+        try{
+            $sql = "SELECT sum(o.points) as points 
+                    FROM questions q inner join options o
+                    ON q.id=o.question_id AND q.isdeleted=:isdeleted 
+                    AND q.game_id=:game_id AND o.isdeleted=:isdeleted";
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':game_id', $game['id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if($result[0]['points'])
+                $game['points'] = (int)$result[0]['points'];
+            else
+                $game['points'] = 0;
+            return $game;
+        }
+        catch (Exception $msg){
+            $game['points'] = 0;
+            return $game;
+        }
+    }
+
+    public static function getGameBadgesScavenger($game){
+        try{
+            $sql = "SELECT badge_data.badge_id,b.badge
+                    FROM 
+                    (SELECT o.badge_id as badge_id
+                    FROM questions q inner join options o
+                    ON q.id=o.question_id AND q.isdeleted=:isdeleted 
+                    AND q.game_id=:game_id AND o.isdeleted=:isdeleted) as badge_data
+                    inner join badges b
+                    ON badge_data.badge_id=b.id and b.isdeleted=:isdeleted";
+
+            $db = static::getDB();
+            $stmt = $db->prepare($sql);
+
+            $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+            $stmt->bindValue(':game_id', $game['id'], PDO::PARAM_INT);
+
+            $stmt->setFetchMode(PDO::FETCH_CLASS, get_called_class());
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $game['badges'] = $result;
+
+            return $game;
+        }
+        catch (Exception $msg){
+            $game['points'] = 0;
+            return $game;
+        }
+        return $game;
+    }
 }

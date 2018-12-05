@@ -46,9 +46,7 @@
             <tr>
                 <td>
                     {% if question.answered %}
-                    <p style="color:green;"> Total score earned : {{ question.userpoints }} points</p>
-                    {% else %}
-                    <p style="color:blueviolet;"> Unanswered question </p>
+                    <p style="color:green;"> Total points earned : {{ question.userpoints }} points</p>
                     {% endif %}
                 </td>
             </tr>
