@@ -28,18 +28,22 @@ class Questioncontroller extends \Core\Controller
         $badges = Badge::getAllBadges();
         $notifications = Notification::getAllPendingScavengerHunt();
         $game_type_id = $_SESSION['game_type_id'];
+        if(isset($_POST['game_type_id'])) {
+            $game_type_id = $_SESSION['game_type_id'] = $_POST['game_type_id'];
+        }
         $pendingGames = Game::getAllPendingGames();
+        $game_id = $_SESSION['game_id'];
+        if(isset($_POST['game_id'])) {
+            $game_id = $_SESSION['game_id'] = $_POST['game_id'];
+        }
         if ($game_type_id == 4) {
-            $game_id = $_SESSION['game_id'];
-            if(isset($_POST['game_id'])) {
-                $game_id = $_POST['game_id'];
-            }
             $count = count(Question::getAllQuestionsByGameId($game_id));
             $nextquestion = Question::getNextQuestion($game_id, $_SESSION['question_id']);
             $prevquestion = Question::getPreviousQuestion($game_id, $nextquestion['id']);
             View::renderTemplate('Admin/quiz.html', array('badges' => $badges, 'game_type_id' => $game_type_id, 'notifications' => $notifications, 'prevquestion' => $nextquestion, 'isPrevQ' => $prevquestion, 'count' => $count, 'pendingGames' => $pendingGames));
         } else {
-            View::renderTemplate('Admin/scavenger.html', array('badges' => $badges, 'game_type_id' => $game_type_id, 'notifications' => $notifications, 'pendingGames' => $pendingGames));
+            $question = Question::getAllQuestionsByGameId($game_id);
+            View::renderTemplate('Admin/scavenger.html', array('badges' => $badges, 'game_type_id' => $game_type_id, 'notifications' => $notifications, 'pendingGames' => $pendingGames, 'question' => $question));
         }
     }
 

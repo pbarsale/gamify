@@ -205,8 +205,10 @@ class Question extends \Core\Model
         if($stmt->rowcount() > 0) {
 
             self::updateQuestionResource($db, $question_id, $question);
-            self::updateDescriptionResource($db, $question_id, $description);
-            Option::updatePOptions($db, $question_id, $options, $prev_options, $answer);
+            if($description) {
+                self::updateDescriptionResource($db, $question_id, $description);
+            }
+            Option::updatePOptions($db, $question_id, $options, $prev_options, $answer, $option_points, $option_badges);
             return true;
         }
         return false;

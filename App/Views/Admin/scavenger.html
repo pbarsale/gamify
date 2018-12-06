@@ -34,6 +34,63 @@
             <h2 style="text-align: center; margin-bottom: 3%">Scavenger Hunt Question</h2>
             <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
                 <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
+                <div id="badges" data-badges="{{ badges|json_encode }}"></div>
+                {% if question[0] %}
+                    <div class="row">
+                        <div class="col-md-1">
+                            <input name="question_id" hidden value="{{ question[0].id }}"/>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="prev-question" style="text-align: center; margin-right: 8%;margin-bottom: 5%;font-size: x-large">Q</label>
+                            <textarea id="prev-question" name="prev-question" placeholder="Enter Question" rows="2" cols="50"
+                                      style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required title="Enter Question">{{ question[0].question }}</textarea>
+                        </div>
+                    </div>
+                    {% set i = 1 %}
+                    {% for o in question[0].options %}
+                        <div class="row" id="prev-option{{ i }}">
+                            <div class="col-md-1" style="margin-right: 6%"></div>
+                            <div class="col-md-6">
+                                <input name="prev-option_id[]" hidden value="{{ o.id }}"/>
+                                <textarea id="prev-optionA{{ i }}" class="prev-options" name="prev-option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
+                                          style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option" required>{{ o.option }}</textarea>
+                                {% if o.iscorrect %}
+                                <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 5%;margin-bottom: 5%" title="Check box to add image verification" checked/>
+                                {% else %}
+                                <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 5%;margin-bottom: 5%" title="Check box to add image verification"/>
+                                {% endif %}
+                                <label style="margin-bottom: 5%;margin-right: 5%;" title="Check box to add image verification">Image Verify?</label>
+                                {% if i > 2 %}
+                                <button data-id="prev-option{{ i }}" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-2">
+                                <label>Points</label>
+                                <input type="number" name="prev-point[optionA{{ i }}]" min="0" max="100" value="{{ o.points }}" style="width:20%" title="Add points to the option">
+                            </div>
+                            <div class="col-md-2">
+                                <select data-option="optionA{{ i }}" name="prev-select-badges[optionA{{ i }}]" class="selcls" title="Add badge to the option">
+                                    <option value="0">Select Badge</option>
+                                    {% for badge in badges %}
+                                    {% if o.badge_id == badge.id %}
+                                    <option value="{{ badge.id }}" data-badge="{{ badge.badge }}" selected>{{ badge.name }}</option>
+                                    {% else %}
+                                    <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <img id="prev-badge-image[optionA{{ i }}]" width="15%" height="15%" style="margin-left: 3%">
+                            </div>
+                        </div>
+                    {% set i = i + 1 %}
+                    {% endfor %}
+                    <div class="row addOptionsBtn" style="margin-bottom: 5%">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                            <button id="prev-addOptions" name="addOptions" class="w3-button w3-circle w3-teal" title="Add more options">+</button>
+                        </div>
+                    </div>
+                {% else %}
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-6">
@@ -41,7 +98,6 @@
                         <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
                                   style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required title="Enter Question"></textarea>
                     </div>
-                    <div id="badges" data-badges="{{ badges|json_encode }}"></div>
                 </div>
                 <div class="row">
                     <div class="col-md-1" style="margin-right: 6%"></div>
@@ -93,6 +149,7 @@
                         <button id="addOptions" name="addOptions" class="w3-button w3-circle w3-teal" title="Add more options">+</button>
                     </div>
                 </div>
+                {% endif %}
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
@@ -109,7 +166,12 @@
 
     <script>
         $(document).ready(function () {
-            var i = 3;
+            let length = document.getElementsByClassName("options").length;
+            if(length === 0) {
+                length = document.getElementsByClassName("prev-options").length;
+            }
+            var i = length + 1;
+
             $("#addOptions").click(function (e) {
                 e.preventDefault();
                 var row = document.createElement('div');
@@ -157,7 +219,62 @@
                 i++;
             });
 
+            $("#prev-addOptions").click(function (e) {
+                e.preventDefault();
+                var row = document.createElement('div');
+                row.className = "row";
+                row.id = "option" + i;
+                var column1 = document.createElement('div');
+                column1.className = "col-md-1";
+                $(column1).css({marginRight: '6%'});
+                row.appendChild(column1);
+                var column2 = document.createElement('div');
+                column2.className = "col-md-6";
+                $(column2).append('<textarea id="optionA2" class="options" name="prev-option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;" title="Enter Option" required></textarea>');
+                $(column2).append('<input type="checkbox" name="prev-options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%" title="Check box to add image verification"/>');
+                $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%" title="Check box to add image verification">Image Verify?</label>');
+                $(column2).append('<button data-id="option'+i+'" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>');
+                row.appendChild(column2);
+                var column3 = document.createElement('div');
+                column3.className = "col-md-2";
+                $(column3).append('<label for="points" style="margin-right: 2%">Points</label>');
+                $(column3).append('<input type="number" name="prev-point[optionA' + i + ']" min="0" max="100" value="0" style="width:20%" title="Add points to the option"/>');
+                row.appendChild(column3);
+                var column4 = document.createElement('div');
+                column4.className = "col-md-2";
+                var select_container = document.createElement("select");
+                select_container.name = "prev-select-badges[optionA" + i + "]";
+                select_container.className = "selcls";
+                select_container.title = "Add badge to the option";
+                $(select_container).data("option", "optionA" + i);
+                var opt = document.createElement('option');
+                opt.value = 0;
+                opt.text = "Select Badge";
+                select_container.appendChild(opt);
+                var badges = $('#badges').data("badges");
+                for (var j = 0; j < badges.length; j++) {
+                    opt = document.createElement('option');
+                    opt.value = badges[j].id;
+                    opt.text = badges[j].name;
+                    $(opt).data("badge", badges[j].badge);
+                    select_container.appendChild(opt);
+                }
+                column4.appendChild(select_container);
+                $(column4).append('<img id="prev-badge-image[optionA' + i + ']" width="15%" height="15%" style="margin-left: 3%">');
+                row.appendChild(column4);
+                $(".addOptionsBtn").before(row);
+                i++;
+            });
+
             $(document).on('click','.deleteOptionBtn',function(e){
+                e.preventDefault();
+                var divId = $(this).data("id");
+                var div = document.getElementById(divId);
+                div.parentNode.removeChild(div);
+                return false;
+            });
+
+            $(document).on('click','.prev-deleteOptionBtn',function(e){
                 e.preventDefault();
                 var divId = $(this).data("id");
                 var div = document.getElementById(divId);
@@ -169,6 +286,9 @@
                 var src = $(this).children("option:selected").data("badge");
                 var optionNum = $(this).data("option");
                 var badgeImg = document.getElementById("badge-image[" + optionNum + "]");
+                if(badgeImg === null) {
+                    badgeImg = document.getElementById("prev-badge-image[" + optionNum + "]");
+                }
                 if($(this).children("option:selected").val() !== '0') {
                     badgeImg.style.display='';
                     badgeImg.setAttribute("src", src);
@@ -176,6 +296,7 @@
                     badgeImg.style.display='none';
                 }
             });
+
         });
     </script>
 

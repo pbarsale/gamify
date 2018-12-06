@@ -59,6 +59,7 @@
                             <div class="col-md-1">
                                 <form action="/museum/gamify/questioncontroller/new" method="post">
                                     <input hidden name="game_id" value="{{ pendingGame.id }}"/>
+                                    <input hidden name="game_type_id" value="{{ pendingGame.game_type_id }}"/>
                                     <button type="submit" title="Add/Edit Questions" style="display:inline-block; padding: 1%;"><i class="fa fa-edit"></i></button>
                                 </form>
                             </div>
