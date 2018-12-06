@@ -7,6 +7,7 @@
  */
 namespace App\Controllers;
 
+use App\Models\Game;
 use App\Models\Notification;
 use \Core\View;
 
@@ -20,6 +21,7 @@ class Admin extends \Core\Controller
     public function newAction(){
         $_SESSION['admin'] = true;
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/index.html', array('notifications' => $notifications));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/index.html', array('notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
 }

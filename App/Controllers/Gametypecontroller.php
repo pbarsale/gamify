@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\Game;
 use App\Models\Notification;
 use \Core\View;
 use \App\Models\GameType;
@@ -24,7 +25,8 @@ class Gametypecontroller extends \Core\Controller
         $this->throwToLoginPage();
         $game_types = GameType::getAllGameTypes();
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types, 'notifications' => $notifications));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/gametype.html', array('game_types' => $game_types, 'notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
 
     public function addAction()

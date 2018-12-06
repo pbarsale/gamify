@@ -258,4 +258,91 @@ class Option extends \Core\Model
         return $option;
     }
 
+    public static function updatePOptions($db, $id, $newOptions, $options_ids, $answer, $points, $badges)
+    {
+        $options = self::getAllOptions($id);
+        $i = 1;
+        foreach($options as $option) {
+            if(in_array($option['id'], $options_ids)) {
+                $sql = "UPDATE options SET points=:points, badge_id=:badge_id, iscorrect=:iscorrect, date_updated=:date_updated, user_updated=:user_updated WHERE question_id=:question_id and id=:id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':question_id', $id, PDO::PARAM_INT);
+                $stmt->bindValue(':iscorrect', false, PDO::PARAM_BOOL);
+                $stmt->bindValue(':points', 0, PDO::PARAM_INT);
+                $stmt->bindValue(':badge_id', null, PDO::PARAM_INT);
+                $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+                $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->bindValue(':id', $option['id'], PDO::PARAM_INT);
+
+                $stmt->execute();
+                if (array_key_exists('optionA' . $i, $newOptions)) {
+                    self::updateOption($db, $option['id'], $newOptions['optionA' . $i]);
+                }
+                $i++;
+            } else {
+                $sql = "UPDATE options SET points=:points, badge_id=:badge_id, date_updated=:date_updated, user_updated=:user_updated, iscorrect=:iscorrect, isdeleted=:isdeleted WHERE question_id=:question_id and id=:id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':question_id', $id, PDO::PARAM_INT);
+                $stmt->bindValue(':isdeleted', true, PDO::PARAM_BOOL);
+                $stmt->bindValue(':iscorrect', false, PDO::PARAM_BOOL);
+                $stmt->bindValue(':points', 0, PDO::PARAM_INT);
+                $stmt->bindValue(':badge_id', null, PDO::PARAM_INT);
+                $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+                $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->bindValue(':id', $option['id'], PDO::PARAM_INT);
+
+                $stmt->execute();
+            }
+        }
+        foreach($newOptions as $key => $value) {
+            $option = self::getOptionByName($db, $id, $value);
+            if($option) {
+                $sql = "UPDATE options SET points=:points, badge_id=:badge_id, date_updated=:date_updated, user_updated=:user_updated, isdeleted=:isdeleted WHERE question_id=:question_id and id=:id";
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':question_id', $id, PDO::PARAM_INT);
+                $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+                $stmt->bindValue(':points', 0, PDO::PARAM_INT);
+                $stmt->bindValue(':badge_id', null, PDO::PARAM_INT);
+                $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+                $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->bindValue(':id', $option, PDO::PARAM_INT);
+
+                $stmt->execute();
+            } else {
+                $sql = "Insert into options(question_id, iscorrect, date_created, user_created, date_updated, user_updated, isdeleted, points, badge_id)
+                            values(:question_id, :iscorrect, :date_created, :user_created, :date_updated, :user_updated, :isdeleted, :points, :badge_id)";
+
+                $stmt = $db->prepare($sql);
+                $stmt->bindValue(':question_id', $id, PDO::PARAM_INT);
+                $stmt->bindValue(':iscorrect', false, PDO::PARAM_BOOL);
+                $stmt->bindValue(':points', 0, PDO::PARAM_INT);
+                $stmt->bindValue(':badge_id', null, PDO::PARAM_INT);
+                $stmt->bindValue(':date_created', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+                $stmt->bindValue(':user_created', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+                $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+                $stmt->bindValue(':isdeleted', false, PDO::PARAM_BOOL);
+                $stmt->execute();
+
+                if ($stmt->rowcount() > 0) {
+                    $option_id = self::getLatestOptionID($db);
+                    if ($option_id) {
+                        if (!self::addOption($db, $option_id, $value)) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        if($answer) {
+            self::updateAnswer($db, $id, $newOptions, $answer);
+        }
+        if($points) {
+            self::updatePoints($db, $id, $newOptions, $points);
+        }
+        if($badges) {
+            self::updateBadges($db, $id, $newOptions, $badges);
+        }
+    }
+
 }

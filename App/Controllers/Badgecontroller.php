@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\Game;
 use App\Models\Notification;
 use \Core\View;
 use \App\Models\Badge;
@@ -24,7 +25,8 @@ class Badgecontroller extends \Core\Controller
         $this->throwToLoginPage();
         $badges = Badge::getAllBadges();
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/badge.html', array('badges' => $badges, 'notifications' => $notifications));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/badge.html', array('badges' => $badges, 'notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
 
     public function addAction()

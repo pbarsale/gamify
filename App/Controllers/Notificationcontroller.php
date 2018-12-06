@@ -8,6 +8,7 @@
 namespace App\Controllers;
 
 use App\Flash;
+use App\Models\Game;
 use App\Models\Notification;
 use \Core\View;
 /**
@@ -22,7 +23,8 @@ class Notificationcontroller extends \Core\Controller
     {
         $this->throwToLoginPage();
         $notifications = Notification::getAllPendingScavengerHunt();
-        View::renderTemplate('Admin/notification.html', array('notifications' => $notifications));
+        $pendingGames = Game::getAllPendingGames();
+        View::renderTemplate('Admin/notification.html', array('notifications' => $notifications, 'pendingGames' => $pendingGames));
     }
 
     public function approveAction()

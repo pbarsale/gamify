@@ -1,4 +1,4 @@
-h2, p {
+h2 {
     font-size: 48px;
     color: rgb(6, 106, 117);
     padding: 2px 0 10px 0;
@@ -16,7 +16,7 @@ h2, p {
     -webkit-background-clip: text;
 }
 
-h2:after, p:after{
+h2:after{
     content: ' ';
     display: block;
     width: 100%;
@@ -86,7 +86,7 @@ textarea {
     transition: all 0.2s linear;
 }
 
-.options {
+.options, .prev-options {
     width: 60%;
 }
 
