@@ -56,7 +56,7 @@
                     <div class="col-md-6">
                         <label for="question" style="margin-right: 8%;font-size: x-large;">Q</label>
                         <textarea id="prev-question" name="prev-question" placeholder="Enter Question" rows="2" cols="50"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" required title="Enter question">{{ prevquestion.question }}</textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter question">{{ prevquestion.question }}</textarea>
                     </div>
                     <div class="col-md-2">
                         <label for="prev-points">Points</label>
@@ -88,7 +88,7 @@
                         <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer"/>
                         {% endif %}
                         <textarea id="prev-optionA{{ i }}" class="prev-options" name="prev-option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" required title="Enter option">{{ o.option }}</textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" title="Enter option">{{ o.option }}</textarea>
                         {% if i > 2 %}
                         <button data-id="prev-option{{ i }}" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>
                         {% endif %}
@@ -301,7 +301,9 @@
                         $("#correctAnsErr").show();
                         flag = false;
                     }
-                    if ($("#question").val().length > 0) {
+                    let $question = $("#question");
+                    let $prev = $("#prev-question");
+                    if (($question.val() !== undefined && $question.val().length > 0) || ($prev.val() !== undefined && $prev.val().length > 0)) {
                         $("#questionErr").hide();
                     } else {
                         $("#questionErr").show();
@@ -309,8 +311,11 @@
                     }
                     var options = document.getElementsByClassName("options");
                     var optionsFlag = true;
-                    for(var i = 0; i < options.length; i++) {
-                        if ($(options[i]).val().length <= 0) {
+                    if(options.length === 0) {
+                        options = document.getElementsByClassName("prev-options");
+                    }
+                    for (var j = 0; j < options.length; j++) {
+                        if ($(options[j]).val().length <= 0) {
                             $("#optionErr").show();
                             flag = false;
                             optionsFlag = false;

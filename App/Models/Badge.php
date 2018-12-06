@@ -31,7 +31,6 @@ class Badge extends \Core\Model
 
         $image_validated = self::validateImage($badge_type);
         $file_uploaded = move_uploaded_file($badge_tmp, $filepath);
-        chmod($filepath, 0777);
 
         if(!$badge_obj and $image_validated and $file_uploaded) {
 
@@ -149,36 +148,42 @@ class Badge extends \Core\Model
     }
 
     public function updateBadge($uploaded_file, $badge_name) {
-        $badge_obj = self::getBadgeByName($badge_name);
-
-        $sql = 'UPDATE badges SET badge = :badge, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
-
-        $badge_tmp = $uploaded_file['tmp_name'];
-        $badge_type = $uploaded_file['type'];
-        $file_type = self::getFileType($badge_type);
-        $filepath = "images/badge_" . $this->id . "." . $file_type;
-
         $db = static::getDB();
-        $stmt = $db->prepare($sql);
-        $stmt->bindValue(':badge', self::FILEPATH . $filepath, PDO::PARAM_STR);
-        $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
-        $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
-        $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
 
-        $image_validated = self::validateImage($badge_type);
-        $file_uploaded = move_uploaded_file($badge_tmp, $filepath);
-//            chmod($filepath, 0777);
-        if (!$badge_obj and $image_validated and $file_uploaded) {
-            $stmt->execute();
-            self::updateResourceBadge($this->id, $db, $badge_name);
-            return true;
+        if($badge_name) {
+            $badge_obj = self::getBadgeByName($badge_name);
+            if(!$badge_obj) {
+                self::updateResourceBadge($this->id, $db, $badge_name);
+                return true;
+            } else {
+                Flash::addMessage('Badge Name Already Exists!', 'warning');
+            }
         }
-        if(!$badge_obj) {
-            Flash::addMessage('Badge Name Already Exists!', 'warning');
-        } else if(!$image_validated) {
-            Flash::addMessage('Please upload .png, .jpg or .gif file!', 'warning');
-        } else if(!$file_uploaded) {
-            Flash::addMessage('File upload failed!', 'warning');
+        if($uploaded_file['tmp_name']) {
+            $sql = 'UPDATE badges SET badge = :badge, date_updated = :date_updated, user_updated = :user_updated WHERE id=:id';
+
+            $badge_tmp = $uploaded_file['tmp_name'];
+            $badge_type = $uploaded_file['type'];
+            $file_type = self::getFileType($badge_type);
+            $filepath = "images/badge_" . $this->id . "." . $file_type;
+
+            $stmt = $db->prepare($sql);
+            $stmt->bindValue(':badge', self::FILEPATH . $filepath, PDO::PARAM_STR);
+            $stmt->bindValue(':date_updated', date('Y-m-d H:i:s', time()), PDO::PARAM_STR);
+            $stmt->bindValue(':user_updated', $_SESSION['user_id'], PDO::PARAM_INT);
+            $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
+
+            $image_validated = self::validateImage($badge_type);
+            $file_uploaded = move_uploaded_file($badge_tmp, $filepath);
+            if ($image_validated and $file_uploaded) {
+                $stmt->execute();
+                return true;
+            }
+            if(!$image_validated) {
+                Flash::addMessage('Please upload .png, .jpg or .gif file!', 'warning');
+            } else if(!$file_uploaded) {
+                Flash::addMessage('File upload failed!', 'warning');
+            }
         }
         return false;
     }

@@ -34,6 +34,17 @@
             <h2 style="text-align: center; margin-bottom: 3%">Scavenger Hunt Question</h2>
             <form class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
                 <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <ul>
+                            <li style="color: red" hidden id="questionErr">Question Not Entered</li>
+                            <li style="color: red" hidden id="optionErr">Options Not Entered</li>
+                            <li style="color: red" hidden id="correctAnsErr">Please select correct answer</li>
+                            <li style="color: #FFBF00">Don't forget to add points and/or badges</li>
+                        </ul>
+                    </div>
+                </div>
                 <div id="badges" data-badges="{{ badges|json_encode }}"></div>
                 {% if question[0] %}
                     <div class="row">
@@ -43,7 +54,7 @@
                         <div class="col-md-6">
                             <label for="prev-question" style="text-align: center; margin-right: 8%;margin-bottom: 5%;font-size: x-large">Q</label>
                             <textarea id="prev-question" name="prev-question" placeholder="Enter Question" rows="2" cols="50"
-                                      style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required title="Enter Question">{{ question[0].question }}</textarea>
+                                      style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" title="Enter Question">{{ question[0].question }}</textarea>
                         </div>
                     </div>
                     {% set i = 1 %}
@@ -53,7 +64,7 @@
                             <div class="col-md-6">
                                 <input name="prev-option_id[]" hidden value="{{ o.id }}"/>
                                 <textarea id="prev-optionA{{ i }}" class="prev-options" name="prev-option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
-                                          style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option" required>{{ o.option }}</textarea>
+                                          style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option">{{ o.option }}</textarea>
                                 {% if o.iscorrect %}
                                 <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 5%;margin-bottom: 5%" title="Check box to add image verification" checked/>
                                 {% else %}
@@ -96,14 +107,14 @@
                     <div class="col-md-6">
                         <label for="question" style="text-align: center; margin-right: 8%;margin-bottom: 5%;font-size: x-large">Q</label>
                         <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" required title="Enter Question"></textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;width: 80%;" title="Enter Question"></textarea>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-1" style="margin-right: 6%"></div>
                     <div class="col-md-6">
                         <textarea id="optionA1" class="options" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option" required></textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option"></textarea>
                         <input type="checkbox" name="options[]" value="optionA1" style="text-align: center; margin-right: 5%;margin-bottom: 5%" title="Check box to add image verification"/>
                         <label style="margin-bottom: 5%;" title="Check box to add image verification">Image Verify?</label>
                     </div>
@@ -125,7 +136,7 @@
                     <div class="col-md-1" style="margin-right: 6%"></div>
                     <div class="col-md-6">
                         <textarea id="optionA2" class="options" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
-                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option" required></textarea>
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%" title="Enter Option"></textarea>
                         <input type="checkbox" name="options[]" value="optionA2" style="text-align: center; margin-right: 5%; margin-bottom: 5%" title="Check box to add image verification"/>
                         <label style="margin-bottom: 5%;" title="Check box to add image verification">Image Verify?</label>
                     </div>
@@ -153,7 +164,7 @@
                 <div class="row">
                     <div class="col-md-4"></div>
                     <div class="col-md-4">
-                        <button type="submit" name="done" class="btn btn-success" style="margin-bottom: 5%" title="Done adding questions">Done</button>
+                        <button type="submit" id="done" name="done" class="btn btn-success" style="margin-bottom: 5%" title="Done adding questions">Done</button>
                     </div>
                 </div>
             </form>
@@ -183,7 +194,7 @@
                 row.appendChild(column1);
                 var column2 = document.createElement('div');
                 column2.className = "col-md-6";
-                $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;" title="Enter Option" required></textarea>');
+                $(column2).append('<textarea id="optionA2" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;" title="Enter Option"></textarea>');
                 $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%" title="Check box to add image verification"/>');
                 $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%" title="Check box to add image verification">Image Verify?</label>');
                 $(column2).append('<button data-id="option'+i+'" name="deleteOptions" class="deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>');
@@ -230,7 +241,7 @@
                 row.appendChild(column1);
                 var column2 = document.createElement('div');
                 column2.className = "col-md-6";
-                $(column2).append('<textarea id="optionA2" class="options" name="prev-option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;" title="Enter Option" required></textarea>');
+                $(column2).append('<textarea id="optionA2" class="options" name="prev-option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right: 3%;width: 50%;" title="Enter Option"></textarea>');
                 $(column2).append('<input type="checkbox" name="prev-options[]" value="optionA' + i + '" style="text-align: center;margin-right:5%;margin-bottom: 5%" title="Check box to add image verification"/>');
                 $(column2).append('<label style="margin-bottom: 5%;margin-right: 5%" title="Check box to add image verification">Image Verify?</label>');
                 $(column2).append('<button data-id="option'+i+'" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>');
@@ -296,6 +307,42 @@
                     badgeImg.style.display='none';
                 }
             });
+
+            $("#done").click(function (e, from) {
+                if(from == null) {
+                    e.preventDefault();
+                    var flag = true;
+                    let $question = $("#question");
+                    let $prev = $("#prev-question");
+                    if (($question.val() !== undefined && $question.val().length > 0) || ($prev.val() !== undefined && $prev.val().length > 0)) {
+                        $("#questionErr").hide();
+                    } else {
+                        $("#questionErr").show();
+                        flag = false;
+                    }
+                    var options = document.getElementsByClassName("options");
+                    var optionsFlag = true;
+                    if(options.length === 0) {
+                        options = document.getElementsByClassName("prev-options");
+                    }
+                    for (var j = 0; j < options.length; j++) {
+                        if ($(options[j]).val().length <= 0) {
+                            $("#optionErr").show();
+                            flag = false;
+                            optionsFlag = false;
+                        }
+                    }
+                    if(optionsFlag) {
+                        $("#optionErr").hide();
+                    }
+                    if(flag) {
+                        $(this).trigger('click', 'fine');
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
 
         });
     </script>
