@@ -34,14 +34,32 @@
 
 <input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
 <div id="wrapper" style="width: 70%">
-    
+
     <h1> {{ game_name }} </h1>
-    {% set answered_count = 0  %}
+
+    {% if questions|length %}
+        {% set count = 0 %}
+        {% set answered_count = 0 %}
+        {% for question in questions %}
+            {% set count = count + 1 %}
+            {% if question.answered %}
+                {% set answered_count = answered_count + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% set percent = (answered_count/(count))*100 %}
+    <div class="progress" style="border-width:2px; background-color: grey">
+        <div class="progress-bar"  role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent }}%">
+            {{ percent|round }}%
+        </div>
+    </div>
+
     {% if questions|length %}
     <table style="width: 100%;position: relative;height:300px;">
         <tr>
             <td style="width:15%;position: relative">
-                <button class="btn btn-primary"><a id="prev">Prev</a></button>
+                <a id="prev" style="color:white; background-color:#337ab7" class="btn btn-primary" role="button">Prev</a>
             </td>
             <td style="width:70%;position: relative">
                 {% set count = 1 %}
@@ -58,7 +76,6 @@
 
                             <p> {{ count }}. {{ question.question }} </p>
                             {% if question.answered %}
-                                {% set answered_count = answered_count + 1 %}
                                 {% if question.userpoints>0 %}
                                     <p style="color:green;"> You have earned : {{ question.userpoints }} points</p>
                                 {% else %}
@@ -82,7 +99,7 @@
                             {% endif %}
 
                             <p>{{ question.description }}</p>
-                            <input   style="width: 50%; margin-left: 20%"  class="btn btn-success" disabled="true" type="submit" name="submit"/>
+                            <input   style="width: 40%;margin-left: 30%"  class="btn btn-success" disabled="true" type="submit" name="submit"/>
                             {% else %}
 
                             {% for opt in question.options %}
@@ -90,7 +107,7 @@
                             <br><br>
                             {% endfor %}
                             <br>
-                            <input  style="width: 50%; margin-left: 20%" class="btn btn-success" type="submit" name="submit"/>
+                            <input  style="width: 40%;margin-left: 30%"  class="btn btn-success" type="submit" name="submit"/>
                             {% endif %}
 
                             {% set count = count + 1 %}
@@ -100,17 +117,10 @@
                 </div>
             </td>
             <td style="width:15%;position: relative">
-                <button class="btn btn-primary"><a id="next">Next</a></button>
+                <a id="next" style="color:white; background-color:#337ab7" class="btn btn-primary" role="button">Next</a>
             </td>
         </tr>
     </table>
-    <br>
-    {% set percent = (answered_count/(count-1))*100 %}
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent }}%">
-            {{ percent }}%
-        </div>
-    </div>
 
     {% else %}
         <h1>{{ game_name }} is not yet ready. Please try again later!</h1>

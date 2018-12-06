@@ -7,7 +7,9 @@
                 <div class="navbar-header">
                     <a class="navbar-brand" href="/museum/gamify/">
                         {% if avatar_file %}
-                        <img src="{{ avatar_file }}?random=323527528432525.24234" height="30px" width="30px" alt="Avatar"/>
+                            <img src="{{ avatar_file }}?random=323527528432525.24234" height="30px" width="30px" alt="Avatar"/>
+                        {% else %}
+                            <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
                         {% endif %}
                     </a>
                     <a class="navbar-brand" href="/museum/gamify/">

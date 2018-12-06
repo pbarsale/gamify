@@ -7,21 +7,35 @@
     <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
 
     {% if current_user %}
-        <nav class="navbar navbar-inverse">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="/museum/gamify/admin">
-                        Hello {{ current_user.name }}
-                    </a>
-                </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
-                    <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
-                    <li><a href="/museum/gamify/logout/admin">Logout</a></li>
-                    <li style="position:absolute; top:0; right:0;"><img src="/museum/gamify/images/buffalo-museum-white.png" width="20%" height="20%" style="margin:2%;"/></li>
-                </ul>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
             </div>
-        </nav>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
 
         {% for message in flash_messages %}
         <div class="alert alert-{{ message.type }}">
