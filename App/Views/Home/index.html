@@ -5,24 +5,32 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="/museum/gamify/">
+
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="/museum/gamify">
+                            <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                        </a>
+                    </div>
+
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="/museum/gamify/">Home</a></li>
+                        <li><a href="/museum/gamify/users/profile">Profile</a></li>
+                        <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
+                        <li><a href="/museum/gamify/logout">Logout</a></li>
+                    </ul>
+                </div>
+                <div class="navbar-header" style="float: right">
+                    <a class="navbar-brand" href="/museum/gamify/users/profile">
                         {% if avatar_file %}
-                            <img src="{{ avatar_file }}?random=323527528432525.24234" height="30px" width="30px" alt="Avatar"/>
+                        <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
                         {% else %}
-                            <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                        <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
                         {% endif %}
                     </a>
-                    <a class="navbar-brand" href="/museum/gamify/">
+                    <a class="navbar-brand" href="/museum/gamify/users/profile">
                         {{ current_user.name }}
                     </a>
                 </div>
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="/museum/gamify/">Home</a></li>
-                    <li><a href="/museum/gamify/users/profile">Profile</a></li>
-                    <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
-                    <li><a href="/museum/gamify/logout">Logout</a></li>
-                    <li style="position:absolute; top:0; right:0;"><img src="/museum/gamify/images/buffalo-museum-white.png" width="20%" height="20%" style="margin:2%;"/></li>
-                </ul>
             </div>
         </nav>
 
@@ -44,10 +52,11 @@
                             {% for item in game %}
                             <div class="w3-container">
                                 <p> <a href="/museum/gamify/users/quiz/{{item.id}}">{{ item.name }}</a>
-                                <span style="float: right"> {{ item.points }}
+                                <span style="float: right">
                                 {% for badge in item.badges %}
                                     <img src="{{ badge.badge }}" height="30px" width="30px" alt="Badges"/>
                                 {% endfor %}
+                                    : {{ item.points }}
                                 </span>
                                 </p>
                             </div>

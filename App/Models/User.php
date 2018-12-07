@@ -179,7 +179,6 @@ class User extends \Core\Model
 
     public static function findByEmail($email)
     {
-
         $sql = "SELECT * from users where email=:email";
         $db = static::getDB();
         $stmt = $db->prepare($sql);
@@ -278,6 +277,9 @@ class User extends \Core\Model
         $user = static::findByEmail($email);
 
         if ($user) {
+            if(isset($_SESSION['user_id']) && $user->id!=$_SESSION['user_id']){
+                return;
+            }
             if ($user->startPasswordReset()) {
                 $user->sendPasswordResetEmail();
             }
@@ -532,8 +534,16 @@ class User extends \Core\Model
     public function validateProfilePage($avatar)
     {
 
-        if (empty($this->name)) {
-            $this->errors[] = 'Empty Name not allowed';
+        if (empty($this->name) || empty($this->email)) {
+            $this->errors[] = 'Empty Name and E-mail not allowed';
+        }
+
+        if (!filter_var($this->email, FILTER_VALIDATE_EMAIL)) {
+            $this->errors[] = 'Invalid email';
+        }
+
+        if ($this->email!=$this->old_email && $this->emailExists($this->email)) {
+            $this->errors[] = 'E-mail already exists';
         }
 
         if (!preg_match("/^[a-zA-Z ]*$/", $this->name)) {
@@ -558,12 +568,13 @@ class User extends \Core\Model
                 }
             }
 
-            $sql = "UPDATE users SET name=:name, member_id=:member_id where id=:id";
+            $sql = "UPDATE users SET name=:name, member_id=:member_id, email=:email where id=:id";
             $db = static::getDB();
             $stmt = $db->prepare($sql);
 
             $stmt->bindValue(':name', $this->name, PDO::PARAM_STR);
             $stmt->bindValue(':member_id', $this->member_id, PDO::PARAM_STR);
+            $stmt->bindValue(':email', $this->email, PDO::PARAM_STR);
             $stmt->bindValue(':id', $this->id, PDO::PARAM_INT);
             return $stmt->execute();
         }

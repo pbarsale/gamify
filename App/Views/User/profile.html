@@ -6,25 +6,35 @@
 
     <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
     <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
             <div class="navbar-header">
-                <a class="navbar-brand" href="/museum/gamify/">
-                    {% if avatar_file %}
-                    <img src="{{ avatar_file }}?random=323527528432525.24234" height="30px" width="30px" alt="Avatar"/>
-                    {% endif %}
-                </a>
-                <a class="navbar-brand" href="/museum/gamify/">
-                    {{ current_user.name }}
+                <a class="navbar-brand" href="/museum/gamify">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
                 </a>
             </div>
+
             <ul class="nav navbar-nav">
-                <li class="active"><a href="/museum/gamify/">Home</a></li>
-                <li><a href="/museum/gamify/users/profile">Profile</a></li>
+                <li ><a href="/museum/gamify/">Home</a></li>
+                <li class="active"><a href="/museum/gamify/users/profile">Profile</a></li>
                 <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
                 <li><a href="/museum/gamify/logout">Logout</a></li>
-                <li style="position:absolute; top:0; right:0;"><img src="/museum/gamify/images/buffalo-museum-white.png" width="20%" height="20%" style="margin:2%;"/></li>
             </ul>
         </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
     </nav>
 
     {% for message in flash_messages %}
@@ -39,7 +49,7 @@
         {% if not current_user.isadmin %}
             <div style="float: left; margin-left: 15%">
                 {% if points %}
-                    <label> Earned Scores: {{ points }}  </label>
+                    <label> Earned Points: {{ points }}  </label>
                 {% else %}
                     <label> Earned Scores: 0  </label>
                 {% endif %}
@@ -66,10 +76,10 @@
                 <div>
 
                     <input type="hidden" name="id" value="{{ current_user.id }}">
-                    <input type="hidden" name="email" value="{{ current_user.email }}">
+                    <input type="hidden" name="old_email" value="{{ current_user.email }}">
 
                     <label for="email" data-icon="e">E-Mail</label>
-                    <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ current_user.email }}" disabled required>
+                    <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ current_user.email }}" required>
 
                     <label for="birth_date" data-icon="u">Birth Date</label>
                     <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ current_user.birth_date }}" disabled required>
