@@ -76,3 +76,39 @@ Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on li
 Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('kjsdhfjdfs.html')
 #1 {main}
 Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 23:32:07 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:10 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:12 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:16 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:18 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:52 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:32:56 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:33:05 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+[07-Dec-2018 23:34:13 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/21_113_1...')
+#1 {main}
+Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
