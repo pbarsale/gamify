@@ -38,7 +38,7 @@ class Questioncontroller extends \Core\Controller
         }
         if ($game_type_id == 4) {
             $count = count(Question::getAllQuestionsByGameId($game_id));
-            $nextquestion = Question::getNextQuestion($game_id, $_SESSION['question_id']);
+            $nextquestion = Question::getNextQuestion($game_id, isset($_SESSION['question_id']) ? $_SESSION['question_id'] : null);
             $prevquestion = Question::getPreviousQuestion($game_id, $nextquestion['id']);
             View::renderTemplate('Admin/quiz.html', array('badges' => $badges, 'game_type_id' => $game_type_id, 'notifications' => $notifications, 'prevquestion' => $nextquestion, 'isPrevQ' => $prevquestion, 'count' => $count, 'pendingGames' => $pendingGames));
         } else {
