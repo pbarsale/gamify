@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Games{% endblock %}
+
+{% block body %}
+
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <h1>Games</h1>
+
+    <p>List of games</p>
+
+{% endblock %}

@@ -1,0 +1,80 @@
+.alert{
+	border: 1px solid #ccc;
+	padding: 6px; 
+}
+
+.alert-info{
+	background-color: #d9edf7;
+}
+
+.alert-success{
+	background-color: #dff0d8;
+}
+
+.alert-warning{
+	background-color: #fcf8e3;
+}
+
+.btn-primary:hover{
+	color: #000000;
+	background-color: #ffffff;
+}
+
+body{
+	background-color: #d9edf7;
+	background-size:cover;
+}
+
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: white;
+}
+
+.selcls {
+    padding: 9px;
+    border: solid 1px #517B97;
+    outline: 0;
+    background: -webkit-gradient(linear, left top, left 25, from(#FFFFFF), color-stop(4%, #CAD9E3), to(#FFFFFF));
+    background: -moz-linear-gradient(top, #FFFFFF, #CAD9E3 1px, #FFFFFF 25px);
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+    -moz-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+    -webkit-box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 8px;
+    height:45px;
+    line-height:45px;
+}
+
+@media (min-width:480px) {
+
+}

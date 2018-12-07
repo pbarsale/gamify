@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Notification{% endblock %}
+
+{% block body %}
+
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/museum/gamify/admin">Home</a></li>
+                <li class="active"><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+{% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div>
+            <h2 style="text-align: center">Pending Requests</h2>
+            <div class="bluediv" id="userlist">
+                {% if notifications|length > 0 %}
+                    {% for notification in notifications %}
+                    <div>
+                        <div class="row" style="margin: 1%;font-size:large">
+                            <div class="col-md-3"></div>
+                            <div class="col-md-3" align="left">{{ notification.option }}</div>
+                            <div class="col-md-1"><img src="{{ notification.image }}" width="35%" height="35%"/></div>
+                            <div class="col-md-1">
+                                <a href="/museum/gamify/notificationcontroller/approve?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" title="Approve Request" style="display:inline-block; padding: 1%;">
+                                    <span><i class="fa fa-check"></i></span>
+                                </a>
+                            </div>
+                            <div class="col-md-1">
+                                <a href="/museum/gamify/notificationcontroller/deny?question={{ notification.question_id }}&option={{ notification.option_id }}&user={{ notification.user_id }}" title="Deny Request" style="display:inline-block; padding: 1%;">
+                                    <span><i class="fa fa-times"></i></span>
+                                </a>
+                            </div>
+                        </div>
+                        <hr align="center">
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <h2 style="text-align: center">No Notifications</h2>
+                {% endif %}
+            </div>
+        </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+{% endblock %}

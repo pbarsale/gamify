@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Error{% endblock %}
+
+{% block body %}
+
+<div id="wrapper">
+    <h1> Sorry, something went wrong. Please try again later! </h1>
+    {% if i_am_admin %}
+    <h3><span style="margin-left:25%"><a href="/museum/gamify/admin"> Please click here </a></span></h3>
+    {% else %}
+    <h3><span style="margin-left:25%"><a href="/museum/gamify"> Please click here </a></span></h3>
+    {% endif %}
+</div>
+{% endblock %}

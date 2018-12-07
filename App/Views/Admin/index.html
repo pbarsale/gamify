@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+
+    <style>
+        .button__badge {
+            background-color: #fa3e3e;
+            border-radius: 2px;
+            color: white;
+
+            padding: 0 3px;
+            font-size: 10px;
+
+            position: absolute; /* Position the badge within the relatively positioned button */
+            top: 0;
+            right: 0;
+        }
+    </style>
+
+    {% if current_user %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="/museum/gamify/admin">
+                        <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                    </a>
+                </div>
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                    <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                    <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                    <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+                </ul>
+            </div>
+            <div class="navbar-header" style="float: right">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    {% if avatar_file %}
+                    <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                    {% else %}
+                    <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                    {% endif %}
+                </a>
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    {{ current_user.name }}
+                </a>
+            </div>
+        </div>
+    </nav>
+
+{% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div style="margin: 5% auto 0;text-align: center;">
+            <div class="row" style="margin-bottom: 5%">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <div class="w3-card w3-blue" style="border-radius: 5%;height: 200px;width: 80%">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/gametypecontroller/new" style="text-decoration:none; cursor: not-allowed;" onclick="return false;">Game Type</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <div class="w3-card w3-blue" style="border-radius: 5%;height: 200px;width: 80%">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/gamecontroller/new" style="text-decoration:none">Game</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row" style="margin-bottom: 5%">
+                <div class="col-md-3"></div>
+                <div class="col-md-3">
+                    <div class="w3-card w3-blue" style="border-radius: 5%;height: 200px;width: 80%">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/badgecontroller/new" style="text-decoration:none;">Badge</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+                <div class="col-md-3">
+                    <div class="w3-card w3-blue" style="border-radius: 5%;height: 200px;width: 80%">
+                        <h3 style="padding-top: 25%">
+                            <a href="/museum/gamify/manageaccount/new" style="text-decoration:none">Manage Account</a>
+                        </h3>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+    {% else %}
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+                <div class="navbar-header" style="font-size: xx-large">
+                    <span style="color: white"> Welcome! </span>
+                </div>
+                <ul class="nav navbar-nav" style="float: right; margin-right: 3%">
+
+                    <form method="post" action="/museum/gamify/login/create">
+                        <input type="text" name="email" placeholder="E-Mail" required autofocus value={{ email }}>
+                        <input type="password" name="password" placeholder="Password" required>
+                        <button type="submit" name="submit"> Log in</button><br>
+                        <input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %} />
+                        <span style="color: white">Remember me</span>
+                        <a href="/museum/gamify/password/forgot" style="float: right;margin-right: 15%;color:white">Reset password</a>
+                    </form>
+                </ul>
+            </div>
+        </nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div id="wrapper">
+            <h1> Sign Up</h1>
+            {% if user.errors is not empty %}
+            <ul>
+                {% for error in user.errors %}
+                <li style="color: red">{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <form method="post" action="/museum/gamify/signup/create" enctype="multipart/form-data">
+
+                <label for="name" data-icon="u">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Full Name" value="{{ user.name }}" required>
+
+                <label for="member_id" data-icon="u">Member-ID</label>
+                <input type="text" id="member_id" name="member_id" placeholder="Member ID" value="{{ user.member_id }}">
+
+                <label for="birth_date" data-icon="u">Birth Date</label>
+                <input type="date" id="birth_date" name="birth_date" placeholder="Birth Date" value="{{ user.birth_date }}" required>
+
+                <label for="user_avatar" data-icon="u">Avatar</label>
+                <input type="file" id="user_avatar" name="user_avatar" />
+
+                <label for="email" data-icon="e">E-Mail</label>
+                <input type="email" id="email" name="email" placeholder="E-Mail" value="{{ user.email }}" required>
+
+                <label for="password" data-icon="p">Password</label>
+                <input type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number, and no special characters">
+
+                <label for="confirmPwd" data-icon="p">Confirm Password</label>
+                <input type="password" id="confirmPwd" name="confirmPwd" placeholder="Confirm Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number, and no special characters">
+
+                <p class="signin button">
+                    <input type="submit" value="Sign up"/>
+                </p>
+
+            </form>
+        </div>
+
+    {% endif %}
+{% endblock %}

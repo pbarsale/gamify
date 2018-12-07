@@ -1,0 +1,18 @@
+{
+    "require": {
+        "twig/twig": "~1.0",
+        "phpmailer/phpmailer": "5.2.2",
+        "ircmaxell/password-compat": "^1.0",
+      "ext-pdo": "*"
+    },
+    "autoload": {
+        "psr-4": {
+             "Core\\": "Core/",
+             "App\\": "App/"
+        }
+    },
+    "config": {
+        "disable-tls": true,
+        "secure-http": true
+    }
+}

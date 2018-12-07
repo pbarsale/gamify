@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Reset Password{% endblock %}
+
+{% block body %}
+
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid" style="margin-top: 1%; margin-bottom: 1%">
+            <div class="navbar-header" style="font-size: xx-large">
+                <span style="color: white"> Welcome! </span>
+            </div>
+        </div>
+    </nav>
+
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <div id="wrapper">
+        <h1> Request Password Reset </h1>
+        {% if user.errors is not empty %}
+        <ul>
+            {% for error in user.errors %}
+            <li style="color: red">{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <form method="post" action="/museum/gamify/password/reset-password">
+
+            <input type="hidden" id='token' name='token' value="{{ token }}" />
+
+            <label for="password" data-icon="p">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" title="Minimum 6 chars, at least one letter and number">
+
+            <label for="confirmPwd" data-icon="p">Confirm Password</label>
+            <input type="password" id="confirmPwd" name="confirmPwd" placeholder="Confirm Password" required>
+
+            <p class="signin button">
+                <input type="submit" value="Reset Password"/>
+            </p>
+        </form>
+    </div>
+{% endblock %}
+ 

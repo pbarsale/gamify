@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Question{% endblock %}
+
+{% block body %}
+
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div style="text-align: center">
+            <h2>Question</h2>
+            <form class="question-form" action="/museum/gamify/questioncontroller/update" method="post">
+                {% for q in question %}
+                <input type="hidden" name="id" value="{{ q.id }}">
+                <div class="row" style="margin-bottom: 2%">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                        <label for="question" style="font-size: x-large; margin-right: 5%">Q</label>
+                        <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter question to be updated" required>{{ q.question }}</textarea>
+                    </div>
+                </div>
+                {% set i = 1 %}
+                {% for o in q.options %}
+                    <div class="row" style="margin-bottom: 2%">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6" id="option{{ i }}">
+                    <textarea id="optionA{{ i }}" class="options" name="option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
+                              style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none" title="Enter option to be updated" required>{{ o.option }}</textarea>
+                </div>
+                    </div>
+                {% set i = i + 1 %}
+                {% endfor %}
+                {% if game_type_id == 4 %}
+                    <div class="row" style="margin-bottom: 2%">
+                        <div class="col-md-3" style="margin-right: 2%"></div>
+                        <div class="col-md-6">
+                            <textarea id="description" name="description" placeholder="Enter Information for the question" rows="2"
+                                      cols="50" style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter description to be updated">{{ q.description }}</textarea>
+                        </div>
+                    </div>
+                {% endif %}
+                    <div class="row" style="margin-bottom: 2%">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <button type="submit" name="update" class="btn btn-primary" title="Update question">Update</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </form>
+        </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+{% endblock %}

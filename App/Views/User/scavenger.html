@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Scavenger Hunt{% endblock %}
+{% block body %}
+{% if current_user %}
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="/museum/gamify/users/profile">Profile</a></li>
+                <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+{% for message in flash_messages %}
+<div class="alert alert-{{ message.type }}">
+    {{ message.body }}
+</div>
+{% endfor %}
+
+<div id="wrapper" style="width: 70%">
+    <h1> {{ game_name }} </h1>
+
+    {% if questions|length %}
+        {% set count = 1 %}
+        {% for question in questions %}
+        <table style="width: 100%;position: relative;height:300px;">
+            <tr>
+                <td>
+                    <p> {{ count }}. {{ question.question }} </p>
+                    <p>{{ question.description }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% if question.answered %}
+                    <p style="color:green;"> Total points earned : {{ question.userpoints }} points</p>
+                    {% endif %}
+                </td>
+            </tr>
+            {% for opt in question.options %}
+            <tr>
+                <td>
+                    <i class="fas fa-check-square"></i>
+                    {{ opt.option }}
+                </td>
+                <td>
+                    {% if opt.answered %}
+                        {% if opt.badge_img %}
+                            <p style="color:green;"> Points : {{ opt.userpoints }}  |
+                                Badge : <img src="{{ opt.badge_img }}" height="25px" width="25px"> |
+                                Status : {{ opt.status }}
+                            </p>
+                        {% else %}
+                            <p style="color:green;"> Points : {{ opt.userpoints }}  |
+                                Status : {{ opt.status }}
+                            </p>
+                        {% endif %}
+
+                    {% else %}
+                    <form action="/museum/gamify/users/scavenger-answer" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="gameid" value={{ gameid }}>
+                        <input type="hidden" name="questionid" value={{ question.id }}>
+                        <input type="hidden" name="optionid" value={{ opt.id }}>
+                        <input type="hidden" name="iscorrect" value={{ opt.iscorrect }}>
+                        <input type="hidden" name="points" value={{ opt.points }}>
+                        <input type="hidden" name="badge_id" value={{ opt.badge_id }}>
+
+                        <input style="width:auto;display: inline-block;padding: 5px" type="file" name="schunt" required class="btn btn-primary"/>
+                        <input  style="width:auto;display: inline-block;padding: 7px" class="btn btn-success" type="submit" name="submit"/>
+
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% set count = count + 1 %}
+        {% endfor %}
+    {% else %}
+        <h1>{{ game_name }} is not yet ready. Please try again later!</h1>
+    {% endif %}
+</div>
+{% else %}
+
+<a href="/museum/gamify/signup/new">Sign Up</a>
+<a href="/museum/gamify/login">Log In</a>
+
+{% endif %}
+{% endblock %}

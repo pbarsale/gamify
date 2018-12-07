@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block body %}
+
+{% if current_user %}
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/">Home</a></li>
+                <li><a href="/museum/gamify/users/profile">Profile</a></li>
+                <li><a href="/museum/gamify/leaderboardcontroller/new">Leaderboard</a></li>
+                <li><a href="/museum/gamify/logout">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/users/profile">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+{% for message in flash_messages %}
+<div class="alert alert-{{ message.type }}">
+    {{ message.body }}
+</div>
+{% endfor %}
+
+<input type="hidden" id="mydiv" name="mydiv" value="{{ div_id }}">
+<div id="wrapper" style="width: 70%">
+
+    <h1> {{ game_name }} </h1>
+
+    {% if questions|length %}
+        {% set count = 0 %}
+        {% set answered_count = 0 %}
+        {% for question in questions %}
+            {% set count = count + 1 %}
+            {% if question.answered %}
+                {% set answered_count = answered_count + 1 %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    {% if count!=0 %}
+        {% set percent = (answered_count/(count))*100 %}
+        <div class="progress" style="border-width:2px; background-color: grey">
+            <div class="progress-bar"  role="progressbar" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100" style="width:{{ percent }}%">
+                {{ percent|round }}%
+            </div>
+        </div>
+    {% endif %}
+
+    {% if questions|length %}
+    <table style="width: 100%;position: relative;height:300px;">
+        <tr>
+            <td style="width:15%;position: relative">
+                <a id="prev" style="color:white; background-color:#337ab7" class="btn btn-primary" role="button">Prev</a>
+            </td>
+            <td style="width:70%;position: relative">
+                {% set count = 1 %}
+                <div class="questiondivs">
+                    {% for question in questions %}
+                    <div class="w3-container">
+                        <form class="questions" action="/museum/gamify/users/quiz-answer" method="post">
+                            <a name="qdiv{{ count }}"></a>
+                            <input type="hidden" name="gameid" value={{ gameid }}>
+                            <input type="hidden" name="questionid" value={{ question.id }}>
+                            <input type="hidden" name="points" value={{ question.points }}>
+                            <input type="hidden" name="badge_id" value={{ question.badge_id }}>
+                            <input type="hidden" name="div_id" value="{{count}}">
+
+                            <p> {{ count }}. {{ question.question }} </p>
+                            {% if question.answered %}
+                                {% if question.userpoints>0 %}
+                                    <p style="color:green;"> You have earned : {{ question.userpoints }} points</p>
+                                {% else %}
+                                    <p style="color:red;"> You have earned : {{ question.userpoints }} points</p>
+                                {% endif %}
+
+                            {% for opt in question.options %}
+                            {% if opt.iscorrect %}
+                            <input type="checkbox"  disabled="true" checked name="option[]" value="{{opt.id}}"/> <span style="color:green;"> {{ opt.option }} </span>
+                            {% else %}
+                            <input type="checkbox"  disabled="true" name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                            {% endif %}
+
+                            <br><br>
+                            {% endfor %}
+
+                            {% if question.userpoints>0 %}
+                            <p style="color:green;"> Great work! </p>
+                            {% else %}
+                            <p style="color:red;"> Wrong answer! </p>
+                            {% endif %}
+
+                            <p>{{ question.description }}</p>
+                            <input   style="width: 40%;margin-left: 30%"  class="btn btn-success" disabled="true" type="submit" name="submit"/>
+                            {% else %}
+
+                            {% for opt in question.options %}
+                            <input type="checkbox"  name="option[]" value="{{opt.id}}"/> {{ opt.option }}
+                            <br><br>
+                            {% endfor %}
+                            <br>
+                            <input  style="width: 40%;margin-left: 30%"  class="btn btn-success" type="submit" name="submit"/>
+                            {% endif %}
+
+                            {% set count = count + 1 %}
+                        </form>
+                    </div>
+                    {% endfor %}
+                </div>
+            </td>
+            <td style="width:15%;position: relative">
+                <a id="next" style="color:white; background-color:#337ab7" class="btn btn-primary" role="button">Next</a>
+            </td>
+        </tr>
+    </table>
+
+    {% else %}
+        <h1>{{ game_name }} is not yet ready. Please try again later!</h1>
+    {% endif %}
+
+</div>
+{% else %}
+
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+
+{% endif %}
+{% endblock %}

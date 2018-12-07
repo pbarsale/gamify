@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+
+<link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <div>
+        <h2 style="text-align: center">{{ user.name }}</h2>
+        <div style="float: left; margin-left: 15%">
+            <label> Earned Scores: {{ user.points }}  </label>
+        </div>
+
+        <div style="float: right; margin-right: 10%">
+            <button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal">Earned Badges</button>
+        </div>
+        <br><br>
+        <div class="bluediv" id="userlist">
+            <form class="game-type-form" action="/museum/gamify/manageaccount/update" method="post">
+                <div align="left">
+                    <input hidden name="existing-points" value="{{ user.points }}">
+                    <input hidden name="user_id" value="{{ user.id }}"/>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Email ID: </label></div>
+                        <div class="col-md-2">{{ user.email }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Birth Date: </label></div>
+                        <div class="col-md-2">{{ user.birth_date }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Member ID: </label></div>
+                        <div class="col-md-2">{{ user.member_id }}</div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Add/Deduct Points: </label></div>
+                        <div class="col-md-2"><input type="number" name="points" min="-100" max="100" title="Enter Points to add or deduct"/></div>
+                    </div>
+                    <div class="row" style="margin: 1%;font-size:large">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-2"><label>Add Badge: </label></div>
+                        <div class="col-md-2">
+                            <select id="select-badge" name="select-badge" class="selcls" title="Select Badge to give to the user">
+                                <option value="0">Select Badge</option>
+                                {% for badge in badges %}
+                                <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <img id="badge-image" width="15%" height="15%" style="margin-left: 3%">
+                        </div>
+                    </div>
+                    <div class="row" style="margin: 3%;font-size:large">
+                        <div class="col-md-5"></div>
+                        <div class="col-md-2"><button type="submit" name="update" class="btn btn-primary" title="Update Points and Badge">Update</button></div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Trigger the modal with the badge button -->
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" title="Close the pop up">&times;</button>
+                        <h2 class="modal-title" style="align-self: center"> Earned Badges</h2>
+                    </div>
+                    <div class="modal-body">
+                        <table style="width: 100%; text-align: center">
+
+                            {% if user.badges %}
+                            <thead >
+                            <th style="text-align: center">
+                                Badge
+                            </th>
+                            <th style="text-align: center">
+                                Total Earned
+                            </th>
+                            </thead>
+                            {% for badge in user.badges %}
+                            <tr>
+                                <td style="width: 50%">
+                                    <img src="{{ badge.badge }}" height="25px" width="25px">
+                                </td>
+                                <td style="width: 50%">
+                                    {{ badge.count }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            <label> Sorry! you have no badges earned this time. </label>
+                            {% endif %}
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" title="Close the pop up">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+    <script>
+        $(document).ready(function () {
+            $("#select-badge").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                $("#badge-image").attr("src", src);
+            });
+        });
+    </script>
+{% endblock %}

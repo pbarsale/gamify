@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}GameType{% endblock %}
+
+{% block body %}
+
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+        {% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div id="game-type-form-div" style="text-align: center;margin: 5% 33% 33%;">
+            <h2>Game Type</h2>
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Add')" id="defaultOpen">Add</button>
+                <button class="tablinks" onclick="openTab(event, 'Update')">Update</button>
+                <button class="tablinks" onclick="openTab(event, 'Delete')">Delete</button>
+            </div>
+
+            <form class="game-type-form" action="/museum/gamify/gametypecontroller/add" method="post">
+                <div id="Add" class="tabcontent">
+                    <div style="margin: 10%">
+                        <input type="text" name="game-type-add" placeholder="Enter Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter Game Type to be added">
+                    </div>
+                    <div style="margin-bottom: 5%">
+                        <button type="submit" name="add" class="btn btn-primary" title="Add Game Type">Add</button>
+                    </div>
+                </div>
+            </form>
+
+            <form class="game-type-form" action="/museum/gamify/gametypecontroller/update" method="post">
+                <div id="Update" class="tabcontent">
+                    <div style="margin: 10%">
+                        <label style="margin-right: 5%; ">Select Game Type</label>
+                        <select name="select-game-type-update" class="selcls" title="Select the Game Type to update">
+                            {% for game_type in game_types %}
+                            <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <div style="margin: 10%">
+                            <input type="text" name="game-type-update" placeholder="Enter New Game Type" style="border: none;outline: 0;border-bottom: 2px solid #0099cc;" required title="Enter New Game Type to be updated">
+                        </div>
+                        <div style="margin-bottom: 5%">
+                            <button type="submit" name="update" class="btn btn-primary" title="Update Game Type">Update</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div id="Delete" class="tabcontent">
+                <div style="margin: 10%">
+                    <label style="margin-right: 5%; ">Select Game Type</label>
+                    <select id="select-game-type-delete" class="selcls" title="Select game type to delete">
+                        {% for game_type in game_types %}
+                        <option value="{{ game_type.id }}">{{ game_type.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-bottom: 5%">
+                    <button type="button" class="btn btn-primary" title="Delete Game Type" data-toggle="modal" data-target="#myModal">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Trigger the modal with the badge button -->
+            <!-- Modal -->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <form class="game-type-form" action="/museum/gamify/gametypecontroller/delete" method="post">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h2 class="modal-title" style="align-self: center">Confirmation</h2>
+                            </div>
+                            <div class="modal-body">
+                                Are you sure you want to delete the game type?
+                                <div id="game_delete">
+                                    <input id="game_type_id" name="select-game-type-delete" hidden/>
+                                    <label id="game_type_name"></label>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="delete" class="btn btn-success">Yes</button>
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        document.getElementById("defaultOpen").click();
+
+        $(document).ready(function () {
+            $("#select-game-type-delete").change(function (e) {
+                var game_type_id = $(this).children("option:selected").val();
+                var game_type_name = $(this).children("option:selected").text();
+                $("#game_type_name").text(game_type_name);
+                $("#game_type_id").val(game_type_id);
+            }).trigger("change");
+
+        });
+    </script>
+
+{% endblock %}

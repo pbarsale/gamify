@@ -1,0 +1,78 @@
+[07-Dec-2018 03:58:28 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 03:58:38 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 03:59:12 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 03:59:23 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:03:22 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:03:49 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:03:58 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:09:53 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('404.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:10:02 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/404')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:10:14 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('505')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:10:28 UTC] Uncaught exception: 'Exception' with message 'Method ggggAction not found in controller App\Controllers\Admin'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): Core\Controller->__call('gggg', Array)
+#1 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): App\Controllers\Admin->gggg()
+#2 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/gggg')
+#3 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Controller.php' on line 56
+[07-Dec-2018 04:10:34 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/gggg.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:11:40 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/gg.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:11:46 UTC] Uncaught exception: 'Exception' with message 'Method sdfsdfsdfsdfAction not found in controller App\Controllers\Admin'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): Core\Controller->__call('sdfsdfsdfsdf', Array)
+#1 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): App\Controllers\Admin->sdfsdfsdfsdf()
+#2 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/sdfsdfsdf...')
+#3 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Controller.php' on line 56
+[07-Dec-2018 04:12:04 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/sdfjh.htm...')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:12:13 UTC] Uncaught exception: 'Exception' with message 'Method jsgfhdgfjhgfjghjAction not found in controller App\Controllers\Admin'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): Core\Controller->__call('jsgfhdgfjhgfjgh...', Array)
+#1 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): App\Controllers\Admin->jsgfhdgfjhgfjghj()
+#2 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('admin/jsgfhdgfj...')
+#3 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Controller.php' on line 56
+[07-Dec-2018 04:12:22 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('jhsdfjdsf')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 04:12:28 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('kjsdhfjdfs.html')
+#1 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130

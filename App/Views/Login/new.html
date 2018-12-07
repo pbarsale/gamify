@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Log in{% endblock %}
+
+{% block body %}
+
+    {% for message in flash_messages %}
+    <div class="alert alert-{{ message.type }}">
+        {{ message.body }}
+    </div>
+    {% endfor %}
+
+    <h1>Log in</h1>
+	<form method="post" action="/museum/gamify/login/create">
+		<div><input type="text" name="email" placeholder="E-Mail" required autofocus value={{ email }}></div><br>
+    	<div><input type="password" name="password" placeholder="Password" required></div><br>
+
+    	<div><input type="checkbox" name="remember_me" {% if remember_me %} checked="checked" {% endif %}/>Remember me</div>
+    	<div><button type="submit" name="submit"> Log in</button></div>
+    	<a href="/museum/gamify/password/forgot">Reset password</a>
+	</form>
+
+{% endblock %}

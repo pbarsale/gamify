@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz{% endblock %}
+
+{% block body %}
+
+    <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
+
+    {% if current_user %}
+
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/museum/gamify/admin">
+                    <img src="/museum/gamify/images/buffalo-museum-white.png" height="30px" width="35px" style="margin:2%;"/>
+                </a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/museum/gamify/admin">Home</a></li>
+                <li><a href="/museum/gamify/notificationcontroller/new">Notification<span class="button__badge">{{ notifications|length }}</span></a></li>
+                <li><a href="/museum/gamify/gamecontroller/pending">Publish Game<span class="button__badge">{{ pendingGames|length }}</span></a></li>
+                <li><a href="/museum/gamify/logout/admin">Logout</a></li>
+            </ul>
+        </div>
+        <div class="navbar-header" style="float: right">
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {% if avatar_file %}
+                <img src="{{ avatar_file }}" height="30px" width="30px" alt="Avatar"/>
+                {% else %}
+                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                {% endif %}
+            </a>
+            <a class="navbar-brand" href="/museum/gamify/admin">
+                {{ current_user.name }}
+            </a>
+        </div>
+    </div>
+</nav>
+
+{% for message in flash_messages %}
+        <div class="alert alert-{{ message.type }}">
+            {{ message.body }}
+        </div>
+        {% endfor %}
+
+        <div>
+            <h2 style="text-align: center; margin-bottom: 3%">Quiz Question</h2>
+            <form id="question-form" class="question-form" action="/museum/gamify/questioncontroller/add" method="post">
+                <input hidden name="game_type_id" id="game_type_id" value="{{ game_type_id }}"/>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-5">
+                        <ul>
+                            <li style="color: red" hidden id="questionErr">Question Not Entered</li>
+                            <li style="color: red" hidden id="optionErr">Options Not Entered</li>
+                            <li style="color: red" hidden id="correctAnsErr">Please select correct answer</li>
+                            <li style="color: #FFBF00">Don't forget to add points and/or badges</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-3"><label>Question Added So Far : {{ count }}</label></div>
+                </div>
+            {% if prevquestion %}
+                <div class="row" style="margin-bottom: 1%">
+                    <div class="col-md-1">
+                        <input name="question_id" hidden value="{{ prevquestion.id }}"/>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="question" style="margin-right: 8%;font-size: x-large;">Q</label>
+                        <textarea id="prev-question" name="prev-question" placeholder="Enter Question" rows="2" cols="50"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter question">{{ prevquestion.question }}</textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="prev-points">Points</label>
+                        <input type="number" id="prev-points" name="prev-points" min="0" max="100" value="{{ prevquestion.points }}" style="width:20%" title="Add points to the question">
+                    </div>
+                    <div class="col-md-2">
+                        <select id="prev-select-badge" name="prev-select-badge" class="selcls" title="Add badge to the question">
+                            <option value="0">Select Badge</option>
+                            {% for badge in badges %}
+                                {% if prevquestion.badge_id == badge.id %}
+                                    <option value="{{ badge.id }}" data-badge="{{ badge.badge }}" selected>{{ badge.name }}</option>
+                                {% else %}
+                                    <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                        <img id="prev-badge-image" width="15%" height="15%" style="margin-left: 3%">
+                    </div>
+                </div>
+                {% set i = 1 %}
+                {% for o in prevquestion.options %}
+                <div class="row" style="margin-bottom: 2%">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6" id="prev-option{{ i }}">
+                        <input name="prev-option_id[]" hidden value="{{ o.id }}"/>
+                        {% if o.iscorrect %}
+                        <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer" checked/>
+                        {% else %}
+                        <input type="checkbox" name="prev-options[]" value="optionA{{ i }}" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer"/>
+                        {% endif %}
+                        <textarea id="prev-optionA{{ i }}" class="prev-options" name="prev-option[optionA{{ i }}]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" title="Enter option">{{ o.option }}</textarea>
+                        {% if i > 2 %}
+                        <button data-id="prev-option{{ i }}" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>
+                        {% endif %}
+                    </div>
+                </div>
+                {% set i = i + 1 %}
+                {% endfor %}
+                <div class="row addOptionsBtn">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-5">
+                        <button id="prev-addOptions" name="addOptions" class="w3-button w3-circle w3-teal" title="Add more options">+</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <textarea id="prev-description" name="prev-description" placeholder="Enter Information for the question (optional)" rows="2"
+                                  cols="50" style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;margin-left: 10%" title="Enter information for the question if any">{{ prevquestion.description }}</textarea>
+                    </div>
+                </div>
+            {% else %}
+                <div class="row" style="margin-bottom: 1%">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <label for="question" style="margin-right: 8%;font-size: x-large;">Q</label>
+                        <textarea id="question" name="question" placeholder="Enter Question" rows="2" cols="50"
+                              style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none" title="Enter question"></textarea>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="points">Points</label>
+                        <input type="number" id="points" name="points" min="0" max="100" value="0" style="width:20%" title="Add points to the question">
+                    </div>
+                    <div class="col-md-2">
+                        <select id="select-badge" name="select-badge" class="selcls" title="Add badge to the question">
+                            <option value="0">Select Badge</option>
+                            {% for badge in badges %}
+                            <option value="{{ badge.id }}" data-badge="{{ badge.badge }}">{{ badge.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <img id="badge-image" width="15%" height="15%" style="margin-left: 3%">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <input type="checkbox" name="options[]" value="optionA1" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer"/>
+                        <textarea id="optionA1" class="options" name="option[optionA1]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none" title="Enter option"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                        <input type="checkbox" name="options[]" value="optionA2" style="text-align: center; margin-right: 9%; margin-bottom: 5%" title="Check if correct answer"/>
+                        <textarea id="optionA2" class="options" name="option[optionA2]" placeholder="Enter Option" rows="1" cols="30"
+                                  style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none"></textarea>
+                    </div>
+                </div>
+                <div class="row addOptionsBtn">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-5">
+                        <button id="addOptions" name="addOptions" class="w3-button w3-circle w3-teal" title="Add more options">+</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-6">
+                    <textarea id="description" name="description" placeholder="Enter Information for the question (optional)" rows="2"
+                              cols="50" style="border: none;outline: 0;border-bottom: 2px solid #337ab7; resize: none;margin-left: 10%" title="Enter information for the question if any"></textarea>
+                    </div>
+                </div>
+            {% endif %}
+                <div class="row" style="margin-top: 3%">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                        {% if isPrevQ %}
+                            <button type="submit" name="prev" class="btn btn-primary prev" style="margin-bottom: 5%" title="Go to prev question in the game">Prev</button>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6"></div>
+                    <div class="col-md-2">
+                        <button type="submit" id="add" name="add" class="btn btn-primary" style="margin-bottom: 5%" title="Add next question to the game">Next</button>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <div class="row">
+                    <div class="col-md-5"></div>
+                    <div class="col-md-5">
+                        <button type="submit" id="done" name="done" class="btn btn-success" style="margin-bottom: 5%" title="Submit when completed with adding questions">Done</button>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
+            </form>
+        </div>
+
+    {% else %}
+        <a href="/museum/gamify/signup/new">Sign Up</a>
+        <a href="/museum/gamify/login">Log In</a>
+    {% endif %}
+
+    <script>
+        $(document).ready(function () {
+            let length = document.getElementsByClassName("options").length;
+            if(length === 0) {
+                length = document.getElementsByClassName("prev-options").length;
+            }
+            var i = length + 1;
+
+            $("#addOptions").click(function (e) {
+                e.preventDefault();
+                var row = document.createElement('div');
+                row.className = "row";
+                row.id = "option" + i;
+                var column1 = document.createElement('div');
+                column1.className = "col-md-1";
+                row.appendChild(column1);
+                var column2 = document.createElement('div');
+                column2.className = "col-md-6";
+                $(column2).append('<input type="checkbox" name="options[]" value="optionA' + i + '" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer"/>');
+                $(column2).append('<textarea id="optionA' + i + '" class="options" name="option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" title="Enter option"></textarea>');
+                $(column2).append('<button data-id="option' + i + '" name="deleteOptions" class="deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>');
+                row.append(column2);
+                $(".addOptionsBtn").before(row);
+                i++;
+            });
+
+            $("#prev-addOptions").click(function (e) {
+                e.preventDefault();
+                var row = document.createElement('div');
+                row.className = "row";
+                row.id = "prev-option" + i;
+                var column1 = document.createElement('div');
+                column1.className = "col-md-1";
+                row.appendChild(column1);
+                var column2 = document.createElement('div');
+                column2.className = "col-md-6";
+                $(column2).append('<input type="checkbox" name="prev-options[]" value="optionA' + i + '" style="text-align: center; margin-right: 9%;margin-bottom: 5%" title="Check if correct answer"/>');
+                $(column2).append('<textarea id="prev-optionA' + i + '" class="prev-options" name="prev-option[optionA' + i + ']" placeholder="Enter Option" rows="1" cols="30" style="border: none;outline: 0;border-bottom: 2px solid #337ab7;resize: none;margin-right:5%" title="Enter option"></textarea>');
+                $(column2).append('<button data-id="prev-option' + i + '" name="prev-deleteOptions" class="prev-deleteOptionBtn w3-button w3-circle w3-teal" title="Delete option">-</button>');
+                row.append(column2);
+                $(".addOptionsBtn").before(row);
+                i++;
+            });
+
+            $(document).on('click','.deleteOptionBtn',function(e){
+                e.preventDefault();
+                var divId = $(this).data("id");
+                var div = document.getElementById(divId);
+                div.parentNode.removeChild(div);
+                return false;
+            });
+
+            $(document).on('click','.prev-deleteOptionBtn',function(e){
+                e.preventDefault();
+                var divId = $(this).data("id");
+                var div = document.getElementById(divId);
+                div.parentNode.removeChild(div);
+                return false;
+            });
+
+            $(document).on('click','#add',function(e, from){
+                if(from == null) {
+                    e.preventDefault();
+                    var flag = true;
+                    if ($("#question-form input:checkbox:checked").length > 0) {
+                        $("#correctAnsErr").hide();
+                    } else {
+                        $("#correctAnsErr").show();
+                        flag = false;
+                    }
+                    let $question = $("#question");
+                    let $prev = $("#prev-question");
+                    if (($question.val() !== undefined && $question.val().length > 0) || ($prev.val() !== undefined && $prev.val().length > 0)) {
+                        $("#questionErr").hide();
+                    } else {
+                        $("#questionErr").show();
+                        flag = false;
+                    }
+                    var options = document.getElementsByClassName("options");
+                    var optionsFlag = true;
+                    if(options.length === 0) {
+                        options = document.getElementsByClassName("prev-options");
+                    }
+                    for (var j = 0; j < options.length; j++) {
+                        if ($(options[j]).val().length <= 0) {
+                            $("#optionErr").show();
+                            flag = false;
+                            optionsFlag = false;
+                        }
+                    }
+                    if(optionsFlag) {
+                        $("#optionErr").hide();
+                    }
+                    if(flag) {
+                        $(this).trigger('click', 'fine');
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            $("#done").click(function (e, from) {
+                if(from == null) {
+                    e.preventDefault();
+                    var flag = true;
+                    if ($("#question-form input:checkbox:checked").length > 0) {
+                        $("#correctAnsErr").hide();
+                    } else {
+                        $("#correctAnsErr").show();
+                        flag = false;
+                    }
+                    let $question = $("#question");
+                    let $prev = $("#prev-question");
+                    if (($question.val() !== undefined && $question.val().length > 0) || ($prev.val() !== undefined && $prev.val().length > 0)) {
+                        $("#questionErr").hide();
+                    } else {
+                        $("#questionErr").show();
+                        flag = false;
+                    }
+                    var options = document.getElementsByClassName("options");
+                    var optionsFlag = true;
+                    if(options.length === 0) {
+                        options = document.getElementsByClassName("prev-options");
+                    }
+                    for (var j = 0; j < options.length; j++) {
+                        if ($(options[j]).val().length <= 0) {
+                            $("#optionErr").show();
+                            flag = false;
+                            optionsFlag = false;
+                        }
+                    }
+                    if(optionsFlag) {
+                        $("#optionErr").hide();
+                    }
+                    if(flag) {
+                        $(this).trigger('click', 'fine');
+                    } else {
+                        return false;
+                    }
+                }
+            });
+
+            $("#select-badge").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                var badgeImg = document.getElementById("badge-image");
+                if($(this).children("option:selected").val() !== '0') {
+                    badgeImg.style.display='';
+                    badgeImg.setAttribute("src", src);
+                } else {
+                    badgeImg.style.display='none';
+                }
+            });
+
+            $("#prev-select-badge").change(function (e) {
+                var src = $(this).children("option:selected").data("badge");
+                var badgeImg = document.getElementById("prev-badge-image");
+                if($(this).children("option:selected").val() !== '0') {
+                    badgeImg.style.display='';
+                    badgeImg.setAttribute("src", src);
+                } else {
+                    badgeImg.style.display='none';
+                }
+            }).trigger("change");
+
+        });
+    </script>
+
+{% endblock %}
