@@ -4,13 +4,13 @@
 
 {% block body %}
 
-    {% for message in flash_messages %}
-    <div class="alert alert-{{ message.type }}">
-        {{ message.body }}
+    <div id="wrapper">
+        <h1> Sorry, that page doesn't exist. </h1>
+        {% if i_am_admin %}
+            <h3><span style="margin-left:25%"><a href="/museum/gamify/admin"> Please click here </a></span></h3>
+        {% else %}
+            <h3><span style="margin-left:25%"><a href="/museum/gamify"> Please click here </a></span></h3>
+        {% endif %}
     </div>
-    {% endfor %}
-
-    <h1>Page not found</h1>
-    <p>Sorry, that page doesn't exist.</p>
 
 {% endblock %}

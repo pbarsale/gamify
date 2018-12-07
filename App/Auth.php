@@ -92,6 +92,14 @@ class Auth{
 		}
 	}
 
+    public static function iAmAdmin(){
+        if(isset($_SESSION['admin'])){
+            return $_SESSION['admin'];
+        }else{
+            return false;
+        }
+    }
+
 	/**
      * Login the user from a remember-me cookie
      * @return mixed The user model if cookie found else null
