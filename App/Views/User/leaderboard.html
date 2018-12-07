@@ -6,6 +6,15 @@
 
     <link rel="stylesheet" href="/museum/gamify/css/adminhome.css">
 
+    <style>
+        hr {
+            text-align:center;
+            margin: 0 auto;
+            width: 80%;
+            border-color: #0099cc;
+        }
+    </style>
+
     {% if current_user %}
 
 <nav class="navbar navbar-inverse">
@@ -56,8 +65,15 @@
                     {% for user in users %}
                     <div id="users">
                         <div class="row" style="margin: 1%;font-size:large;">
-                            <div class="col-md-3"></div>
+                            <div class="col-md-2"></div>
                             <div class="col-md-1" id="rank">{{ j }}</div>
+                            <div class="col-md-1">
+                                {% if user.avatar %}
+                                <img src="{{ user.avatar }}" height="30px" width="30px" alt="Avatar"/>
+                                {% else %}
+                                <img src="/museum/gamify/images/avatar_default.jpg" height="30px" width="30px" alt="Avatar"/>
+                                {% endif %}
+                            </div>
                             <div class="col-md-2" align="left">{{ user.name }}</div>
                             <div class="col-md-1 points" align="left">{{ user.points }}</div>
                             <div class="col-md-5 badges" align="left">
@@ -69,7 +85,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <div class="col-md-12"><hr align="center" width="70%"/></div>
+                            <div class="col-md-12"><hr align="center"/></div>
                         </div>
                         {% set j = j + 1 %}
                     </div>
