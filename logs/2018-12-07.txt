@@ -76,39 +76,17 @@ Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on li
 Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('kjsdhfjdfs.html')
 #1 {main}
 Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
-[07-Dec-2018 23:32:07 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
+[07-Dec-2018 15:18:08 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('users')
 #1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:10 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:12 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:16 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:18 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:52 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:32:56 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_19...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:33:05 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/badge_20...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
-[07-Dec-2018 23:34:13 UTC] Uncaught exception: 'Exception' with message 'No route matched.'
-Stack trace: #0 /Applications/AMPPS/www/museum/gamify/public/index.php(47): Core\Router->dispatch('images/21_113_1...')
-#1 {main}
-Thrown in '/Applications/AMPPS/www/museum/gamify/Core/Router.php' on line 130
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php' on line 130
+[07-Dec-2018 15:33:06 UTC] Uncaught exception: 'ErrorException' with message 'Undefined offset: 0'
+Stack trace: #0 C:\Program Files (x86)\Ampps\www\museum\gamify\App\Models\Quiz.php(43): Core\Error::errorHandler(8, 'Undefined offse...', 'C:\\Program File...', 43, Array)
+#1 C:\Program Files (x86)\Ampps\www\museum\gamify\App\Controllers\Users.php(109): App\Models\Quiz::calculatePoints(172, 20, 4, Array)
+#2 [internal function]: App\Controllers\Users->quizAnswerAction()
+#3 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Controller.php(52): call_user_func_array(Array, Array)
+#4 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): Core\Controller->__call('quizAnswer', Array)
+#5 C:\Program Files (x86)\Ampps\www\museum\gamify\Core\Router.php(121): App\Controllers\Users->quizAnswer()
+#6 C:\Program Files (x86)\Ampps\www\museum\gamify\public\index.php(47): Core\Router->dispatch('users/quiz-answ...')
+#7 {main}
+Thrown in 'C:\Program Files (x86)\Ampps\www\museum\gamify\App\Models\Quiz.php' on line 43
