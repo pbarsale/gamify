@@ -36,12 +36,21 @@ class Quiz extends \Core\Model
         $badge_obtained = null;
 
         $correctoptions = Option::getCorrectOptions($questionid);
-        if($correctoptions && count(array_diff($option, $correctoptions[0]))==0 &&
-            count(array_diff($correctoptions[0], $option))==0){
+        $correct_array = array();
+
+        if($correctoptions){
+            for($index=0;$index<count($correctoptions);$index++){
+                $correct_array[$index] = $correctoptions[$index]['id'];
+            }
+        }
+
+        if($correctoptions && count(array_diff($option, $correct_array))==0 &&
+            count(array_diff($correct_array, $option))==0){
             $points_obtained = $points;
             if($badge_id!=0)
                 $badge_obtained = $badge_id;
         }
+
         static::updateUserScore($questionid,$points_obtained,$badge_obtained);
     }
 
